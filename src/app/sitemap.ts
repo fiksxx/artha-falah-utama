@@ -1,0 +1,28 @@
+import type { MetadataRoute } from "next";
+
+import { products } from "@/lib/data/products";
+import { navItems, siteConfig } from "@/lib/site";
+
+/**
+ * Sitemap otomatis: halaman utama dari `navItems`, halaman detail produk dari data katalog.
+ * Menambah produk baru otomatis menambah entri sitemap-nya.
+ */
+export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
+
+  const pages: MetadataRoute.Sitemap = navItems.map((item) => ({
+    url: item.href === "/" ? siteConfig.url : `${siteConfig.url}${item.href}`,
+    lastModified,
+    changeFrequency: "monthly",
+    priority: item.href === "/" ? 1 : 0.8,
+  }));
+
+  const productPages: MetadataRoute.Sitemap = products.map((product) => ({
+    url: `${siteConfig.url}/artha-labs/${product.slug}`,
+    lastModified,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...pages, ...productPages];
+}
