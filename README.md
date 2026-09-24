@@ -48,26 +48,48 @@ src/
 ├── app/
 │   ├── page.tsx                # About (route "/")
 │   ├── artha-labs/page.tsx     # Brand marquee + katalog produk
-│   ├── activity/page.tsx       # Rekam jejak kegiatan
+│   ├── artha-labs/[slug]/      # Halaman detail produk (page, loading, not-found)
+│   ├── activity/page.tsx       # Daftar tulisan & kegiatan
+│   ├── activity/[slug]/        # Halaman detail tulisan (page, loading, not-found)
 │   ├── contact/page.tsx        # Form + info kontak + peta
 │   ├── api/contact/route.ts    # Handler form → email
 │   ├── layout.tsx, template.tsx, not-found.tsx
 │   ├── sitemap.ts, robots.ts, globals.css
 ├── components/
+│   ├── analytics/Analytics.tsx # Titik pemasangan seluruh script pengukuran
 │   ├── layout/                 # Navbar, Footer, Container, Logo, SkipLink
-│   ├── sections/               # HomeHero, PageHero, CompanyStats, BrandMarquee,
-│   │                           # ProductGrid, ActivityGrid, ContactForm, ContactInfo, QuickNavCards
-│   └── ui/                     # Button, Section, FilterTabs, MultiSelect, icons
+│   ├── sections/               # HomeHero, PageHero, BusinessScope, LoopCarousel,
+│   │                           # TestimonialCarousel, ActivityCarousel, BrandMarquee,
+│   │                           # ProductGrid/Card/Header/Tabs, ActivityGrid/Card,
+│   │                           # ArticleBody, ContactForm, ContactInfo, QuickNavCards
+│   └── ui/                     # Button, Section, Breadcrumb, DetailTable,
+│                               # FilterTabs, MultiSelect, icons
 ├── lib/
 │   ├── data/                   # about, activities, brands, categories, products
 │   ├── validation/contact.ts   # skema Zod
 │   ├── email/resend.ts         # klien email
+│   ├── analytics.ts            # trackEvent() - peristiwa yang dikirim ke GA
 │   ├── site.ts                 # nama, kontak, nav, sosial media, GA id
 │   ├── images.ts                # path foto perusahaan (semua header)
 │   ├── seo.ts                  # helper metadata + JSON-LD
 │   └── utils.ts                # cn(), formatRupiah, tanggal, sanitasi
 └── types/index.ts              # tipe bersama
 ```
+
+### Aturan yang dipegang saat menambah kode
+
+- **Judul section selalu lewat `SectionHeading`** (`components/ui/Section.tsx`),
+  jangan menulis ulang pola `h2` + garis emas secara manual. Satu komponen ini
+  yang menjaga tracking huruf, panjang garis, dan jaraknya tetap sama di seluruh
+  halaman.
+- **Warna selalu lewat token** (`brand-*`, `accent-*`, `ink*`, `surface*`,
+  `line*`, `danger-*`). Jangan memakai palet bawaan Tailwind seperti `red-500`
+  atau `green-900`. Dua tempat yang WAJIB memakai hex literal karena tidak bisa
+  membaca CSS variable sudah diberi komentar: template email
+  (`lib/email/resend.ts`) dan `themeColor` di `app/layout.tsx`.
+- **Jangan menaruh `console.log` di komponen.** Logging hanya untuk jalur error
+  di sisi server (lihat `app/api/contact/route.ts`); console browser harus
+  bersih saat website berjalan normal.
 
 ---
 
@@ -107,9 +129,11 @@ Semua konten hidup di `src/lib/data/` — **tidak perlu menyentuh komponen**.
 | --- | --- |
 | Logo brand di marquee | `src/lib/data/brands.ts` + file di `public/brands/` |
 | Produk & kategori Artha Labs | `src/lib/data/products.ts` + `public/images/products/` |
-| Statistik perusahaan (klien, produk, brand, kepuasan) | `src/lib/data/about.ts` -> `companyStats` |
-| Kegiatan (pameran/instalasi) | `src/lib/data/activities.ts` + `public/images/activities/` |
-| Visi, misi, values, quick navigation cards | `src/lib/data/about.ts` + `public/images/about/` |
+| Blok lini bisnis (About) | `src/lib/data/about.ts` -> `businessBlocks` |
+| Gambar Activity di About | `public/images/activities/activity-01.png` dst. (urutan kartu) |
+| Tulisan & kegiatan di halaman Activity | `src/lib/data/activities.ts` + `public/images/activities/` |
+| Lini bisnis (About), quick navigation cards | `src/lib/data/about.ts` + `public/images/about/` |
+| Testimoni pelanggan (dummy) | `src/lib/data/testimonials.ts` |
 | Alamat, email, telepon, WhatsApp, sosial media, jam kerja | `src/lib/site.ts` |
 | Warna & tipografi | CSS variables di `src/app/globals.css` + `tailwind.config.ts` |
 
@@ -141,7 +165,7 @@ Palet aktif mengikuti logo perusahaan: **dark green sebagai primary**, **premium
 
 Dua utility gradient terpusat di `globals.css`:
 
-- `.surface-brand-deep` — gradient 135° `brand-950 → brand-900 → brand-800` untuk hero, kartu Visi, dan footer.
+- `.surface-brand-deep` — gradient 135° `brand-950 → brand-900 → brand-800` untuk hero, section Lini bisnis, dan footer.
 - `.surface-soft` — gradient vertikal putih → off-white untuk `Section tone="soft"`, dipakai sebagai transisi halus antar section.
 - `.rule-accent` — garis hijau→emas untuk aksen tipis (batas atas footer, eyebrow section, kartu quick navigation saat hover).
 - `.divider-gold` — garis emas 1px yang memudar di kedua ujung; dipakai sebagai penutup bawah hero.
@@ -172,11 +196,10 @@ Satu file data menjadi sumber tunggal untuk katalog, halaman detail, sitemap, da
   brandId: "brand-04",
   category: "Alat Lab",
   model: "AL-2400",
-  shortDescription: "...",      // dipakai di card + header detail
-  description: ["...", "..."],  // paragraf section "Deskripsi Produk"
+  description: ["...", "..."],  // paragraf di tab "Detail Produk" (di atas tabel spesifikasi)
   highlights: ["..."],          // opsional, bullet "Poin penting"
   packaging: [{ label: "Package contents", value: "..." }],       // opsional
-  specifications: [{ label: "Power supply", value: "220 V" }],     // opsional
+  specifications: [{ label: "Power supply", value: "220 V" }],     // tabel di tab "Detail Produk"
   additionalInformation: [{ id: "warranty", title: "Warranty", bullets: ["..."] }], // opsional
   relatedProductIds: ["product-05"], // opsional, default: kategori/brand sama
   image: "/images/products/product-04.png",
@@ -195,12 +218,11 @@ Satu file data menjadi sumber tunggal untuk katalog, halaman detail, sitemap, da
 
 ### Tab informasi produk
 
-`src/components/sections/ProductTabs.tsx` menggabungkan tiga section menjadi tab horizontal compact:
+`src/components/sections/ProductTabs.tsx` menampilkan dua tab horizontal compact:
 
 | Tab | Isi |
 | --- | --- |
-| Detail Produk | Paragraf `description` + kartu `highlights` |
-| Spesifikasi Produk | Tabel `specifications` (Specification / Details) |
+| Detail Produk | Paragraf `description`, disusul tabel `specifications` (Specification / Details); kartu `highlights` di sisi kanan bila ada |
 | Informasi Tambahan | Tabel `packaging` + grup `additionalInformation` (bullet/key-value/note) |
 
 - Hanya konten tab aktif yang dirender, dengan transisi fade halus (framer-motion, otomatis nonaktif pada `prefers-reduced-motion`).
@@ -235,6 +257,82 @@ Hierarki panel filter: **Find your product** -> Search products -> Filter by bra
 
 - `loading.tsx` - skeleton mengikuti layout header & section.
 - `not-found.tsx` - "Product Not Found" + tombol "Back to Artha Labs" (dipicu `notFound()` bila slug tidak dikenal).
+
+---
+
+## Activity: knowledge hub perusahaan
+
+Halaman Activity bukan sekadar galeri kegiatan. Strukturnya dirancang untuk
+menampung tulisan yang jumlahnya terus bertambah: catatan teknis, panduan
+penggunaan alat, sampai dokumentasi kegiatan.
+
+### Route
+
+| Route | Isi |
+| --- | --- |
+| `/activity` | Satu tulisan sorotan + filter kategori + grid seluruh tulisan |
+| `/activity/[slug]` | Halaman baca (dibuat otomatis dari data, `generateStaticParams`) |
+
+### Menambah tulisan baru
+
+Cukup tambahkan **satu objek** pada `activitySeeds` di
+`src/lib/data/activities.ts`, lalu letakkan gambarnya di
+`public/images/activities/`. URL, filter, kartu, daftar isi, estimasi waktu
+baca, artikel terkait, dan entri sitemap menyesuaikan sendiri.
+
+`slug` dan `readingMinutes` **tidak perlu ditulis** - keduanya dihasilkan
+otomatis, pola yang sama dengan data produk.
+
+### Isi artikel ditulis sebagai blok, bukan HTML
+
+Field `body` berisi daftar blok berjenis, sehingga penulis konten tidak pernah
+menyentuh markup dan tampilannya dijamin konsisten:
+
+```ts
+body: [
+  { type: "paragraph", text: "..." },
+  { type: "heading", text: "..." },              // otomatis masuk daftar isi
+  { type: "list", items: ["..."], ordered: true },
+  { type: "table", items: [{ label: "...", value: "..." }], caption: "..." },
+  { type: "callout", title: "...", text: "..." },
+]
+```
+
+Menambah jenis blok baru: tambahkan di union `ArticleBlock`
+(`src/types/index.ts`), lalu beri tampilannya di
+`src/components/sections/ArticleBody.tsx`. TypeScript akan menandai bila ada
+jenis blok yang belum diberi tampilan.
+
+### Kategori
+
+Tiga kategori (`Insight`, `Panduan`, `Kegiatan`) didefinisikan di
+`ActivityCategory`. Filter hanya menampilkan kategori yang benar-benar dipakai
+minimal satu tulisan, jadi tidak pernah ada filter yang nol hasil.
+
+---
+
+## Analytics
+
+Google Analytics dipasang lewat `@next/third-parties` dan **hanya dimuat bila
+`NEXT_PUBLIC_GA_MEASUREMENT_ID` terisi**. Seluruh script pengukuran dikumpulkan
+di satu komponen, `src/components/analytics/Analytics.tsx`, supaya mudah
+terlihat apa saja yang dimuat halaman.
+
+Kunjungan halaman dicatat otomatis oleh GA4. Di luar itu, hanya tiga peristiwa
+yang dilacak - masing-masing menjawab satu pertanyaan yang nyata:
+
+| Peristiwa | Dikirim dari | Menjawab |
+| --- | --- | --- |
+| `catalog_search` | `ProductGrid` | Kata kunci apa yang dicari, dan berapa hasilnya. **Pencarian ber-hasil nol adalah petunjuk paling berguna** untuk menambah produk atau kata kunci. |
+| `quote_request_start` | `ContactForm` | Produk mana yang paling sering dibawa ke form penawaran. |
+| `contact_form_submit` | `ContactForm` | Berapa banyak permintaan yang benar-benar terkirim, dibanding yang berhenti di tengah. |
+
+Menambah peristiwa: daftarkan nama dan parameternya di `AnalyticsEventMap`
+(`src/lib/analytics.ts`), lalu panggil `trackEvent("nama", { ... })`. Nama yang
+tidak terdaftar akan menggagalkan build, bukan diam-diam terkirim. Bila GA tidak
+dipasang, seluruh pemanggilan berhenti diam-diam tanpa error.
+
+---
 
 ## Deploy ke Vercel
 
@@ -300,6 +398,11 @@ Ringkasan teknis. Panduan langkah demi langkah untuk pengelola konten ada di
   menggagalkan build alih-alih diam-diam menghilangkan produk dari filter.
 - **Harga adalah data, bukan tampilan.** Komponen hanya memanggil
   `formatRupiah(product.price)`; tidak ada string harga di JSX.
+  Field `price` wajib diisi, dan konstanta `DEFAULT_PRICE` di `products.ts`
+  bernilai `1`, sehingga semua produk yang belum diberi harga asli tampil
+  sebagai **"Rp1"** (tidak ada lagi teks "Harga atas permintaan"). Untuk mengisi
+  harga asli, ganti `price: DEFAULT_PRICE` pada produk terkait dengan angka
+  murni (`price: 1250000`, tanpa titik dan tanpa "Rp").
 - **Pengacakan katalog memakai seeded PRNG (mulberry32).** Server merender
   dengan seed tetap agar tidak terjadi hydration mismatch, lalu browser
   mengambil seed sesi dari `sessionStorage`. Filter diterapkan SETELAH urutan

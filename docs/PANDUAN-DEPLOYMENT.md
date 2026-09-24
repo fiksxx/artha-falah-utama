@@ -704,6 +704,23 @@ Rutinitas bulanan (10 menit):
 
 ## 5. Workflow Update Setelah Production
 
+### 5.0 Catatan sinkronisasi folder (September 2026)
+
+Pada tahap ini ditemukan project punya DUA folder terpisah: `D:\Notion\artha-falah-utama`
+(punya riwayat Git, terhubung ke `github.com/fiksxx/artha-falah-utama` dan Vercel, tapi isinya
+versi lama/scaffold awal) dan `D:\Notion\website-arthalabs` (tempat seluruh revisi terbaru
+dikerjakan - About, Activity, testimoni, konten Panduan, produk - tapi tidak punya Git sama
+sekali). Sebelum redeploy revisi tersebut, kedua folder ini disatukan dengan memindahkan
+folder `.git` dari `artha-falah-utama` ke `website-arthalabs`, lalu `website-arthalabs`
+dijadikan satu-satunya folder kerja ke depannya (folder lama diarsipkan/dihapus setelah
+dipastikan tersinkron). Perubahan lokal yang belum ter-commit di `artha-falah-utama` (alamat,
+link maps, form kontak) sudah diverifikasi ikut terbawa di `website-arthalabs` sebelum
+langkah ini dilakukan.
+
+**Pelajaran untuk ke depan:** jangan bekerja di lebih dari satu folder untuk project yang
+sama. Pastikan folder kerja SELALU folder yang punya `.git` dan remote yang benar
+(`git remote -v`) sebelum memulai revisi apa pun.
+
 ### 5.1 Alur harian (perubahan kecil)
 
 ```
@@ -1275,7 +1292,7 @@ grep -rn -i "lorem\|placeholder" src/lib/data/ src/lib/site.ts
 [ ] Setiap produk punya kode model (SKU) yang benar
 [ ] Setiap produk punya kategori yang tepat
 [ ] Setiap produk punya brandId yang valid
-[ ] shortDescription informatif, bukan generik
+[ ] description informatif, bukan generik
 [ ] Produk utama punya specifications lengkap
 [ ] Semua id produk unik
 [ ] Urutan produk sudah sesuai prioritas bisnis

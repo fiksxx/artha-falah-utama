@@ -36,8 +36,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 
   return createPageMetadata({
-    title: `${product.name} - ${product.brand}`,
-    description: `${product.shortDescription} Kategori ${product.category}, model ${product.model}. Minta Penawaran melalui Artha Labs.`,
+    title: product.name,
+    description: `${product.name} dari ${product.brand}, model ${product.model}. Kategori ${product.category}. Minta Penawaran melalui Artha Labs.`,
     path: `/artha-labs/${product.slug}`,
     image: product.image,
     keywords: [product.name, product.brand, product.model, product.category],
@@ -64,16 +64,21 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     name: product.name,
     sku: product.model,
     category: product.category,
-    description: product.shortDescription,
+    ...(paragraphs[0] ? { description: paragraphs[0] } : {}),
     image: `${siteConfig.url}${product.image}`,
     brand: { "@type": "Brand", name: product.brand },
     url: `${siteConfig.url}/artha-labs/${product.slug}`,
   };
 
-  /* TAB 1 - Detail Produk: deskripsi + poin penting */
+  /*
+   * TAB 1 - Detail Produk: deskripsi, poin penting, dan tabel spesifikasi.
+   * Spesifikasi tidak lagi menjadi tab tersendiri: pengunjung langsung melihat
+   * deskripsi lalu tabel spesifikasinya dalam satu layar gulir.
+   */
+  const hasHighlights = highlights.length > 0;
   const detailPanel = (
     <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-      <div className={highlights.length > 0 ? "lg:col-span-7" : "lg:col-span-9"}>
+      <div className={hasHighlights ? "lg:col-span-8" : "lg:col-span-12"}>
         {paragraphs.length > 0 ? (
           <div className="max-w-content space-y-4">
             {/* TODO: ganti dengan konten asli */}
@@ -89,10 +94,34 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             penjelasan produk bersama penawaran.
           </InfoNote>
         )}
+
+        {/* Spesifikasi - tabel wajib, tampil langsung di bawah deskripsi */}
+        <div className="mt-10 max-w-4xl border-t border-line pt-8">
+          <h3 className="text-heading font-semibold text-ink">Spesifikasi</h3>
+          <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+            Data teknis lengkap produk ini.
+          </p>
+          {specifications.length > 0 ? (
+            <div className="mt-4">
+              <DetailTable
+                items={specifications}
+                caption={`Spesifikasi Teknis ${product.name}`}
+                labelHeader="Specification"
+                valueHeader="Details"
+              />
+            </div>
+          ) : (
+            <InfoNote>
+              Spesifikasi Teknis produk ini belum tercatat di katalog, sehingga tidak kami tampilkan
+              agar informasinya tetap akurat. Kirim permintaan penawaran dan tim kami akan
+              melampirkan datasheet resmi dari brand.
+            </InfoNote>
+          )}
+        </div>
       </div>
 
-      {highlights.length > 0 ? (
-        <aside className="lg:col-span-5">
+      {hasHighlights ? (
+        <aside className="lg:col-span-4">
           <div className="rounded-xl border border-line bg-surface p-6 shadow-card">
             <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">
               Poin Penting
@@ -113,29 +142,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     </div>
   );
 
-  /* TAB 2 - Spesifikasi Produk: wajib tabel */
-  const specificationPanel = (
-    <div className="max-w-4xl">
-      {specifications.length > 0 ? (
-        <div>
-          <DetailTable
-            items={specifications}
-            caption={`Spesifikasi Teknis ${product.name}`}
-            labelHeader="Specification"
-            valueHeader="Details"
-          />
-        </div>
-      ) : (
-        <InfoNote>
-          Spesifikasi Teknis produk ini belum tercatat di katalog, sehingga tidak kami tampilkan agar
-          informasinya tetap akurat. Kirim permintaan penawaran dan tim kami akan melampirkan
-          datasheet resmi dari brand.
-        </InfoNote>
-      )}
-    </div>
-  );
-
-  /* TAB 3 - Informasi Tambahan: packaging + grup informasi lain */
+  /* TAB 2 - Informasi Tambahan: packaging + grup informasi lain */
   const hasAdditional = packaging.length > 0 || additionalGroups.length > 0;
   const additionalPanel = hasAdditional ? (
     <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
@@ -202,7 +209,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
   const tabs: ProductTab[] = [
     { id: "detail", label: "Detail Produk", content: detailPanel },
-    { id: "spesifikasi", label: "Spesifikasi Produk", content: specificationPanel },
     { id: "tambahan", label: "Informasi Tambahan", content: additionalPanel },
   ];
 
@@ -215,7 +221,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       <ProductHeader product={product} />
 
-      {/* INFORMASI PRODUK - 3 tab compact: detail, spesifikasi, informasi tambahan */}
+      {/* INFORMASI PRODUK - 2 tab compact: detail (deskripsi + spesifikasi) dan informasi tambahan */}
       <Section width="wide">
         <SectionHeading title="Informasi Produk" />
         <ProductTabs tabs={tabs} className="mt-8" />

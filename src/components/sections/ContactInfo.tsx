@@ -19,6 +19,9 @@ const socialIconMap: Record<SocialIcon, typeof MailIcon> = {
   facebook: FacebookIcon,
 };
 
+const DEFAULT_MAPS_EMBED_SRC =
+  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16278081.630689578!2d102.40425322906611!3d-5.080880444271725!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2d95bb00298e3e0f%3A0x4b9006f68c024804!2sCV%20Artha%20Falah%20Utama!5e0!3m2!1sid!2sid!4v1789794478170!5m2!1sid!2sid";
+
 /** Kartu info kontak: alamat, email, telepon, WhatsApp, jam operasional, sosial media. */
 export function ContactInfo() {
   const { contact } = siteConfig;
@@ -31,7 +34,6 @@ export function ContactInfo() {
           <MapPinIcon className="mt-0.5 shrink-0 text-brand-600" />
           <div>
             <p className="font-semibold text-ink">Alamat kantor</p>
-            {/* TODO: ganti dengan konten asli */}
             <address className="mt-1 not-italic leading-relaxed text-ink-muted">
               {contact.addressLines.map((line) => (
                 <span key={line} className="block">
@@ -117,31 +119,12 @@ export function ContactInfo() {
   );
 }
 
-/** Embed Google Maps - hanya tampil jika NEXT_PUBLIC_MAPS_EMBED_SRC diisi. */
+/** Embed Google Maps */
 export function MapEmbed() {
-  const src = siteConfig.contact.mapsEmbedSrc;
-
-  if (!src) {
-    return (
-      <div className="flex min-h-[320px] flex-col items-center justify-center rounded-xl border border-dashed border-line-strong bg-surface-muted p-8 text-center">
-        {/* TODO: ganti dengan konten asli - isi NEXT_PUBLIC_MAPS_EMBED_SRC di .env.local */}
-        <MapPinIcon className="text-ink-subtle" />
-        <p className="mt-3 text-sm font-semibold text-ink">Peta lokasi belum dikonfigurasi</p>
-        <p className="mt-1 max-w-sm text-sm text-ink-muted">
-          Isi variabel NEXT_PUBLIC_MAPS_EMBED_SRC dengan URL embed Google Maps untuk menampilkan
-          peta kantor di sini.
-        </p>
-        <a
-          href={siteConfig.contact.mapsLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 text-sm font-semibold text-brand-700 underline underline-offset-4"
-        >
-          Buka di Google Maps
-        </a>
-      </div>
-    );
-  }
+  const src =
+    process.env.NEXT_PUBLIC_MAPS_EMBED_SRC ||
+    siteConfig.contact.mapsEmbedSrc ||
+    DEFAULT_MAPS_EMBED_SRC;
 
   return (
     <div className="overflow-hidden rounded-xl border border-line">

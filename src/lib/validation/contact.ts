@@ -16,6 +16,10 @@ export const contactFormSchema = z.object({
     .min(1, "Email wajib diisi")
     .max(150, "Email maksimal 150 karakter")
     .email("Format email tidak valid"),
+  phone: z
+    .string()
+    .min(8, "Nomor telepon minimal 8 digit")
+    .regex(/^[0-9+\-\s]+$/, "Nomor telepon hanya boleh angka dan simbol + atau -"),
   subject: z
     .string({ required_error: "Subjek wajib diisi" })
     .trim()

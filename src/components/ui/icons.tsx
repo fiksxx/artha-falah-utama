@@ -117,6 +117,76 @@ export function ClockIcon(props: IconProps) {
   );
 }
 
+export function BookIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} width="22" height="22" {...props}>
+      <path d="M12 6.5C10.3 5.3 8 4.8 4.5 5v13.5c3.5-.2 5.8.3 7.5 1.5 1.7-1.2 4-1.7 7.5-1.5V5c-3.5-.2-5.8.3-7.5 1.5z" />
+      <path d="M12 6.5V20" />
+    </svg>
+  );
+}
+
+export function CalendarIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} width="22" height="22" {...props}>
+      <rect x="3.5" y="5" width="17" height="15" rx="2" />
+      <path d="M3.5 10h17M8 3.5v3M16 3.5v3" />
+    </svg>
+  );
+}
+
+export function FlaskIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} width="22" height="22" {...props}>
+      <path d="M9.5 3.5h5M10.5 3.5v5.2l-5.3 8.9a2 2 0 0 0 1.7 2.9h10.2a2 2 0 0 0 1.7-2.9l-5.3-8.9V3.5" />
+      <path d="M8 14.5h8" />
+    </svg>
+  );
+}
+
+export function ChecklistIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} width="22" height="22" {...props}>
+      <path d="m4 7 1.5 1.5L8.5 5M4 13l1.5 1.5L8.5 11M4 19l1.5 1.5L8.5 17" />
+      <path d="M12 7h8M12 13h8M12 19h8" />
+    </svg>
+  );
+}
+
+export function GearIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} width="22" height="22" {...props}>
+      <circle cx="12" cy="12" r="3" />
+      <circle cx="12" cy="12" r="6.2" />
+      <path d="M12 3.5v2.3M12 18.2v2.3M3.5 12h2.3M18.2 12h2.3M6 6l1.6 1.6M16.4 16.4 18 18M6 18l1.6-1.6M16.4 7.6 18 6" />
+    </svg>
+  );
+}
+
+export function StarIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} width="16" height="16" fill="currentColor" stroke="none" {...props}>
+      <path d="m12 2.8 2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6-4.4-4.2 6-.9z" />
+    </svg>
+  );
+}
+
+export function PlayIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} width="16" height="16" {...props}>
+      <path d="M8 5.5v13l10.5-6.5z" />
+    </svg>
+  );
+}
+
+export function PauseIcon(props: IconProps) {
+  return (
+    <svg {...baseProps} width="16" height="16" {...props}>
+      <path d="M8.5 5.5v13M15.5 5.5v13" />
+    </svg>
+  );
+}
+
 export function ShieldIcon(props: IconProps) {
   return (
     <svg {...baseProps} width="22" height="22" {...props}>

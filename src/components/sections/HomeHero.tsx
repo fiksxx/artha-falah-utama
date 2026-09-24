@@ -43,14 +43,16 @@ export function HomeHero() {
 
       <Container width="wide" className="relative py-14 lg:py-16">
         <div className="max-w-3xl">
-          <p className="flex animate-fade-up items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.22em] text-brand-200">
+          <p className="flex animate-fade-up items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.22em] text-accent-300">
             <span
               aria-hidden="true"
-              className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-brand-300"
+              className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-accent-400"
             />
             {siteConfig.shortName}
           </p>
 
+          {/* Judul memakai skala `display-lg` yang sama dengan header halaman lain,
+              bukan ukuran lepas - supaya tipografi seluruh situs tetap satu sistem. */}
           <h1 className="mt-6 animate-fade-up text-4xl text-white [animation-delay:90ms]">
             Solusi Terintegrasi Kebutuhan <span className="text-brand-300">Alat, Reagen, dan Bahan Laboratorium Presisi</span>
           </h1>
@@ -61,8 +63,8 @@ export function HomeHero() {
           />
 
           <p className="mt-7 max-w-content animate-fade-up text-base leading-relaxed text-white/80 [animation-delay:200ms] lg:text-lg">
-            Melalui Artha Labs, kami menyediakan instrumen uji, reagen, dan alat kesehatan berstandar internasional, 
-            lengkap dengan CoA dan layanan purna jual andal.
+            Melalui Artha Labs, kami menyediakan reagen, instrumen laboratorium, dan alat kesehatan
+            dari brand mitra, beserta dokumen pendukung, bantuan instalasi, dan layanan purna jual.
           </p>
 
           <div className="mt-10 flex animate-fade-up flex-wrap gap-3 [animation-delay:280ms]">

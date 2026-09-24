@@ -26,14 +26,16 @@ const INSTRUMENT_WARRANTY = {
 };
 
 /**
- * HARGA DEFAULT SEMENTARA.
+ * HARGA DEFAULT - Rp1 untuk seluruh produk.
  *
- * Semua produk memakai angka ini sampai harga asli dimasukkan. Ubah `price`
- * per produk di bawah (tulis angka murni: 1250000, bukan "Rp1.250.000").
- * Bila sebuah produk tidak ingin ditampilkan harganya, HAPUS field `price`
- * pada produk itu - website otomatis menulis "Harga atas permintaan".
+ * Kartu produk dan halaman detail selalu menampilkan harga dari field `price`
+ * (tidak ada lagi teks "Harga atas permintaan"). Selama harga asli belum
+ * dimasukkan, semua produk memakai konstanta ini sehingga tampil sebagai "Rp1".
  *
- * TODO WAJIB SEBELUM WEBSITE ONLINE: ganti harga asli atau hapus field `price`.
+ * MENGISI HARGA ASLI: ganti `price: DEFAULT_PRICE` pada produk yang
+ * bersangkutan dengan angka murni, mis. `price: 1250000` (tanpa titik, tanpa
+ * "Rp"). Format tampilannya diurus otomatis oleh `formatRupiah()`.
+ * Mengubah nilai konstanta ini mengubah harga SEMUA produk yang memakainya.
  */
 const DEFAULT_PRICE = 1;
 
@@ -132,7 +134,7 @@ type ProductSeed = Omit<Product, "brand" | "slug" | "subcategory"> & {
  *   productType   -> jenis yang lebih sempit, teks bebas (jadi opsi filter otomatis)
  *   applications  -> bidang penggunaan, teks bebas (jadi opsi filter otomatis)
  *   keywords      -> sinonim/istilah Inggris agar tetap ditemukan pencarian
- *   price         -> angka murni, atau hapus field-nya bila harga on-request
+ *   price         -> angka murni (wajib). Default: DEFAULT_PRICE = Rp1
  *   availability  -> "Tersedia" | "Pre-Order" | "Indent"
  *   featured      -> true untuk produk andalan tiap kategori (lihat catatan urutan katalog)
  *
@@ -171,8 +173,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Mikropipet manual mekanis 1 kanal rentang 0.1–2.5 µL dengan pembacaan volume digital, kalibrasi standar ISO 8655, bodi ergonomis ringan, dan bagian bawah yang dapat diautoklaf.",
     description: [
       "DLAB TopPette 0.1–2.5 µL adalah pipet mekanis volume variabel saluran tunggal yang dirancang dengan bobot ringan dan gaya pemipetan rendah guna meminimalkan risiko Repetitive Strain Injury (RSI).",
       "Memiliki tampilan volume digital yang jelas terbaca, rentang volume 0.1–2.5 µL dengan inkremen 0.05 µL, kalibrasi pabrik sesuai standar ISO 8655 lengkap dengan sertifikat uji individu, bagian poros bawah (lower section) yang tahan autoklaf, serta kepatuhan penuh terhadap regulasi RoHS."
@@ -227,8 +227,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual mekanis rentang volume 0.5–10 µL dengan kenaikan 0.1 µL, sertifikat uji individual ISO 8655, bagian bawah tahan autoklaf, dan tampilan digital.",
     description: [
       "DLAB TopPette 0.5–10 µL menghadirkan kenyamanan penanganan cairan berakurasi tinggi untuk aplikasi mikrobiologi dan biologi molekuler harian.",
       "Dilengkapi tampilan angka digital yang presisi, komponen bawah yang dapat diautoklaf untuk menjaga sterilitas bebas kontaminasi nuklease, sistem pendorong pegas berdaya tekan ringan, kepatuhan RoHS, serta sertifikat kalibrasi pabrik individual sesuai regulasi ISO 8655."
@@ -283,8 +281,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual mekanis 2–20 µL dengan kenaikan 0.5 µL, jendela volume digital, kalibrasi ISO 8655 terverifikasi, dan poros bawah tahan autoklaf.",
     description: [
       "DLAB TopPette 2–20 µL adalah instrumen penanganan cairan presisi untuk kebutuhan riset analitik, farmasi, dan mikrobiologi.",
       "Menyediakan pengaturan volume 2 hingga 20 µL dengan resolusi 0.5 µL, mekanisme pemosisian volume yang stabil untuk mencegah pergeseran tidak disengaja, poros bawah yang dapat diautoklaf, serta sertifikat kalibrasi individual berbasis ISO 8655."
@@ -339,8 +335,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Mikropipet manual mekanis 5–50 µL dengan kenaikan 0.5 µL, tampilan volume digital jelas, bagian bawah tahan autoklaf, dan sertifikat kalibrasi individual ISO 8655.",
     description: [
       "DLAB TopPette 5–50 µL dirancang untuk memberikan kinerja pemipetan yang konsisten dan akurat pada volume menengah di berbagai laboratorium riset dan pengujian kualitas.",
       "Menyediakan akurasi sistematik hingga ±0.6% pada volume nominal 50 µL, bodi berdesain ergonomis dan tahan terhadap bahan kimia umum, ujung cone yang cocok dengan berbagai merek tips universal, serta kemudahan re-kalibrasi mandiri."
@@ -395,8 +389,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual mekanis 10–100 µL dengan kenaikan 1 µL, sertifikat kalibrasi individu ISO 8655, bagian bawah tahan autoklaf, dan bodi ergonomis rendah gaya tekan.",
     description: [
       "DLAB TopPette 10–100 µL adalah pilihan utama mikropipet volume kerja harian untuk pemindahan cairan, preparasi buffer, dan pemipetan reagen analitik.",
       "Dilengkapi jendela display digital yang presisi dan mudah dipantau, akurasi tinggi (systematic error ±0.8% pada 100 µL), poros bawah yang dapat diautoklaf pada suhu 121°C, ketahanan terhadap korosi bahan kimia, serta kepatuhan standar RoHS dan ISO 8655."
@@ -451,8 +443,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual mekanis 20–200 µL dengan kenaikan 1 µL, pembacaan digital volume, akurasi tinggi hingga ±0.6%, poros bawah tahan autoklaf, dan sertifikat ISO 8655.",
     description: [
       "DLAB TopPette 20–200 µL menawarkan keandalan dan daya tahan tinggi untuk berbagai pengujian di laboratorium klinis, universitas, dan industri pangan.",
       "Mengadopsi mekanisme pegas ringan yang melindungi pergelangan tangan dari cedera regangan berulang, akurasi sistematik ±0.6% pada 200 µL, kompatibel dengan tips kuning/bening 200 µL universal, poros bawah yang dapat diautoklaf, serta perkakas servis yang disertakan lengkap."
@@ -506,8 +496,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual mekanis varian rentang sempit 50–200 µL untuk presisi ekstra pada batas bawah, kenaikan 1 µL, terkalibrasi ISO 8655, dan bagian bawah tahan autoklaf.",
     description: [
       "DLAB TopPette 50–200 µL dikembangkan untuk pengguna yang memerlukan presisi lebih tinggi pada volume 50–200 µL dibanding varian rentang luas.",
       "Memiliki akurasi sistematik ±0.6% pada 200 µL dan ±1.0% pada 50 µL, dilengkapi display digital yang mudah dibaca, mekanisme pegas lembut rendah gaya tekan, poros bawah yang dapat diautoklaf, serta sertifikat kalibrasi pabrik individual."
@@ -562,8 +550,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Mikropipet manual mekanis 100–1000 µL (1 mL) dengan kenaikan 5 µL, tampilan volume digital, akurasi sistematik ±0.6% pada 1000 µL, kalibrasi ISO 8655, dan bagian bawah tahan autoklaf.",
     description: [
       "DLAB TopPette 100–1000 µL (1 mL) adalah mikropipet kapasitas mililiter yang banyak digunakan untuk pemindahan cairan bervolume sedang, preparasi media kultur, dan reagen diagnostik.",
       "Mengusung pegas berbobot ringan yang nyaman ditekan berulang kali, jendela display volume 4-digit yang jelas, akurasi tinggi (systematic error ±0.6% pada volume nominal 1000 µL), bagian bawah yang dapat diautoklaf pada 121°C, serta sertifikat pengujian mutu individual berbasis standar ISO 8655."
@@ -618,8 +604,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Makropipet manual mekanis rentang 1000–5000 µL (1–5 mL) dengan kenaikan 50 µL, display volume digital, akurasi sistematik ±0.5% pada 5000 µL, bagian bawah tahan autoklaf, dan kalibrasi ISO 8655.",
     description: [
       "DLAB TopPette 1000–5000 µL (1–5 mL) adalah makropipet bervolume besar yang dirancang untuk pemindahan cairan skala mililiter dengan tingkat akurasi yang jauh melampaui gelas ukur atau pipet ukur konvensional.",
       "Dilengkapi pengatur volume presisi dari 1000 hingga 5000 µL dengan kenaikan 50 µL, display digital jelas, akurasi sistematik luar biasa ±0.5% pada 5 mL, pegas berdaya dorong stabil, bagian bawah yang dapat diautoklaf, serta sertifikat kalibrasi individu sesuai ISO 8655."
@@ -665,7 +649,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["methanol hplc", "gradient grade methanol", "pelarut kromatografi", "lichrosolv"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Gradient grade for liquid chromatography LiChrosolv® Reag. Ph Eur, Reag. ChP",
     description: [
       "Methanol gradient grade LiChrosolv® diformulasikan untuk HPLC gradien dengan absorbansi UV rendah dan kadar impuritas yang terkontrol ketat.",
     ],
@@ -699,7 +682,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["acetonitrile hplc", "gradient grade acetonitrile", "lichrosolv"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Gradient grade for liquid chromatography LiChrosolv® Reag. Ph Eur, Reag. ChP",
     description: [
       "Acetonitrile gradient grade LiChrosolv® merupakan pelarut HPLC dengan transmisi UV tinggi, cocok untuk metode gradien yang menuntut baseline stabil.",
     ],
@@ -733,7 +715,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["acetonitrile lcms", "hypergrade acetonitrile", "lichrosolv"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Hypergrade for LC-MS LiChrosolv®",
     description: [
       "Acetonitrile hypergrade for LC-MS LiChrosolv® diproduksi khusus untuk analisis LC-MS dengan latar belakang ion yang sangat rendah.",
     ],
@@ -767,7 +748,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["methanol lcms", "hypergrade methanol", "lichrosolv"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Hypergrade for LC-MS LiChrosolv®",
     description: [
       "Methanol hypergrade for LC-MS LiChrosolv® dirancang untuk analisis spektrometri massa dengan noise latar rendah dan sensitivitas maksimal.",
     ],
@@ -801,7 +781,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["water for chromatography", "lcms water", "air kromatografi", "lichrosolv"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Water for chromatography, LC-MS grade LiChrosolv®",
     description: [
       "Air untuk kromatografi LC-MS grade LiChrosolv® diuji khusus terhadap impuritas pengganggu sehingga aman untuk fase gerak LC-MS.",
     ],
@@ -835,7 +814,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["methanol emsure", "methanol for analysis"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Methanol EMSURE® for analysis adalah pelarut analitik serbaguna untuk preparasi sampel, ekstraksi, dan analisis rutin laboratorium.",
     ],
@@ -869,7 +847,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["ethanol absolute", "ethanol emsure"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Absolute, for analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Ethanol absolute EMSURE® for analysis merupakan pelarut analitik dengan kadar air minimal, cocok untuk analisis instrumental dan preparasi reagen.",
     ],
@@ -903,7 +880,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["ethanol 96%", "extra pure ethanol", "etanol farmasi"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "96%, extra pure, sesuai persyaratan farmakope",
     description: [
       "Ethanol 96% extra pure memenuhi persyaratan farmakope dan banyak digunakan untuk preparasi larutan, desinfeksi permukaan, serta pembersihan alat laboratorium.",
     ],
@@ -937,7 +913,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["acetone emsure", "acetone for analysis"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Acetone EMSURE® for analysis adalah pelarut polar aprotik untuk pembersihan alat gelas, ekstraksi, dan analisis rutin laboratorium.",
     ],
@@ -971,7 +946,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["isopropanol", "2-propanol emsure"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "2-Propanol (isopropanol) EMSURE® for analysis digunakan sebagai pelarut analitik, media pembersih presisi, dan bahan preparasi sampel.",
     ],
@@ -1005,7 +979,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["n-hexane emsure", "hexane for analysis"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS",
     description: [
       "n-Hexane EMSURE® for analysis adalah pelarut nonpolar untuk ekstraksi lipid, analisis residu, dan aplikasi kromatografi.",
     ],
@@ -1039,7 +1012,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["toluene emsure", "toluene for analysis"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Toluene EMSURE® for analysis merupakan pelarut aromatik dengan kemurnian analitik untuk sintesis, ekstraksi, dan analisis instrumental.",
     ],
@@ -1073,7 +1045,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["dichloromethane emsure", "dcm for analysis"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Dichloromethane EMSURE® for analysis adalah pelarut terklorinasi untuk ekstraksi cair-cair dan preparasi sampel analitik.",
     ],
@@ -1107,7 +1078,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["chloroform emsure", "chloroform stabilized"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur; distabilkan dengan ethanol",
     description: [
       "Chloroform EMSURE® for analysis distabilkan dengan ethanol untuk menjaga kestabilan produk selama penyimpanan dan penggunaan analitik.",
     ],
@@ -1141,7 +1111,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["ethyl acetate emsure", "etil asetat"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Ethyl acetate EMSURE® for analysis merupakan pelarut ester dengan kemurnian analitik untuk ekstraksi, kromatografi, dan sintesis.",
     ],
@@ -1175,7 +1144,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["thf", "tetrahydrofuran lichrosolv"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For liquid chromatography LiChrosolv®; mengandung stabilizer",
     description: [
       "Tetrahydrofuran LiChrosolv® untuk kromatografi cair mengandung stabilizer guna mencegah pembentukan peroksida selama penyimpanan.",
     ],
@@ -1209,7 +1177,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["dmso", "dimethyl sulfoxide emsure"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE®",
     description: [
       "Dimethyl sulfoxide (DMSO) EMSURE® for analysis adalah pelarut polar aprotik dengan daya larut tinggi, umum digunakan untuk preparasi larutan stok.",
     ],
@@ -1243,7 +1210,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["acetic acid glacial", "asam asetat glasial"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "100%, for analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Acetic acid glacial 100% EMSURE® for analysis digunakan untuk preparasi buffer, titrasi, dan berbagai aplikasi analitik laboratorium.",
     ],
@@ -1277,7 +1243,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["sulfuric acid emsure", "asam sulfat"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "95-97%, for analysis EMSURE® ISO, Reag. Ph Eur",
     description: [
       "Sulfuric acid 95-97% EMSURE® for analysis merupakan asam mineral kuat untuk destruksi sampel, titrasi, dan preparasi reagen analitik.",
     ],
@@ -1311,7 +1276,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["nitric acid emsure", "asam nitrat"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Minimum 65%, for analysis EMSURE® ISO, Reag. Ph Eur",
     description: [
       "Nitric acid minimum 65% EMSURE® for analysis banyak dipakai untuk destruksi sampel logam dan preparasi sampel AAS/ICP.",
     ],
@@ -1345,7 +1309,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["orthophosphoric acid", "asam fosfat"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "85%, for analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Orthophosphoric acid 85% EMSURE® for analysis digunakan untuk preparasi buffer fosfat dan pengaturan pH fase gerak HPLC.",
     ],
@@ -1379,7 +1342,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["formic acid emsure", "asam format"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "98-100%, for analysis EMSURE® ACS, Reag. Ph Eur",
     description: [
       "Formic acid 98-100% EMSURE® for analysis umum digunakan sebagai aditif fase gerak LC-MS dan reagen analitik.",
     ],
@@ -1413,7 +1375,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["perchloric acid emsure", "asam perklorat"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "70-72%, for analysis EMSURE® ACS",
     description: [
       "Perchloric acid 70-72% EMSURE® for analysis dipakai untuk destruksi sampel dan titrasi non-akuatik dengan penanganan khusus.",
     ],
@@ -1447,7 +1408,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["sodium hydroxide", "naoh pellets"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Pellets, for analysis EMSURE® ISO",
     description: [
       "Sodium hydroxide pellets EMSURE® for analysis digunakan untuk preparasi larutan standar basa, titrasi, dan netralisasi.",
     ],
@@ -1481,7 +1441,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["potassium hydroxide", "koh pellets"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Pellets, for analysis EMSURE®",
     description: [
       "Potassium hydroxide pellets EMSURE® for analysis dipakai untuk preparasi larutan basa alkoholik, saponifikasi, dan titrasi.",
     ],
@@ -1515,7 +1474,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["ammonia solution", "larutan amonia"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "25%, for analysis EMSURE®",
     description: [
       "Ammonia solution 25% EMSURE® for analysis digunakan untuk pengaturan pH, preparasi buffer, dan analisis kompleksometri.",
     ],
@@ -1549,7 +1507,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["sodium chloride emsure", "nacl for analysis"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Sodium chloride EMSURE® for analysis merupakan garam anorganik kemurnian tinggi untuk preparasi larutan salin, buffer, dan media kultur.",
     ],
@@ -1583,7 +1540,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["potassium chloride emsure", "kcl for analysis"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Potassium chloride EMSURE® for analysis digunakan untuk preparasi buffer, larutan elektrolit elektroda pH, dan analisis rutin.",
     ],
@@ -1617,7 +1573,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["sodium carbonate anhydrous", "na2co3"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Anhydrous, for analysis EMSURE® ACS, ISO",
     description: [
       "Sodium carbonate anhydrous EMSURE® for analysis dipakai sebagai standar primer titrasi asam-basa dan bahan preparasi buffer alkalis.",
     ],
@@ -1651,7 +1606,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["sodium hydrogen carbonate", "sodium bicarbonate"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, Reag. Ph Eur",
     description: [
       "Sodium hydrogen carbonate EMSURE® for analysis digunakan untuk preparasi buffer karbonat dan netralisasi larutan asam.",
     ],
@@ -1685,7 +1639,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["disodium hydrogen phosphate", "buffer fosfat"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Dihydrate, for analysis EMSURE®",
     description: [
       "di-Sodium hydrogen phosphate dihydrate EMSURE® adalah komponen utama buffer fosfat untuk aplikasi analitik dan biologi molekuler.",
     ],
@@ -1719,7 +1672,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["potassium dihydrogen phosphate", "kh2po4"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Potassium dihydrogen phosphate EMSURE® for analysis merupakan bahan baku buffer fosfat untuk HPLC dan analisis rutin laboratorium.",
     ],
@@ -1753,7 +1705,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["sodium dihydrogen phosphate monohydrate", "nah2po4"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Monohydrate, for analysis EMSURE® ACS, Reag. Ph Eur",
     description: [
       "Sodium dihydrogen phosphate monohydrate EMSURE® digunakan untuk preparasi buffer fosfat dengan rentang pH yang dapat disesuaikan.",
     ],
@@ -1787,7 +1738,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["ammonium chloride emsure", "nh4cl"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Ammonium chloride EMSURE® for analysis dipakai untuk preparasi buffer amonia dan berbagai reaksi analitik anorganik.",
     ],
@@ -1821,7 +1771,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["magnesium sulfate heptahydrate", "mgso4"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Heptahydrate, for analysis EMSURE® ACS, Reag. Ph Eur",
     description: [
       "Magnesium sulfate heptahydrate EMSURE® for analysis digunakan sebagai sumber ion magnesium pada preparasi larutan dan media analitik.",
     ],
@@ -1855,7 +1804,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["calcium chloride dihydrate", "cacl2"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Dihydrate, for analysis EMSURE® ACS, Reag. Ph Eur",
     description: [
       "Calcium chloride dihydrate EMSURE® for analysis dipakai sebagai sumber ion kalsium dan bahan pengering pada aplikasi laboratorium.",
     ],
@@ -1889,7 +1837,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["copper sulfate pentahydrate", "cuso4"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Pentahydrate, for analysis EMSURE®",
     description: [
       "Copper(II) sulfate pentahydrate EMSURE® for analysis digunakan pada reaksi kolorimetri, uji Fehling/Biuret, dan analisis anorganik.",
     ],
@@ -1923,7 +1870,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["iron(iii) chloride hexahydrate", "fecl3"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Hexahydrate, for analysis EMSURE® ACS, Reag. Ph Eur",
     description: [
       "Iron(III) chloride hexahydrate EMSURE® for analysis umum dipakai untuk uji fenol, reaksi kolorimetri, dan analisis anorganik.",
     ],
@@ -1957,7 +1903,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["potassium iodide emsure", "ki"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ISO, Reag. Ph Eur",
     description: [
       "Potassium iodide EMSURE® for analysis digunakan pada titrasi iodometri, preparasi larutan iodine, dan analisis redoks.",
     ],
@@ -1991,7 +1936,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["iodine resublimed", "i2"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Resublimed, for analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Iodine resublimed EMSURE® for analysis merupakan reagen standar untuk titrasi iodometri dan preparasi larutan iodine.",
     ],
@@ -2025,7 +1969,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["silver nitrate emsure", "agno3"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Silver nitrate EMSURE® for analysis adalah reagen standar untuk titrasi argentometri dan penentuan kadar klorida.",
     ],
@@ -2059,7 +2002,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["boric acid emsure", "asam borat"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Boric acid EMSURE® for analysis digunakan untuk preparasi buffer borat, analisis Kjeldahl, dan aplikasi analitik lainnya.",
     ],
@@ -2093,7 +2035,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["citric acid monohydrate", "asam sitrat"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Monohydrate, for analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Citric acid monohydrate EMSURE® for analysis dipakai untuk preparasi buffer sitrat, pengaturan pH, dan analisis rutin.",
     ],
@@ -2127,7 +2068,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["oxalic acid dihydrate", "asam oksalat"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Dihydrate, for analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Oxalic acid dihydrate EMSURE® for analysis merupakan standar primer untuk standardisasi larutan permanganat dan basa.",
     ],
@@ -2161,7 +2101,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["edta disodium salt dihydrate", "chelating agent"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Ethylenediaminetetraacetic acid disodium salt dihydrate, for analysis EMSURE®",
     description: [
       "EDTA disodium salt dihydrate EMSURE® adalah agen pengkelat standar untuk titrasi kompleksometri dan penentuan kesadahan air.",
     ],
@@ -2195,7 +2134,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["phenolphthalein indicator", "indikator titrasi"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Indicator, ACS reagent / Reag. Ph Eur",
     description: [
       "Phenolphthalein indicator digunakan sebagai indikator titrasi asam-basa dengan perubahan warna pada rentang pH 8.2-10.0.",
     ],
@@ -2229,7 +2167,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["methyl orange indicator", "indikator ph"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "pH indicator",
     description: [
       "Methyl orange adalah indikator pH untuk titrasi asam kuat dengan perubahan warna pada rentang pH 3.1-4.4.",
     ],
@@ -2263,7 +2200,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["potassium permanganate emsure", "kmno4"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "For analysis EMSURE® ACS, ISO, Reag. Ph Eur",
     description: [
       "Potassium permanganate EMSURE® for analysis merupakan oksidator kuat untuk titrasi permanganometri dan uji angka permanganat.",
     ],
@@ -2297,7 +2233,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["hydrogen peroxide 30%", "h2o2 emsure"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "Solution 30%, for analysis EMSURE® ISO",
     description: [
       "Hydrogen peroxide solution 30% EMSURE® for analysis digunakan untuk destruksi sampel, oksidasi, dan preparasi sampel analitik.",
     ],
@@ -2331,7 +2266,6 @@ const productSeeds: ProductSeed[] = [
     keywords: ["hydrochloric acid emsure", "asam klorida", "hcl 37%"],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription: "37%, for analysis EMSURE® ACS,ISO,Reag. Ph Eur",
     description: [
       "Hydrochloric acid EMSURE® ACS,ISO,Reag. Ph Eur merupakan reagen kimia dengan konsentrasi 37% yang diformulasikan untuk kebutuhan analisis laboratorium dengan standar kemurnian tinggi.",
     ],
@@ -2377,8 +2311,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Spektrofotometer UV-Vis Double Beam presisi tinggi dengan bandwidth variabel kontinu 0.5–6.0 nm dan layar sentuh 7 inci.",
     description: [
       "Infitek SP-LUV7600 merupakan spektrofotometer UV-Vis double beam kelas riset yang dilengkapi sistem monokromator Czerny-Turner dengan tingkat stray light sangat rendah (<0.03%).",
       "Instrumen ini memiliki bandwidth spektral yang dapat diatur secara kontinu dari 0.5 nm hingga 6.0 nm (interval 0.1 nm), ditenagai lampu deuterium Hamamatsu berumur pakai lebih dari 2.000 jam, serta kompatibel dengan kontrol perangkat lunak PC canggih.",
@@ -2439,8 +2371,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Double Beam 190–1100 nm dengan bandwidth 2.0 nm, layar sentuh 7 inci, dan dukungan multi-mode pengukuran.",
     description: [
       "Infitek SP-MUV25 dirancang untuk kebutuhan analisis rutin maupun riset di bidang bioteknologi, farmasi, dan lingkungan. Menggunakan sistem double beam dan komponen optik impor yang menjamin akurasi tinggi.",
       "Mendukung pengujian pemindaian panjang gelombang, pemindaian kinetika waktu, regresi linier, hingga analisis DNA/protein, lengkap dengan proteksi data otomatis saat daya mati.",
@@ -2505,8 +2435,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer UV-Vis Double Beam dengan layar sentuh 8 inci, bandwidth 1.8 nm, dan monokromator Czerny-Turner.",
     description: [
       "Infitek SP-IUV7 menghadirkan performa analisis kualitatif dan kuantitatif tingkat lanjut dengan sistem optik Double Beam serta kisi difraksi 1200 lines/mm.",
       "Dilengkapi antarmuka layar sentuh berwarna 8 inci beresolusi tinggi, memori internal kapasitas besar untuk kurva dan spektrum, serta kemampuan integrasi printer eksternal dan PC software.",
@@ -2570,8 +2498,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Visible 325–1100 nm dengan pemroses core ARM, layar sentuh 7 inci, dan built-in thermal printer.",
     description: [
       "Infitek SP-IV2S merupakan spektrofotometer sinar tampak (visible) modern berbasis core processor ARM yang menawarkan kecepatan analisis tinggi untuk pengujian rutin.",
       "Sudah terintegrasi langsung dengan thermal printer di dalam unit sehingga laporan hasil analisis dapat dicetak seketika tanpa memerlukan perangkat tambahan.",
@@ -2633,8 +2559,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer NIR 700–2500 nm metode Integrating Sphere untuk analisis non-destruktif kadar air, lemak, dan protein dalam 1 menit.",
     description: [
       "Infitek SP-LIF460 adalah instrumen Near-Infrared (NIR) dengan sistem difusi pantulan integrating sphere dan rotating sample stage yang ideal untuk sampel serbuk, butiran, maupun padatan tidak rata.",
       "Mampu menganalisis multi-komponen secara simultan (kadar air, lemak, protein, asam amino) dalam waktu kurang dari 1 menit tanpa preparasi sampel yang rumit dan tanpa merusak sampel.",
@@ -2692,8 +2616,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer NIR transmisi 900–2500 nm untuk analisis non-destruktif sampel cairan seperti minyak, alkohol, dan minuman.",
     description: [
       "Infitek SP-LIF430 dirancang khusus untuk analisis cepat sampel cairan berbasis transmisi monokromator grating pada rentang panjang gelombang 900 nm – 2500 nm.",
       "Prosedur pengujian sangat praktis: cukup masukkan sampel cair ke dalam kuvet kuarsa khusus, letakkan di platform, dan hasil multi-komponen akan tampil dalam waktu sekitar 1 menit.",
@@ -2756,8 +2678,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Fluoresensi berkinerja tinggi dengan lampu Xenon Hamamatsu 150W, scan speed hingga 60.000 nm/menit, dan SNR Water Raman ≥350:1.",
     description: [
       "Infitek SP-LF98 merupakan spektrofotometer fluoresensi generasi baru untuk analisis luminesensi molekuler dengan resolusi, rasio signal-to-noise (SNR), dan kecepatan pemindaian ultra-tinggi.",
       "Didukung lampu Xenon 150W dan PMT Hamamatsu, celah spektral teregulasi 1–20 nm, kemampuan volume sampel mikro hingga 0.5 mL, serta kompatibilitas dengan aksesori Fluorescence Quantum Yield.",
@@ -2815,8 +2735,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Fotometer nyala multi-elemen (K, Na, Li, Ca, Ba) dengan layar sentuh 7 inci, penyalaan tombol otomatis, dan flameout protection.",
     description: [
       "Infitek FP-I Series dirancang untuk analisis kuantitatif elemen alkali dan alkali tanah (Kalium, Natrium, Litium, Kalsium, dan Barium) menggunakan bahan bakar LPG yang ekonomis.",
       "Dilengkapi fitur pemantik tombol otomatis, proteksi padamnya api (flameout protection), kompresor udara terintegrasi, serta layar sentuh 7 inci untuk menampilkan kurva dan konsentrasi seketika.",
@@ -2877,8 +2795,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer UV-Vis 190–1100 nm berbasis ARM core dengan layar sentuh 7 inci dan built-in thermal printer terintegrasi.",
     description: [
       "Infitek SP-IUV4S menggabungkan keandalan rentang spektrum ultraviolet hingga sinar tampak (190–1100 nm) dengan kepraktisan built-in thermal printer untuk pelaporan hasil uji secara instan.",
       "Didukung monokromator Czerny-Turner, lampu tungsten dan deuterium berproteksi umur panjang, serta kemampuan spektrum scanning dan pemindaian kinetika waktu.",
@@ -2941,8 +2857,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Double Beam platform optik baru dengan kisi difraksi 1600 lines/mm, lampu Hamamatsu & Osram, serta layar sentuh 8 inci.",
     description: [
       "Infitek SP-IUV8 dan SP-IUV9 dibangun di atas platform optik mutakhir dengan grating 1600 lines/mm, focal length 200 mm, dan stray light sangat rendah (≤0.02% T) untuk kebutuhan riset analitik kritis.",
       "Dilengkapi lampu Deuterium Hamamatsu dan lampu Tungsten OSRAM dengan mekanisme auto-switch ke posisi optimum, serta pengoperasian intuitif melalui layar sentuh 8 inci.",
@@ -2999,8 +2913,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer UV-Vis Double Beam dengan pilihan bandwidth 1 nm / 2 nm, lampu Deuterium Hamamatsu, dan layar sentuh 7 inci.",
     description: [
       "Infitek SP-LUV1910 dan SP-LUV1920 menawarkan stabilitas baseline yang luar biasa berkat sistem optik double beam dengan pemrosesan sinyal umpan balik proporsional digital real-time.",
       "Didukung kisi difraksi holografik 1200 lines/mm, monokromator Czerny-Turner dengan stray light ultra-rendah (<0.03%), serta lampu Deuterium Hamamatsu dan tungsten Osram dengan sistem pencarian posisi optimum otomatis.",
@@ -3058,8 +2970,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer UV-Vis single beam 190–1000 nm dengan layar LCD 2.5 inci, bandwidth 2 nm, dan pengaturan panjang gelombang otomatis.",
     description: [
       "Infitek SP-MUV5100 merupakan spektrofotometer UV-Vis single beam yang andal dan ekonomis untuk analisis rutin laboratorium industri maupun pendidikan.",
       "Dilengkapi lampu deuterium impor, kisi difraksi 1200 lines/mm, kemampuan penetapan kurva standar mandiri, serta memori internal yang mampu menyimpan hingga 200 hasil pengujian.",
@@ -3125,8 +3035,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Spektrofotometer Serapan Atom (AAS) Double Beam 190–900 nm dengan burner titanium anti-korosi dan koreksi latar belakang lampu deuterium.",
     description: [
       "Infitek SP-IAA320 adalah instrumen Atomic Absorption Spectrophotometer (AAS) kelas riset dengan jalur optik total-reflection double beam yang dirancang untuk analisis kuantitatif elemen logam mikro dengan presisi tinggi.",
       "Menggunakan sistem pembakar paduan titanium anti-korosi tanpa pendingin air, atomiser kaca berefisiensi tinggi, sistem jalur gas berproteksi keselamatan otomatis, serta kompatibilitas dengan Graphite Furnace GRD-3202 dan Hydride Generator.",
@@ -3191,8 +3099,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Visible 320–1100 nm dengan prosesor 32-bit ARM, layar LCD 128×64, dan port USB Flashdisk untuk ekspor Excel.",
     description: [
       "Infitek SP-LV723S memadukan sistem pemroses 32-bit ARM berkecepatan tinggi dengan monokromator presisi untuk analisis kuantitatif dan kualitatif rutin di rentang 320–1100 nm.",
       "Mendukung penyimpanan data offline langsung ke flashdisk USB dalam format file Excel, kalibrasi panjang gelombang otomatis, serta integrasi software PC untuk analisis kinetika dan DNA/RNA testing.",
@@ -3248,8 +3154,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Visible ringkas 325–1000 nm dengan grating 1200 lines/mm dan tombol satu sentuhan auto-zero / 100%T.",
     description: [
       "Infitek SP-MV5000 adalah spektrofotometer sinar tampak tingkat dasar yang ringkas, ekonomis, dan sangat mudah dioperasikan untuk analisis fotometri rutin di institusi pendidikan dan laboratorium industri kecil.",
       "Menggunakan kisi monokromator 1200 lines/mm dengan tingkat stray light rendah, kompartemen sampel selebar 120 mm, serta tombol auto-zero dan auto-100%T instan.",
@@ -3310,8 +3214,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Visible ekonomis 340–1000 nm dengan kompartemen sampel luas untuk kuvet path length 5–100 mm (standar holder 50 mm).",
     description: [
       "Infitek SP-IV721G adalah spektrofotometer seri G ekonomis dengan sistem monokromator Czerny-Turner dan pengaturan panjang gelombang manual (turn knob).",
       "Dirancang dengan kompartemen sampel ekstra lebar yang mendukung holder kuvet 5–100 mm, ideal untuk pengujian larutan berkonsentrasi sangat rendah yang membutuhkan panjang lintasan optik lebih panjang.",
@@ -3374,8 +3276,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Visible ultra-kompak (4 kg) 360–1000 nm dengan monokromator C-T tersegel dan bodi plastik tahan asam/basa kuat.",
     description: [
       "Infitek SP-LV721 adalah spektrofotometer sinar tampak ultra-kompak dengan bobot bersih hanya 4 kg, memanfaatkan monokromator C-T bersegel presisi tinggi yang unggul dalam stabilitas dan resolusi.",
       "Bodi dan sel sampel terbuat dari plastik teknik khusus tahan korosi pelarut serta asam/basa kuat, dilengkapi lampu halogen 10W/8V pra-kalibrasi tanpa perlu penyelarasan optik rumit.",
@@ -3437,8 +3337,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer layar sentuh 7 inci dengan teknologi gerbang cahaya otomatis (auto light gate) dan memori 30 kurva kalibrasi.",
     description: [
       "Infitek seri N Plus (SP-IUV752N Plus UV-Vis / SP-IV722N Visible) menghadirkan antarmuka modern layar sentuh 7 inci yang dipadukan dengan monokromator kisi difraksi holografik blazed 1200 lines/mm.",
       "Dilengkapi teknologi Automatic Light Gate untuk melindungi sensor tanpa memerlukan penutup blackbody manual, konversi T-A presisi tinggi, serta kapasitas simpan hingga 30 kurva regresi linier.",
@@ -3504,8 +3402,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Spektrofotometer warna portabel d/8° dengan layar sentuh TFT 3.5 inci, kamera pembidik posisi, sensor CMOS array ganda, dan baterai Li-ion.",
     description: [
       "Infitek SP-CLR301 adalah spektrofotometer warna portabel dengan geometri optik d/8° (SCI & SCE) yang dirancang presisi sesuai standar CIE No.15, ISO, dan ASTM untuk pengukuran spektrum pantulan dan nilai perbedaan warna (ΔE*).",
       "Dilengkapi kamera view-finder terintegrasi untuk pemosisian sampel akurat, layar sentuh kapasitif 3.5 inci, memori berkapasitas lebih dari 20.000 data, serta baterai Li-ion yang sanggup melakukan 5.000 kali pengukuran dalam satu kali pengisian.",
@@ -3572,8 +3468,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer UV-Vis 190–1100 nm dengan lampu Deuterium Hamamatsu, stray light ≤0.05% T, dan fungsi auto-matching kuvet.",
     description: [
       "Infitek SP-LUV759 merupakan spektrofotometer UV-Vis single beam kelas atas yang didukung lampu Deuterium Hamamatsu dan lampu Tungsten Osram dengan tingkat stray light sangat rendah (≤0.05% T).",
       "Memiliki fitur unggulan Auto-matching Cuvettes untuk mengeliminasi deviasi pembacaan akibat perbedaan fisik kuvet, pemindai cepat berbasis prosesor 32-bit ARM, dan penyimpanan data via flashdisk USB.",
@@ -3630,8 +3524,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer warna portabel d/8° dengan dual aperture 8mm/4mm, sumber LED+UV, layar sentuh 3.5 inci, dan konektivitas Bluetooth.",
     description: [
       "Infitek SP-CLR770 adalah spektrofotometer grating portabel dengan struktur optik d/8° (SCI/SCE simultan) yang dilengkapi sumber cahaya LED spektrum penuh plus lampu UV untuk analisis sampel berpendar (fluoresensi).",
       "Memiliki kisi difraksi datar (flat grating) 1000 lines, sensor array photodiode 40 grup, kamera pembidik terintegrasi, dan memori penyimpanan lebih dari 30.000 data pengujian.",
@@ -3698,8 +3590,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Spektrofotometer benchtop kelas laboratorium dengan integrating sphere Φ154 mm, pengukuran reflektansi & transmitansi (Haze ASTM D1003), dan layar sentuh 7 inci.",
     description: [
       "Infitek SP-CLR606 adalah spektrofotometer benchtop presisi tinggi untuk analisis reflektansi dan transmitansi warna serta pengukuran Haze (ASTM D1003) di laboratorium.",
       "Dilengkapi integrating sphere besar Φ154 mm, kisi cekung (concave grating), sensor CMOS array ganda 256 piksel, 4 pilihan bukaan ukur otomatis (Φ25.4/15/8/4 mm), serta kompensasi suhu terintegrasi.",
@@ -3764,8 +3654,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer portabel d/8° dengan dual aperture (8mm & 4mm), lampu LED + UV, kamera pembidik posisi, dan konektivitas Bluetooth 4.0.",
     description: [
       "Infitek SP-CLR306 menggabungkan desain ergonomis dengan sistem optik d/8° dan sumber cahaya gabungan LED + UV untuk pengukuran warna akurat pada sampel standar maupun fluorescent.",
       "Dilengkapi sensor CMOS array ganda 256 elemen, layar sentuh TFT 3.5 inci, kamera pembidik presisi, serta memori internal hingga 20.000 data sampel.",
@@ -3830,8 +3718,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer UV-Vis single beam 190–1100 nm dengan bandwidth 2 nm, penggantian lampu flensa universal, dan tampilan LED 4 digit.",
     description: [
       "Infitek SP-LUV752P adalah spektrofotometer UV-Vis single beam dengan monokromator kisi difraksi C-T 1200 lines/mm yang menawarkan kemudahan penetapan faktor dan pembacaan langsung transmitansi, absorbansi, dan konsentrasi.",
       "Desain mekanis lampu deuterium menggunakan pengencang flensa universal sehingga penggantian lampu hanya memerlukan dua baut tanpa perlu kalibrasi optik ulang.",
@@ -3888,8 +3774,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer UV-Vis Double Beam dengan jalur optik panjang 520 mm, bandwidth tajam 1.8 nm, basis aluminium die-cast 16 mm, dan layar LCD 6 inci.",
     description: [
       "Infitek SP-MUV9000 mengadopsi desain lintasan optik panjang ganda (520 mm long light path) yang terpasang di atas basis aluminium die-cast rigid 16 mm untuk kestabilan mekanik dan resolusi optik prima.",
       "Mendukung spektrum scanning, kurva standar, uji kinetika, multi-wavelength, dan analisis DNA/Protein langsung dari instrumen atau via software PC."
@@ -3948,8 +3832,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Fluoresensi monokromator ganda dengan scan speed hingga 48.000 nm/menit, lampu Xenon Hamamatsu 150W, dan fitur fast 3D scanning.",
     description: [
       "Infitek SP-LF97 Series (SP-LF97 / SP-LF97XP / SP-LF97PRO) dirancang untuk analisis molekuler dengan sensitivitas tinggi (Water Raman SNR ≥200:1) dan kecepatan scanning tercepat di kelasnya mencapai 48.000 nm/menit.",
       "Menggunakan sistem pemantauan rasio dual-beam eksitasi, monokromator ganda Ex/Em 200–900 nm, dan built-in optical gate untuk sampel labil.",
@@ -4006,8 +3888,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer NIR 900–2500 nm dengan detektor Hamamatsu Cooled InGaAs, integrating sphere pantulan baur, dan regresi kalibrasi MPLS/DPLS.",
     description: [
       "Infitek SP-LIF450 menggunakan detektor berpendingin Hamamatsu InGaAs asal Jepang untuk analisis simultan multi-indikator (kelembapan, lemak, protein, asam amino) dalam waktu 1 menit tanpa preparasi bahan kimia.",
       "Dilengkapi integrating sphere diffuse reflection dengan meja putar sampel, modul referensi internal PTFE, serta teknologi kalibrasi MPLS dan analisis kualitatif DPLS.",
@@ -4064,8 +3944,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Fluoresensi 200–900 nm dengan lampu Xenon Hamamatsu 150W, penyesuaian gain 17 tahap, dan scan spektrum ultra-cepat 1 detik.",
     description: [
       "Infitek SP-LF96P menawarkan solusi spektrofluorometri presisi untuk analisis kuantitatif dan kualitatif senyawa runut dengan filter eksitasi interferensi (standar 365 nm) dan monokromator emisi kisi C-T.",
       "Memiliki 17 tingkatan penguatan sinyal (gain), pemindaian spektrum penuh dalam 1 detik, fitur prescan cerdas untuk deteksi puncak otomatis, dan nilai fluoresensi ternormalisasi.",
@@ -4126,8 +4004,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Visible 325–1000 nm dengan optik sumber asferis, kisi difraksi Czerny-Turner, dan kompartemen sampel 4-posisi (1–5 cm).",
     description: [
       "Infitek SP-LV722S menggabungkan optik sumber asferis dan monokromator kisi difraksi Czerny-Turner untuk analisis transmitansi, absorbansi, dan pembacaan konsentrasi langsung.",
       "Dilengkapi kompartemen sampel luas dengan rak 4-posisi yang kompatibel dengan kuvet 1 hingga 5 cm, serta port serial RS-232 untuk printer mikro atau software pemroses data PC.",
@@ -4191,8 +4067,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer warna portabel d/8° dengan sumber cahaya seimbang CLEDs, sistem optik SCS dual-light-paths, dan kalibrasi otomatis ETC.",
     description: [
       "Infitek SP-CLR600 Series (SP-CLR600A Φ10mm / SP-CLR600B Φ4mm & 6mm) dilengkapi teknologi optik mutakhir pemecah berkas SCS single-grating dual-light-paths untuk repetabilitas pengukuran tertinggi.",
       "Menggunakan sumber cahaya seimbang CLEDs spektrum penuh, teknologi kalibrasi ETC (Every Time Calibration), kompensasi kilap (gloss) otomatis, serta kamera pembidik terintegrasi.",
@@ -4257,8 +4131,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer warna ultra-ringan (300 g) dengan basis kalibrasi & pengisian daya nirkabel multifungsi, layar IPS 2.4 inci, dan koneksi Bluetooth.",
     description: [
       "Infitek SP-CLR500C adalah spektrofotometer warna cerdas ultra-ringkas (hanya 300 gram) dengan basis docking multifungsi yang mengintegrasikan pengisian baterai dan kalibrasi otomatis whiteboard saat alat diletakkan.",
       "Mendukung 26 jenis sumber pencahayaan, 20 indeks warna (Whiteness, Yellowness, Opacity, CMYK Density), sensor CMOS 256 piksel, serta kompatibilitas aplikasi Android, iOS, dan Windows via Bluetooth.",
@@ -4317,8 +4189,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Spektrofotometer 45/0° bukaan lebar Φ20 mm dengan sumber LED+UV khusus pengujian faktor kecerahan dan kromatisitas rambu lalu lintas serta film reflektif.",
     description: [
       "Infitek SP-CLR458 mengadopsi geometri optik 45/0° pencahayaan melingkar cincin yang dirancang khusus sesuai standar GB 2893 dan GB/T 18833 untuk pengukuran faktor kecerahan dan koordinat warna rambu lalu lintas, marka jalan, serta stiker reflektif.",
       "Dilengkapi bukaan ukur besar Φ20 mm untuk sampel bertekstur atau tidak rata, sumber cahaya gabungan LED + UV untuk sampel fluoresensi, kisi cekung (concave grating), dan layar sentuh kapasitif 3.5 inci.",
@@ -4383,8 +4253,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer warna d/8° dengan 3 bukaan ukur (11mm, 6mm, dan mikro 1×3mm), kamera pembidik, lampu LED+UV, dan basis docking auto-kalibrasi.",
     description: [
       "Infitek SP-CLR520C adalah spektrofotometer warna cerdas dengan 3 pilihan bukaan ukur switchable (11mm, 6mm, dan celah mikro 1×3mm) untuk mengakomodasi sampel datar luas hingga komponen elektronik sangat kecil.",
       "Dilengkapi kamera terintegrasi, dukungan UV Included/Excluded untuk sampel berpendar, layar IPS 2.4 inci, serta docking base multifungsi untuk pengisian nirkabel dan kalibrasi otomatis instan.",
@@ -4444,8 +4312,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Spektrofotometer portabel d/8° resolusi grating 10 nm MEMS dengan standar kalibrasi keramik ZrO2 tahan cuaca, 3 bukaan ukur, dan layar IPS 3.5 inci.",
     description: [
       "Infitek SP-CLR700D memadukan teknologi kisi difraksi MEMS beresolusi spektral 10 nm dengan sensor dual array berarea luas yang memantau fluktuasi energi cahaya secara simultan selama pengukuran.",
       "Menggunakan standar kalibrasi keramik Zirkonia (ZrO2 R%>90%) yang tahan gores dan cuaca, 3 bukaan ukur tool-free (8mm, 4mm, 1×3mm), sumber LED 360–700 nm + UV, serta lebih dari 30 parameter evaluasi warna.",
@@ -4505,8 +4371,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Instrumen 2-in-1: Spektrofotometer geometri 45/0° dan Gloss Meter 60° terintegrasi untuk evaluasi warna dan kilap permukaan bertekstur.",
     description: [
       "Infitek SP-CLR600G menggabungkan spektrofotometer warna geometri 45/0° (paling sesuai dengan persepsi visual manusia) dan sensor pengukur kilap (gloss) 60° presisi tinggi dalam satu unit portabel.",
       "Sistem pencahayaan cincin melingkar 45° mampu meniadakan efek arah serat material pada permukaan abrasif atau kasar, memungkinkan pengukuran warna dan tingkat kilap (0–1000 GU) secara simultan.",
@@ -4570,8 +4434,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer portabel d/8° dengan mesin optik SCS, sumber CLEDs spektrum seimbang, kalibrasi mandiri ETC, dan repetabilitas ΔE*ab ≤0.015.",
     description: [
       "Infitek SP-CLR660A menawarkan presisi pengukuran warna tingkat tinggi dengan repetabilitas kromatisitas mencapai ΔE*ab ≤0.015 berkat mesin optik pemecah berkas SCS (Single-grating double-beam).",
       "Menggunakan sumber cahaya seimbang CLEDs, sistem kalibrasi mandiri ETC (Every Time Calibration), kompensasi kilap otomatis, kamera pembidik terintegrasi, dan bukaan ukur 10 mm.",
@@ -4636,8 +4498,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer portabel geometri 45/0° bukaan Φ11 mm untuk pengukuran warna konsisten pada komponen interior otomotif dan permukaan bertekstur.",
     description: [
       "Infitek SP-CLR600C merupakan instrumen pengukur warna berdesain kompak dengan geometri 45/0° (pencahayaan cincin melingkar 45°, pengamatan 0°) yang efektif menghilangkan kilap pantulan spekular dari tekstur permukaan.",
       "Sangat ideal untuk pengujian warna suku cadang interior otomotif, tekstil, dan lembaran pelapis logam dengan repetabilitas ΔE*ab ≤0.03 dan memori simpan hingga 20.000 data pengujian.",
@@ -4701,8 +4561,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer 45/0° presisi tinggi dengan dual aperture (8mm/4mm), lampu LED+UV, toleransi poligon rambu jalan, dan layar sentuh 3.5 inci.",
     description: [
       "Infitek SP-CLR456 adalah spektrofotometer 45/0° presisi tinggi dengan dua pilihan bukaan ukur (MAV 8mm/10mm dan SAV 4mm/5mm) yang cocok untuk pengujian laboratorium maupun verifikasi rambu dan marka jalan.",
       "Mengintegrasikan kisi difraksi cekung, sensor array CMOS ganda 256 piksel, sumber cahaya kombinasi LED + UV untuk sampel fluoresensi, serta konektivitas USB dan Bluetooth 4.0.",
@@ -4765,8 +4623,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Fluoresensi berbasis sumber LED kecerahan tinggi (Ex: 250–600 nm) dengan monokromator emisi kisi C-T 200–650 nm.",
     description: [
       "Infitek SP-LF96S menggunakan sumber cahaya dingin High-Brightness LED dengan set panjang gelombang eksitasi standar (365, 376, 392, 405 nm) untuk emisi bebas polusi termal dan umur pakai sangat panjang.",
       "Menggunakan monokromator emisi kisi difraksi konfigurasi Czerny-Turner dengan batas deteksi hingga 1×10⁻¹⁰ g/mL (larutan kuinin sulfat) dan linearitas γ ≥ 0.995.",
@@ -4824,8 +4680,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Fluoresensi kompak dengan sumber LED (365–405 nm), kisi difraksi 1200 lines/mm, dan pengaturan sensitivitas 8 tahap.",
     description: [
       "Infitek seri SP-LF93 (SP-LF93 standar 365 nm / SP-LF93A multi-LED 365, 376, 392, 405 nm) dirancang khusus untuk laboratorium pendidikan dan riset farmasi/klinis dasar.",
       "Menggunakan monokromator emisi kisi 1200 lines/mm dengan cermin pantul non-sferis untuk sensitivitas tinggi, sistem penyesuaian sensitivitas 8 tingkat, serta zero adjustment dan background subtraction otomatis.",
@@ -4881,8 +4735,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer portabel d/8° rentang spektrum luas 360–740 nm dengan lampu Xenon Pulsa + UV, mesin optik SCS, dan kalibrasi otomatis ETC.",
     description: [
       "Infitek SP-CLR650 Series (SP-CLR650A 10mm / SP-CLR650B 4mm & 6mm) ditenagai lampu Xenon Pulsa dengan komponen UV untuk cakupan panjang gelombang ekstra luas 360–740 nm.",
       "Mengadopsi mesin optik pemecah berkas SCS single-grating double-beam, teknologi kalibrasi mandiri ETC, kamera pembidik real-time, serta kompensasi kilap otomatis untuk akurasi warna mutlak.",
@@ -4946,8 +4798,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer warna d/8° dengan sumber CLEDs spektrum seimbang, mesin optik SCS, kamera pembidik, dan pilihan bukaan 10mm / 4mm & 6mm.",
     description: [
       "Infitek SP-CLR580 Series (SP-CLR580A Φ10mm / SP-CLR580B Φ4mm & 6mm) menghadirkan solusi inspeksi warna profesional berbasis sumber cahaya seimbang CLEDs dan mesin optik presisi SCS.",
       "Dilengkapi teknologi Every Time Calibration (ETC), kamera pemosisian real-time, layar true-color, serta perangkat lunak Color QC untuk manajemen formulasi dan pelaporan pengujian warna.",
@@ -5010,8 +4860,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Spektrofotometer Serapan Atom (AAS) kontrol PC penuh dengan platform optik melayang (floated base), turet 8 lampu otomatis, dan tungku grafit suhu tinggi hingga 3000°C.",
     description: [
       "Infitek SP-IAA4530 adalah instrumen Atomic Absorption Spectrophotometer mutakhir yang dikendalikan penuh melalui workstation komputer PC dengan platform optik melayang untuk ketahanan getaran maksimal.",
       "Dilengkapi turret 8 lampu katoda berputar dan pra-pemanasan otomatis, burner titanium 100 mm dengan kontrol gas EPC akurat, proteksi rantai keselamatan otomatis, serta tungku grafit berteknologi kontrol suhu PID berkecepatan pemanasan ≥2000°C/detik.",
@@ -5074,8 +4922,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Spektrofotometer Serapan Atom Double Beam dengan jalur optik pemantulan total (total reflection), burner titanium 10 cm, dan pemroses LCD mandiri.",
     description: [
       "Infitek SP-IAA320 merupakan spektrofotometer serapan atom double-beam yang dirancang untuk mengompensasi pergeseran sumber cahaya dan temperatur secara otomatis demi stabilitas baseline terbaik.",
       "Mengadopsi sistem pemantulan total untuk mengeliminasi aberasi kromatik spektral, burner titanium anti-korosi tanpa pendingin air, serta mendukung integrasi sistem graphite furnace GRD-3202 dan generator hidrida.",
@@ -5140,8 +4986,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "AAS otomatis terintegrasi Flame & Graphite Furnace dengan kisi 1800 lines/mm, ruang atomisasi polimer tahan asam fluorida (HF), turet 6 lampu mandiri, dan autosampler 130 posisi.",
     description: [
       "Infitek SP-IAA1800H adalah spektrometer serapan atom kelas premium yang mengintegrasikan metode Flame dan Graphite Furnace dengan peralihan otomatis satu tombol.",
       "Dilengkapi ruang atomisasi polimer tahan asam kuat (termasuk HF), sistem monokromator kolimasi mandiri dengan kisi 1800 lines/mm berpelapis Shi Ying, autosampler 130 posisi dengan injeksi mikro mulai 0.5 µL, serta kontrol suhu tungku hingga 3000°C/detik.",
@@ -5200,8 +5044,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Sistem tungku grafit (Graphite Furnace) suhu tinggi 20–3000°C 9-tahap dengan daya 7.2 kW untuk analisis unsur logam runut pada AAS SP-IAA320.",
     description: [
       "Infitek GRD-3202 dirancang khusus sebagai sistem tungku grafit terdedikasi untuk analisis kuantitatif elemen runut tingkat ultra-mikro (sub-ppb) yang kompatibel dengan AAS SP-IAA320.",
       "Memiliki pengaturan pemanasan 9 langkah hingga suhu 3000°C, pemantauan alarm tekanan gas dan panas berlebih, antarmuka RS232, serta sensitivitas deteksi ekstrem (Cd ≤1×10⁻¹² g, Cu ≤1×10⁻¹⁰ g).",
@@ -5258,8 +5100,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis merkuri langsung (Direct Mercury Analyzer) metode Cold Vapor AAS dan perangkap emas amalgam tanpa preparasi sampel dengan autosampler 100 posisi.",
     description: [
       "Infitek DMA-5 Series (DMA-5 standar / DMA-5P ultra-low limit 0.001 ng) menggunakan teknologi dekomposisi termal, pengayaan amalgam emas (gold amalgam), dan spektroskopi serapan atom uap dingin (CVAAS 253.7 nm).",
       "Mampu menganalisis kadar merkuri (Hg) pada sampel padat, cair, maupun gas dalam waktu 5 menit per sampel tanpa digesti kimia basah, dilengkapi autosampler 3D 100 posisi untuk operasi mandiri tanpa pengawasan hingga lebih dari 8 jam.",
@@ -5318,8 +5158,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Refraktometer otomatis presisi tinggi dengan sensor CCD resolusi 0.00001 nD, prisma safir/kaca keras, kontrol suhu Peltier 5–85°C, dan layar sentuh hingga 8 inci.",
     description: [
       "Infitek RFT-A7 Series (RFT-A756 kelas riset farmasi / RFT-A733 & RFT-A731 kelas industri) adalah refraktometer digital otomatis berbasis sensor CCD beresolusi tinggi yang hanya memerlukan 0.5 mL sampel non-destruktif.",
       "Dilengkapi pengatur suhu termoelektrik Peltier presisi (±0.02°C), prisma safir tahan gores, sumber LED tahan 100.000 jam (589 nm), memori internal 16 GB, serta kepatuhan penuh regulasi FDA 21 CFR Part 11 dan audit trail.",
@@ -5376,8 +5214,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Refraktometer digital portabel bersertifikasi tahan air & debu IP65 dengan layar warna TFT dan kompensasi suhu otomatis (ATC).",
     description: [
       "Infitek RFT-PD-F Series merupakan refraktometer digital saku dengan proteksi tahan air dan debu IP65 yang ideal untuk penggunaan di area basah, perkebunan, maupun pabrik pengolahan.",
       "Dilengkapi layar warna TFT dengan lampu latar, pembacaan indeks bias dan skala industri khusus (Brix, Baume, Salinitas, Water in Honey), serta daya tahan baterai hingga lebih dari 10.000 kali pengukuran.",
@@ -5434,8 +5270,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Refraktometer Abbe optik klasik dengan pembidikan visual, termometer digital, dan flow cell terintegrasi untuk koneksi water bath konstan.",
     description: [
       "Infitek RFT-A Series (RFT-A1 dan RFT-A2) adalah refraktometer Abbe visual yang dirancang untuk mengukur indeks bias (nD 1.3000–1.7000), dispersi rata-rata (nF-nc), dan kadar Brix (0–95%) pada cairan transparan/semi-transparan serta padatan.",
       "Menggunakan prisma kaca keras tahan gores, kebutuhan sampel hanya 0.1 mL (1–2 tetes), dilengkapi termometer digital dan jaket termostatik untuk pengujian pada suhu terkontrol.",
@@ -5490,8 +5324,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Refraktometer optik genggam (tipe teropong) tanpa baterai untuk pengujian cepat konsentrasi Brix (0–32%, 0–50%, 28–62%) dan salinitas.",
     description: [
       "Infitek RFT-P Series adalah refraktometer genggam analog berbobot ringan (160 gram) yang bekerja murni secara optik tanpa memerlukan daya listrik atau baterai.",
       "Sangat praktis untuk penentuan kadar gula buah matang di kebun, minuman ringan, konsentrasi emulsi oli pemotongan logam (cutting oil), dan larutan garam industri.",
@@ -5544,8 +5376,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Refraktometer digital saku dengan layar LCD besar, kompensasi suhu otomatis, dan pencatu daya baterai 2×AAA.",
     description: [
       "Infitek RFT-PD Series menghadirkan kenyamanan pengukuran indeks bias dan konsentrasi larutan secara digital dalam format portabel bertenaga 2 baterai AAA standar.",
       "Dilengkapi fungsi Automatic Temperature Compensation (ATC), fitur auto shut-down hemat daya, dan opsi rentang pengukuran spesifik untuk industri gula, madu murni, maupun salinitas.",
@@ -5600,8 +5430,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Polarimeter digital otomatis berkecepatan tinggi (8°/detik) berbasis Android OS dengan encoder fotolistrik presisi, kontrol Peltier, prisma Glan-Thompson, dan layar sentuh 10.1 inci.",
     description: [
       "Infitek POL-5 Series merevolusi polarimetri konvensional dengan mengganti mekanisme roda gigi cacing lama menggunakan photoelectric encoder presisi tinggi berkecepatan respon 8°/detik (6 pengukuran dalam 26 detik) dengan tingkat kebisingan sangat rendah.",
       "Didukung prisma polarisasi Glan-Thompson, kontrol suhu Peltier presisi (10–50°C ±0.2°C), sistem operasi cerdas Android pada layar sentuh 10.1 inci, memori internal 128 GB, serta kepatuhan penuh regulasi FDA 21 CFR Part 11.",
@@ -5659,8 +5487,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Polarimeter digital otomatis dengan lampu LED 100.000 jam (589 nm), kontrol suhu Peltier (pada model 2P), dan kemampuan uji ulang otomatis 6 siklus.",
     description: [
       "Infitek POL Series menawarkan pengukuran rotasi optik, rotasi spesifik, konsentrasi, dan skala gula internasional (°Z) yang akurat untuk kendali mutu harian.",
       "Dilengkapi fungsi pengulangan pengukuran otomatis hingga 6 kali dengan kalkulasi nilai rata-rata dan RMS untuk sampel pekat/gelap, serta layar sentuh berwarna 7 inci pada model POL-2P/1P/3.",
@@ -5716,8 +5542,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Refraktometer Abbe digital dengan layar sentuh berwarna (pada A3S), sensor suhu presisi tinggi, koreksi temperatur Brix otomatis, dan rentang nD hingga 1.72000.",
     description: [
       "Infitek RFT-A3S dan RFT-A2S menggabungkan kemudahan pembidikan visual prisma Abbe dengan sistem deteksi digital modern, lampu LED dingin 589 nm bebas kenaikan suhu, dan koreksi otomatis pengaruh temperatur terhadap nilai Brix.",
       "Model RFT-A3S dilengkapi layar sentuh LCD berwarna beresolusi 0.00001 nD (nD 1.30000–1.72000, Brix 0–100%), memori internal 500 data, serta koneksi USB dan RS232.",
@@ -5773,8 +5597,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Density meter berbasis getaran pipa-U (U-tube vibration) dengan kontrol suhu Peltier, kamera video HD 1080P pemeriksa gelembung, dan pompa peristaltik otomatis.",
     description: [
       "Infitek DM Series mengadopsi teknologi getaran pipa-U kaca kuarsa (U-tube vibration) presisi tinggi yang hanya memerlukan sampel 2–3 mL untuk pengujian massa jenis, specific gravity, konsentrasi alkohol, API crude oil, dan Brix.",
       "Dilengkapi pengatur suhu termoelektrik Peltier, kamera resolusi tinggi 1080P untuk inspeksi gelembung secara real-time, sistem operasi Android pada layar sentuh 10.1 inci, pompa peristaltik otomatis, serta kepatuhan penuh standar ASTM D4052, ISO 12185, dan FDA 21 CFR Part 11.",
@@ -5833,8 +5655,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH meter meja presisi tinggi dengan layar 7 inci lampu latar putih, kalibrasi otomatis 1–3 titik, dan proteksi IP54.",
     description: [
       "Infitek PH-100B merupakan pH meter laboratorium meja beresolusi tinggi dengan layar 7 inci yang menyajikan pembacaan pH, ORP (mV), dan temperatur larutan secara jernih.",
       "Dilengkapi pengenalan kalibrasi otomatis 1–3 titik, Automatic Temperature Compensation (ATC), indikator stabilitas pembacaan, kapasitas simpan 450 data, serta koneksi flashdisk USB untuk ekspor data.",
@@ -5895,8 +5715,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Titrator potensiometri otomatis dengan layar sentuh 7 inci, buret resolusi ultra-halus 1/480.000, saluran tahan asam perklorat, multi-mode titrasi, dan kepatuhan GMP.",
     description: [
       "Infitek TITR-A51 adalah titrator potensiometri otomatis kelas atas yang mendukung titrasi potensiometri, fasa bebas air (non-aqueous menggunakan asam perklorat), pengukuran pH, pX, dan konsentrasi ion spesifik (F⁻, Cl⁻, Ca²⁺, dll.).",
       "Memiliki buret presisi resolusi 1/480.000 (5/10/20 mL), multi-mode titrasi (DET, MET, SET, pH konstan, MAT), formula editor terintegrasi, manajemen hierarki 4 level pengguna, serta kepatuhan log audit GLP/GMP.",
@@ -5956,8 +5774,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "pH meter portabel bersertifikasi tahan air IP65 dengan layar LCD 5 inci, baterai lithium isi ulang, dan pengenalan otomatis buffer NIST.",
     description: [
       "Infitek PH-P210E dirancang tangguh dengan perlindungan tahan air IP65 untuk pengujian pH, potensial redoks (mV), dan suhu di area luar ruangan, instalasi pengolahan air limbah, maupun pabrik.",
       "Dilengkapi fungsi Auto-read dan Auto-hold yang otomatis mengunci titik akhir pengukuran stabil, kalibrasi 1–3 titik standar NIST, serta baterai lithium isi ulang berfitur auto-power off.",
@@ -6013,8 +5829,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "pH tester saku ultra-ringan (102 g) dengan probe sensor kaca berkepekaan tinggi, kompensasi suhu otomatis 0–50°C, dan klip saku praktis.",
     description: [
       "Infitek PH-W2 adalah pH tester model pena (pocket size) yang sangat praktis dan mudah dibawa berkat klip saku pada bagian belakang bodi.",
       "Menggunakan probe elektroda kaca khusus dengan transmisi sinyal cepat dan akurat, layar tampilan besar yang mudah dibaca, serta kompensasi temperatur otomatis (ATC 0–50°C).",
@@ -6068,8 +5882,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH meter meja ekonomis dengan layar LCD 6 inci, pengenalan buffer NIST otomatis 1–2 titik, dan elektroda komposit E-201.",
     description: [
       "Infitek PH-B100BD adalah instrumen pengukur pH meja yang dirancang untuk kebutuhan praktikum pendidikan dan laboratorium industri kecil.",
       "Dilengkapi layar LCD 6.0 inci dengan lampu latar, pengenalan otomatis buffer NIST (pH 4.01, 7.00, 10.01), elektroda komposit E-201, dan fungsi reset pengaturan pabrik instan.",
@@ -6129,8 +5941,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kontroler pH/ORP online industri dengan output analog 4–20 mA terisolasi, port RS485 Modbus, relai alarm batas High/Low, dan panel mount 96×96 mm.",
     description: [
       "Infitek PH-OL620 adalah pemancar dan kontroler pH/ORP industri terintegrasi yang dirancang untuk monitoring berkelanjutan pada lini pengolahan air limbah dan proses kimia pabrik.",
       "Mendukung kalibrasi 1–3 titik (USA/NIST buffers), Automatic Temperature Compensation (0–100°C), output sinyal standar 4–20 mA, komunikasi digital RS485, diagnosis kesehatan elektroda otomatis, dan pengaturan histeresis alarm.",
@@ -6186,8 +5996,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Titrator potensiometri otomatis dengan layar sentuh 7 inci, buret presisi resolusi 1/50.000 (10mL/20mL), dan saluran tahan bahan kimia agresif.",
     description: [
       "Infitek TITR-A41 adalah titrator potensiometri otomatis yang andal untuk analisis titrasi asam-basa, titrasi non-aqueous, redoks, presipitasi, dan titrasi kompleksometri.",
       "Dilengkapi layar sentuh LCD 7 inci beresolusi tinggi, kurva titrasi real-time, formula editor terintegrasi, kapasitas simpan 1000 data GLP, serta buret presisi yang tahan terhadap pelarut organik dan asam agresif.",
@@ -6247,8 +6055,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH meter meja LCD 6 inci dengan kompensasi suhu otomatis (pada PH-B200E), kalibrasi 1–3 titik NIST, dan proteksi IP54.",
     description: [
       "Infitek seri PH-B200 (PH-B200E dengan pengukur suhu ATC / PH-B200EM tipe standar) menghadirkan pembacaan pH (-2.00–18.00) dan mV yang stabil melalui layar LCD 6 inci berlampu latar.",
       "Mendukung kalibrasi 1–3 titik dengan pengenalan otomatis buffer NIST (pH 1.68, 4.01, 7.00, 10.01), mode pembacaan Auto-read dan Continuous, penguncian titik akhir stabil, serta memori 50 data.",
@@ -6303,8 +6109,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "pH meter meja presisi tinggi (resolusi 0.001 pH, akurasi ±0.002 pH) dengan layar sentuh 7 inci, kalibrasi hingga 6 titik, dan kepatuhan GLP.",
     description: [
       "Infitek PH-B600L dirancang untuk riset analitik dan laboratorium farmasi yang membutuhkan presisi ekstrem dengan resolusi 0.001 pH dan akurasi ±0.002 pH.",
       "Mengusung antarmuka layar sentuh 7 inci dengan sistem operasi cerdas (manajemen pengguna, metode, kalibrasi, dan log), kalibrasi 1–6 titik (NIST, DIN, GB & Custom), memori 1000 data GLP, serta port USB/RS232.",
@@ -6360,8 +6164,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH meter meja layar sentuh 7 inci dengan dukungan buffer global (DIN, NIST, USA, MERCK, JIS, GB), mode EH ORP khusus, dan kalibrasi 6 titik.",
     description: [
       "Infitek PH-B500T adalah pH/ORP meter meja cerdas yang mendukung standar buffer internasional terlengkap (DIN, NIST, USA, MERCK, JIS, GB) dan kalibrasi hingga 6 titik.",
       "Dilengkapi mode pengukuran EH ORP khusus, rentang suhu luas (-10 s.d. 135°C), layar sentuh 7 inci, penyimpanan 1000 grup data GLP, serta port USB dan RS232 untuk printer, scanner barcode, dan autosampler.",
@@ -6416,8 +6218,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester pH Bluetooth nirkabel dengan kompensasi koefisien suhu air murni (25°C), kalibrasi 1–5 titik, dan koneksi simultan hingga 3 tester.",
     description: [
       "Infitek PH-BT10 merupakan tester pH cerdas berbasis konektivitas nirkabel Bluetooth yang memungkinkan transfer data langsung ke smartphone atau tablet.",
       "Memiliki fitur khusus Solution Temperature Coefficient untuk mengompensasi pembacaan pada sampel air murni (merujuk ke 25°C), kalibrasi 1–5 titik (USA, NIST, DIN & Custom), proteksi kata sandi, dan alarm batas pengukuran.",
@@ -6475,8 +6275,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "pH meter portabel layar sentuh 4.3 inci bersertifikasi IP65 dengan kalibrasi hingga 8 titik buffer global, memori GLP 1000 data, dan baterai lithium.",
     description: [
       "Infitek PH-P510T memadukan kepraktisan perangkat portabel tahan air IP65 dengan kecanggihan layar sentuh berwarna 4.3 inci dan sistem operasi laboratorium cerdas.",
       "Mendukung kalibrasi hingga 8 titik dengan pengenalan otomatis buffer USA, NIST, DIN, GB, MERCK, JIS, memori 1000 grup data GLP, mode EH ORP, serta port USB 2.0 untuk flashdisk, PC, dan scanner barcode.",
@@ -6532,8 +6330,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH meter meja LCD 5.7 inci dengan kalibrasi 1–5 titik, memori GLP 500 data, diagnosis kemiringan elektroda otomatis, dan port ganda USB/RS232.",
     description: [
       "Infitek PH-B300F adalah pH meter meja berkinerja tinggi dengan layar LCD 5.7 inci resolusi tinggi yang mendukung kalibrasi 1–5 titik (NIST, GB, DIN).",
       "Menawarkan mode pembacaan fleksibel (Auto-read, Timed-read, Continuous), kompensasi temperatur ATC/MTC, memori 500 data GLP, serta antarmuka komunikasi ganda USB 2.0 dan RS232 untuk printer.",
@@ -6587,8 +6383,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH meter portabel berperingkat IP65 dengan layar LCD 5 inci, kalibrasi 1–5 titik, memori 500 grup GLP, dan konektivitas USB.",
     description: [
       "Infitek PH-P310F dirancang untuk kebutuhan inspeksi lapangan profesional yang membutuhkan kepatuhan pencatatan data GLP dengan ketahanan bodi IP65 terhadap air dan debu.",
       "Mendukung kalibrasi hingga 5 titik (NIST, GB, DIN), mode Auto-read, Timed-read, Continuous, kapasitas simpan 500 hasil per parameter, serta transfer data langsung ke PC atau printer via USB.",
@@ -6640,8 +6434,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "pH/ORP meter meja ekonomis dengan layar LCD backlight putih, kalibrasi tombol tekan 2 titik, dan konektor BNC standar.",
     description: [
       "Infitek PH-B25CW merupakan pH dan ORP meter meja ekonomis yang cocok untuk sekolah, universitas, dan pengujian kimia umum.",
       "Dilengkapi layar LCD berlampu latar putih, kalibrasi 2 titik dengan tombol tekan (pengenalan otomatis buffer USA pH 4.01/7.00/10.01), serta tampilan kemiringan elektroda otomatis untuk memantau performa sensor.",
@@ -6697,8 +6489,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH meter meja standar dengan layar LCD 6 inci, pengenalan buffer otomatis NIST 1–2 titik, dan proteksi IP54.",
     description: [
       "Infitek PH-B100B menawarkan pengukuran pH (-0.00–14.00) dan mV (±1800 mV) yang presisi dengan akurasi ±0.01 pH untuk kebutuhan operasional laboratorium harian.",
       "Menggunakan layar LCD 6.0 inci dengan lampu latar, kalibrasi 1–2 titik dengan pengenalan otomatis larutan buffer NIST, kompensasi temperatur manual, dan bodi berperingkat proteksi IP54.",
@@ -6751,8 +6541,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "pH/Ion Meter meja dengan layar sentuh 7.0 inci, resolusi 0.001 pH, kalibrasi ion hingga 6 titik (Direct, Standard/Sample Addition, GRAN), dan memori 1000 data GLP.",
     description: [
       "Infitek BEP-M500B dirancang untuk analisis simultan parameter pH, potensial redoks (ORP), pX, dan konsentrasi ion spesifik (ISE) dengan batas deteksi sangat rendah melalui metode elektroda selektif ion.",
       "Mendukung lebih dari 10 metode ion bawaan (F⁻, Cl⁻, Br⁻, I⁻, NO₃⁻, BF₄⁻, NH₄⁺, K⁺, Na⁺, Ca²⁺, Cu²⁺, Pb²⁺, Ag⁺), 4 mode penentuan konsentrasi (Direct Reading, Standard Addition, Sample Addition, GRAN Method), serta layar sentuh berwarna 7 inci.",
@@ -6809,8 +6597,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH meter meja presisi tinggi (resolusi 0.001 pH, akurasi ±0.002 pH) dengan layar LCD 5.7 inci, kalibrasi 5 titik, dan memori 500 data GLP.",
     description: [
       "Infitek PH-B400F menawarkan tingkat akurasi analitik tinggi (±0.002 pH) dengan resolusi 3 desimal (0.001 pH) untuk pengujian mutu yang membutuhkan kepatuhan ketat.",
       "Dilengkapi layar LCD 5.7 inci kontras tinggi, kalibrasi 1–5 titik dengan pengenalan otomatis buffer NIST, GB, DIN, USA, dan MERCK, serta antarmuka komunikasi USB dan RS232.",
@@ -6865,8 +6651,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "pH/Ion Meter portabel bersertifikasi IP65 dengan layar sentuh 4.3 inci, baterai lithium isi ulang, kalibrasi pH hingga 8 titik, dan kalibrasi ion 6 titik.",
     description: [
       "Infitek BEP-M510P menghadirkan kemampuan analisis ion selektif (ISE) dan pH laboratorium ke dalam unit lapangan portabel berlayar sentuh berwarna 4.3 inci yang tahan air (IP65).",
       "Mendukung lebih dari 10 metode ion bawaan, 4 mode pengukuran ion (Direct, Addition, GRAN), memori 1000 data GLP per parameter, serta transfer data praktis via port USB 2.0.",
@@ -6920,8 +6704,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH/Ion Meter meja dengan layar LCD 5.7 inci, resolusi 0.001 pH / pX, kalibrasi pH & ISE hingga 5 titik, dan memori 500 data GLP.",
     description: [
       "Infitek BEP-M400B merupakan instrumen pH dan Ion selektif meja berkinerja tinggi yang dirancang untuk analisis kuantitatif ion dan pH larutan dengan ketepatan tinggi.",
       "Dilengkapi layar LCD 5.7 inci, kalibrasi 1–5 titik (pH & ISE), dukungan metode Direct Reading, Standard Addition, Sample Addition, GRAN Mode, serta memori simpan 500 data GLP.",
@@ -6974,8 +6756,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH/Ion Meter meja standar dengan layar LCD 5.7 inci, akurasi ±0.01 pH, kalibrasi 1–5 titik, dan memori 500 hasil uji GLP.",
     description: [
       "Infitek BEP-M300B menyediakan solusi pengujian ion dan pH meja yang efisien dan ekonomis untuk laboratorium analitik umum dan institusi pendidikan.",
       "Mendukung kalibrasi 1–5 titik dengan pengenalan otomatis buffer standar, mode analisis konsentrasi ion bawaan, kompensasi temperatur otomatis (ATC), serta bodi berperingkat proteksi IP54.",
@@ -7028,8 +6808,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis multi-parameter portabel (pH, Daya Hantar Listrik / EC, Ion / ISE, Resistivitas, TDS, Salinitas) dengan layar sentuh 4.3 inci dan bodi tahan air IP65.",
     description: [
       "Infitek BEP-M510A menggabungkan pengukuran pH presisi (0.001 pH), konduktivitas rentang luas (hingga 3000 mS/cm), resistivitas, TDS, salinitas, dan konsentrasi ion spesifik (ISE) dalam satu instrumen lapangan yang tangguh.",
       "Dilengkapi layar sentuh LCD berwarna 4.3 inci, baterai lithium isi ulang, memori 1000 grup data GLP, serta soket konektor tahan air terpisah untuk elektroda pH/ISE dan probe konduktivitas ber-ATC.",
@@ -7086,8 +6864,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Stasiun penganalisis kualitas air meja all-in-one (pH, EC, ISE, Oksigen Terlarut / DO, TDS, Salinitas, Resistivitas) dengan layar sentuh 7.0 inci dan kompensasi tekanan barometrik otomatis.",
     description: [
       "Infitek BEP-M500T adalah instrumen multi-parameter meja kelas premium yang menggabungkan seluruh modul pengujian elektrokimia: pH presisi tinggi, konduktivitas hingga 2000 mS/cm, ISE, serta Oksigen Terlarut (DO Polarografi hingga 99.99 ppm).",
       "Dilengkapi kompensasi tekanan barometrik otomatis, koreksi faktor salinitas manual untuk DO, layar sentuh berwarna 7.0 inci, memori 1000 data GLP per parameter, serta port USB/RS232.",
@@ -7144,8 +6920,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester saku 5-in-1 (pH, TDS, EC, Salinitas, Suhu) dengan layar VA berpanel akrilik, sensor kelas industri, dan perlindungan tahan air IP65.",
     description: [
       "Infitek BEP-M51X adalah tester kualitas air saku multifungsi 5-in-1 untuk pengukuran cepat pH, TDS, konduktivitas listrik (EC), salinitas, dan temperatur larutan.",
       "Dilengkapi sensor kelas industri berakurasi tinggi, layar VA yang jernih dengan pelindung panel akrilik, bodi ABS tahan air IP65, serta fitur mati daya otomatis 5 menit untuk menghemat baterai.",
@@ -7201,8 +6975,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis multi-parameter portabel lengkap (pH, EC, ISE, DO Polarografi, TDS, Salinitas, Resistivitas) berlayar sentuh 4.3 inci dengan proteksi IP65.",
     description: [
       "Infitek BEP-M510T adalah alat ukur kualitas air portabel terlengkap yang memadukan elektroda pH/ISE, probe konduktivitas hingga 3000 mS/cm, dan sensor Oksigen Terlarut (DO Polarografi hingga 99.99 ppm).",
       "Memiliki layar sentuh berwarna 4.3 inci, bodi tangguh bersertifikasi tahan air IP65, kompensasi tekanan barometrik otomatis, memori 1000 data GLP per parameter, serta baterai lithium isi ulang.",
@@ -7258,8 +7030,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis kualitas air meja (pH, EC, ISE, DO, TDS, Salinitas, Resistivitas) dengan layar LCD 5.7 inci, kalibrasi multi-titik, dan memori 500 data GLP.",
     description: [
       "Infitek BEP-M300F menghadirkan fleksibilitas uji multi-parameter meja (pH, konduktivitas hingga 1000 mS/cm, konsentrasi ion, Oksigen Terlarut hingga 20 ppm, TDS, dan salinitas).",
       "Dilengkapi layar LCD 5.7 inci beresolusi tinggi, kompensasi barometrik otomatis untuk sensor DO, memori 500 data per parameter, serta port komunikasi ganda USB 2.0 dan RS232.",
@@ -7313,8 +7083,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis kualitas air portabel berperingkat IP65 dengan layar LCD 3.5 inci, pengukuran multi-parameter (pH, EC, DO, ISE, TDS, Salinitas), dan memori 500 data.",
     description: [
       "Infitek BEP-M310F dirancang untuk memudahkan pemantauan kualitas air di lapangan dengan bodi tahan air IP65 dan bobot ringan (400 gram).",
       "Mendukung pengukuran pH, konduktivitas hingga 500 mS/cm, Oksigen Terlarut (DO hingga 50 ppm), TDS, salinitas, dan ion spesifik, dilengkapi baterai lithium isi ulang dan port USB untuk koneksi PC.",
@@ -7369,8 +7137,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Meter kualitas air meja komprehensif dengan layar LCD 6.5 inci, kalibrasi 1–5 titik untuk pH/EC/ISE, kompensasi air murni, dan kit elektroda terpadu.",
     description: [
       "Infitek BEP-M900 adalah meter kualitas air meja komprehensif yang dilengkapi layar LCD 6.5 inci dengan lampu latar, mendukung pengukuran simultan pH, ORP, konsentrasi ion (ISE), konduktivitas, TDS, salinitas (PSU & ppt), resistivitas, dan Oksigen Terlarut (DO).",
       "Mendukung pemilihan konstanta sel K=0.1/1/10, kompensasi linear & air murni, koreksi tekanan barometrik & salinitas untuk DO, kapasitas simpan 500 set data, serta paket lengkap elektroda pH, EC, dan DO.",
@@ -7429,8 +7195,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Meter kualitas air portabel 8-in-1 (pH, ORP, Ion, EC, TDS, Salinitas PSU/ppt, Resistivitas, DO) dengan layar LCD 3.5 inci dan catu daya multi-mode (baterai AA / USB / adaptor).",
     description: [
       "Infitek BEP-M900P mengemas seluruh kemampuan analisis kualitas air tingkat lanjut (termasuk mode salinitas air laut praktis PSU) ke dalam instrumen genggam yang ringkas dan fleksibel.",
       "Didukung skema daya multi-mode (3 baterai AA, port USB, atau adaptor DC 5V), layar LCD 3.5 inci berlampu latar, memori 500 set data, serta tas koper penyimpanan yang memuat seluruh sensor elektroda dan larutan kalibrasi.",
@@ -7492,8 +7256,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Konduktivitimeter meja kelas atas dengan rentang ultra-luas 0.000 μS/cm hingga 3000 mS/cm, layar sentuh 7.0 inci, kompensasi air murni, dan kepatuhan GLP.",
     description: [
       "Infitek CON-B600L dikembangkan khusus untuk manajemen kualitas air kelas tinggi dan kontrol otomatis pada sistem air distilasi bertingkat medis, air umpan boiler, serta air kondensat suhu tinggi (hingga 130°C).",
       "Mengusung layar sentuh 7.0 inci, rentang ukur konduktivitas hingga 3000 mS/cm, resistivitas hingga 100 MΩ·cm, kompensasi temperatur khusus Pure Water, memori 1000 grup data GLP, serta port USB dan RS232.",
@@ -7550,8 +7312,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter meja layar sentuh 7.0 inci dengan rentang ukur hingga 2000 mS/cm, pengenalan standar kalibrasi ganda, dan memori 1000 data GLP.",
     description: [
       "Infitek CON-B500T adalah instrumen pengukur konduktivitas, resistivitas, TDS, dan salinitas meja berbasis layar sentuh berwarna 7.0 inci dengan sistem operasi cerdas.",
       "Mendukung kalibrasi 1–5 titik dengan pengenalan otomatis 8 nilai larutan standar internasional, kompensasi temperatur ATC/MTC (-10 s.d. 135°C), serta integrasi data GLP yang komprehensif.",
@@ -7607,8 +7367,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Konduktivitimeter portabel bersertifikasi tahan air IP65 dengan layar sentuh 4.3 inci, rentang ukur hingga 3000 mS/cm, dan baterai lithium isi ulang.",
     description: [
       "Infitek CON-P510T memadukan performa tinggi rentang ukur konduktivitas 0.000 μS/cm hingga 3000 mS/cm dengan portabilitas bodi tahan air IP65 dan antarmuka layar sentuh berwarna 4.3 inci.",
       "Mendukung kalibrasi 1–5 titik otomatis, kompensasi temperatur suhu tinggi (-10 s.d. 135°C), mode kompensasi Pure Water, memori 1000 grup data GLP, serta baterai lithium isi ulang yang tahan lama.",
@@ -7662,8 +7420,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter meja LCD 5.7 inci dengan rentang ukur hingga 1000 mS/cm, kompensasi air murni (pure water), dan kapasitas simpan 500 data GLP.",
     description: [
       "Infitek CON-B300F dirancang untuk pengujian konduktivitas, resistivitas, TDS, dan salinitas pada sistem air distilasi medis dan instalasi penukar panas bersuhu tinggi (hingga 110°C).",
       "Dilengkapi layar LCD 5.7 inci beresolusi tinggi, kalibrasi 1–3 titik dengan pengenalan otomatis standar konduktivitas, kompensasi temperatur ATC/MTC, memori 500 data GLP, serta port USB dan RS232.",
@@ -7718,8 +7474,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter portabel tahan air IP65 dengan layar LCD 3.5 inci, rentang ukur hingga 500 mS/cm, memori 500 data GLP, dan baterai lithium isi ulang.",
     description: [
       "Infitek CON-P310F menawarkan fleksibilitas pengukuran konduktivitas, TDS, salinitas, dan resistivitas di lapangan dengan perlindungan bodi tahan air dan debu IP65.",
       "Mendukung kalibrasi otomatis 1–3 titik, kompensasi temperatur ATC/MTC, memori internal 500 data berstandar GLP, serta port USB untuk koneksi ke PC atau printer.",
@@ -7773,8 +7527,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter meja dengan layar LCD 6.0 inci berlampu latar, rentang ukur 0.00 μS/cm hingga 200 mS/cm, dan proteksi IP54.",
     description: [
       "Infitek CON-B200E menyediakan pengukuran konduktivitas, TDS, dan temperatur yang andal untuk kebutuhan laboratorium kendali mutu harian dan praktikum sains.",
       "Dilengkapi layar LCD 6.0 inci, kalibrasi 1 titik dengan pengenalan otomatis larutan standar (84 μS/cm, 1413 μS/cm, 12.88 mS/cm), konstanta sel yang dapat diatur, serta memori simpan 50 data.",
@@ -7827,8 +7579,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Konduktivitimeter portabel bersertifikasi tahan air IP65 dengan layar LCD 3.5 inci, rentang 0.00 μS/cm hingga 200 mS/cm, dan baterai lithium.",
     description: [
       "Infitek CON-P210E dirancang praktis dan tangguh untuk pengujian daya hantar listrik (konduktivitas) dan TDS di lingkungan luar ruangan dengan proteksi IP65.",
       "Dilengkapi layar LCD 3.5 inci berlampu latar, kompensasi suhu otomatis ATC, kapasitas simpan 200 hasil per parameter, serta baterai lithium isi ulang dengan auto-power off.",
@@ -7882,8 +7632,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Meter Oksigen Terlarut (DO) meja polarografi dengan layar sentuh 7.0 inci, kompensasi tekanan barometrik otomatis, koreksi faktor salinitas, dan memori 1000 data GLP.",
     description: [
       "Infitek DO-B500T merupakan instrumen pengukur Oksigen Terlarut (DO) meja presisi tinggi berbasis sensor polarografi dengan rentang konsentrasi 0.00 hingga 99.99 ppm dan saturasi hingga 600%.",
       "Dilengkapi kompensasi tekanan udara atmosfer otomatis (satuan kPa, mbar, Torr, Atm), koreksi faktor salinitas manual, antarmuka layar sentuh 7.0 inci, memori 1000 grup data GLP, serta port USB dan RS232.",
@@ -7940,8 +7688,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Meter Oksigen Terlarut (DO) portabel polarografi bersertifikasi IP65 dengan layar sentuh 4.3 inci, baterai lithium isi ulang, dan memori 1000 data GLP.",
     description: [
       "Infitek DO-P510T menghadirkan kemampuan pengukuran Oksigen Terlarut (DO Polarografi hingga 99.99 ppm) ke dalam format portabel berlayar sentuh berwarna 4.3 inci yang tahan air IP65.",
       "Dilengkapi kompensasi tekanan barometrik otomatis, koreksi salinitas manual, kalibrasi air jenuh udara / titik nol, memori 1000 data GLP, serta port USB untuk ekspor data langsung ke flashdisk.",
@@ -7998,8 +7744,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Meter Oksigen Terlarut (DO) portabel metode optik (luminesensi) bebas polarisasi dan tanpa larutan elektrolit, layar sentuh 4.3 inci, dan proteksi IP65.",
     description: [
       "Infitek DO-P511T menggunakan teknologi sensor optik luminesensi mutakhir untuk pengukuran Oksigen Terlarut (DO 0.00–20.00 ppm) yang tidak mengonsumsi oksigen selama pengukuran dan tidak memerlukan penggantian membran/elektrolit rutin.",
       "Dilengkapi antarmuka layar sentuh berwarna 4.3 inci, bodi tahan air IP65, kompensasi tekanan barometrik otomatis, memori 1000 data GLP, serta baterai lithium isi ulang berbobot ringan (300 gram).",
@@ -8054,8 +7798,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Meter Oksigen Terlarut (DO) meja polarografi dengan layar LCD 5.7 inci, rentang hingga 99.99 ppm, kompensasi tekanan barometrik, dan memori 500 data GLP.",
     description: [
       "Infitek DO-B400F adalah instrumen pengukur Oksigen Terlarut (DO) meja yang andal dengan rentang ukur 0.00 hingga 99.99 ppm berbasis sensor polarografi.",
       "Dilengkapi layar LCD 5.7 inci beresolusi tinggi, kompensasi tekanan barometrik otomatis, koreksi faktor salinitas manual, memori simpan 500 data GLP, serta port USB dan RS232.",
@@ -8109,8 +7851,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Meter Oksigen Terlarut (DO) portabel polarografi bersertifikasi IP65 dengan layar LCD, rentang ukur hingga 50.00 ppm, memori 1000 data GLP, dan baterai lithium.",
     description: [
       "Infitek DO-P310F dirancang untuk pemantauan kadar Oksigen Terlarut (DO hingga 50.00 ppm) di lapangan dengan perlindungan bodi tahan air dan debu IP65.",
       "Mendukung kalibrasi air jenuh udara atau titik nol, kompensasi tekanan barometrik otomatis, koreksi salinitas manual, memori simpan 1000 grup data GLP, serta port USB untuk ekspor data.",
@@ -8163,8 +7903,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Meter Oksigen Terlarut (DO) portabel tahan air IP65 dengan rentang 0.00–20.00 mg/L, kompensasi temperatur otomatis, dan kapasitas simpan 200 hasil.",
     description: [
       "Infitek DO-P210E menawarkan kemudahan pengukuran kadar Oksigen Terlarut (DO) dan saturasi oksigen pada sampel perairan alami dan kolam budidaya.",
       "Dilengkapi layar LCD berlampu latar, kompensasi temperatur ATC/MTC, koreksi tekanan barometrik & salinitas manual, kapasitas simpan 200 data, serta baterai lithium isi ulang berfitur auto-power off.",
@@ -8217,8 +7955,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester Oksigen Terlarut (DO) saku ekonomis dengan elektroda polarografi DO100, layar LCD baris ganda, kompensasi suhu otomatis, dan daya tahan baterai 200 jam.",
     description: [
       "Infitek DO-P10 adalah tester Oksigen Terlarut (DO) model pena saku yang ringkas dan ekonomis untuk penentuan kadar oksigen (0.0–20.0 mg/L) secara langsung di lapangan.",
       "Menggunakan elektroda polarografi DO100 yang mudah dirawat, kompensasi temperatur otomatis (0–40°C), layar LCD baris ganda, serta paket lengkap yang memuat larutan elektrolit, membrane cap, dan kotak jinjing.",
@@ -8278,8 +8014,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Tester Oksigen Terlarut (DO) nirkabel Bluetooth untuk Android dengan kalkulasi otomatis nilai BOD, OUR, dan SOUR, serta koneksi simultan hingga 3 tester.",
     description: [
       "Infitek DO-BT60 adalah tester Oksigen Terlarut nirkabel pintar yang terhubung langsung via Bluetooth ke smartphone atau tablet Android untuk pemantauan dan analisis data komprehensif.",
       "Mendukung 4 mode pengujian khusus (Dissolved Oxygen, BOD, Oxygen Uptake Rate / OUR, dan Specific Oxygen Uptake Rate / SOUR), kalibrasi 1–2 titik, alarm batas pengukuran, serta koneksi multi-parameter hingga 3 tester sekaligus.",
@@ -8336,8 +8070,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kontroler Oksigen Terlarut (DO) online industri dengan output analog 4–20 mA terisolasi, port RS485 Modbus, relai alarm batas High/Low, dan panel mount 96×96 mm.",
     description: [
       "Infitek DO-OL680 adalah pemancar dan kontroler Oksigen Terlarut industri terintegrasi yang dirancang untuk monitoring aerasi berkelanjutan pada bak pengolahan limbah dan kolam tambak industri.",
       "Dilengkapi elektroda DO industri IE-80T, kalibrasi 1–2 titik, Automatic Temperature Compensation (0–40°C), output analog 4–20 mA, antarmuka komunikasi RS485, relai alarm High/Low independen, serta format panel mount 96×96 mm.",
@@ -8398,8 +8130,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Konduktivitimeter portabel bersertifikasi IP65 dengan layar LCD 3.5 inci, rentang ukur 0.00 μS/cm hingga 100 mS/cm, dan baterai lithium.",
     description: [
       "Infitek CON-P110B merupakan instrumen pengukur daya hantar listrik (konduktivitas) portabel yang praktis dan ekonomis dengan perlindungan bodi tahan air IP65.",
       "Dilengkapi layar LCD 3.5 inci berlampu latar, mode pembacaan kontinu dengan indikator stabil, konstanta sel yang dapat diatur, serta baterai lithium isi ulang berfitur mati otomatis.",
@@ -8452,8 +8182,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "pH meter portabel tahan air IP65 dengan layar LCD 5 inci, pengenalan buffer NIST otomatis 1–2 titik, dan baterai lithium isi ulang.",
     description: [
       "Infitek PH-P110B menyediakan solusi pengukuran pH (-0.00–14.00 pH) dan potensial redoks (±1400 mV) yang praktis untuk inspeksi lapangan dengan ketahanan bodi IP65.",
       "Dilengkapi kalibrasi 1–2 titik dengan pengenalan otomatis larutan buffer NIST, mode pembacaan kontinu dengan indikator stabil, serta baterai lithium isi ulang berfitur auto-power off.",
@@ -8508,8 +8236,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Tester pH saku berujung elektroda datar (flat surface) khusus pengukuran pH tanah lembap, krim kosmetik, gel, kertas, kulit, dan bahan padat.",
     description: [
       "Infitek PH-P20F dirancang khusus dengan sensor elektroda kaca permukaan datar (flat surface pH electrode) yang memungkinkan pengukuran pH langsung pada permukaan semi-padat seperti tanah, kosmetik, kulit, gel, dan kertas tanpa perlu melarutkannya ke dalam cairan.",
       "Dilengkapi kalibrasi tombol tekan 2 titik dengan pengenalan otomatis buffer USA, Automatic Temperature Compensation (0–60°C), modul elektroda yang dapat diganti mandiri, bodi tahan air, dan daya tahan baterai hingga 150 jam.",
@@ -8562,8 +8288,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH/Ion Meter portabel berperingkat IP65 dengan layar LCD 3.5 inci, kalibrasi pH & ISE 1–5 titik, memori 1000 grup GLP, dan baterai lithium.",
     description: [
       "Infitek BEP-M310P dirancang untuk pengukuran praktis konsentrasi ion spesifik (ISE) dan pH di lapangan dengan batas deteksi rendah menggunakan elektroda selektif ion.",
       "Mendukung 4 mode penentuan konsentrasi ion (Direct Reading, Standard Addition, Sample Addition, GRAN Mode), lebih dari 10 metode ion bawaan (F⁻, Cl⁻, NO₃⁻, Ca²⁺, dll.), kapasitas simpan 1000 grup data GLP, serta port USB untuk koneksi PC/printer.",
@@ -8619,8 +8343,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Tester saku multifungsi 7-in-1 (TDS, pH, EC, Salinitas, Specific Gravity / S.G, ORP, Suhu) dengan sensor industri dan layar VA berpanel akrilik.",
     description: [
       "Infitek BEP-M71X adalah tester kualitas air saku 7-in-1 tingkat lanjut yang menambahkan parameter Berat Jenis (Specific Gravity: 0–1.222) dan Potensial Redoks (ORP: ±990 mV) di samping pH, TDS, konduktivitas (EC), dan salinitas.",
       "Dilengkapi sensor kelas industri berakurasi tinggi, layar VA berlampu latar dengan pelindung panel akrilik, bodi ABS tahan air IP65, serta kemasan kotak keras berpemanis nampan plastik.",
@@ -8675,8 +8397,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Stasiun penganalisis multi-parameter meja (pH, EC, ISE, Resistivitas, TDS, Salinitas) dengan layar sentuh 7.0 inci, kalibrasi buffer global, dan memori 1000 data GLP.",
     description: [
       "Infitek BEP-M500A adalah penganalisis multi-parameter meja canggih yang memadukan modul pengukuran pH beresolusi 0.001 pH, konduktivitas hingga 2000 mS/cm, resistivitas hingga 100 MΩ·cm, konsentrasi ion spesifik (ISE), TDS, dan salinitas.",
       "Mengusung antarmuka layar sentuh 7.0 inci, sistem manajemen cerdas (pengguna, metode, kalibrasi, dan log), kompensasi temperatur ATC/MTC (-10 s.d. 135°C), serta integrasi USB dan RS232.",
@@ -8731,8 +8451,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis kualitas air portabel berperingkat IP65 dengan layar LCD 3.5 inci, pengukuran 6 parameter (pH, EC, ISE, DO, TDS, Salinitas), memori 1000 data GLP, dan baterai lithium.",
     description: [
       "Infitek BEP-M310T memadukan portabilitas bodi tahan air IP65 dengan kapabilitas pengujian multi-parameter elektrokimia lengkap termasuk Oksigen Terlarut (DO hingga 50 ppm) dan konduktivitas hingga 1000 mS/cm.",
       "Dilengkapi kompensasi tekanan barometrik otomatis, koreksi faktor salinitas manual, memori 1000 grup data GLP, serta port USB untuk transfer data ke PC atau printer.",
@@ -8790,8 +8508,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Stasiun kerja multi-parameter meja modular 4-kanal dengan layar sentuh 7.0 inci, kebebasan kombinasi 3 modul (pH/ISE, EC, DO), dan rentang konduktivitas hingga 3000 mS/cm.",
     description: [
       "Infitek BEP-M600L adalah instrumen multi-parameter unggulan dengan arsitektur modular 4-kanal bebas kustomisasi yang memungkinkan pengguna mengombinasikan modul pH/ISE, konduktivitas (hingga 3000 mS/cm), dan Oksigen Terlarut (DO Polarografi hingga 99.99 mg/L) sesuai kebutuhan laboratorium.",
       "Mengusung layar sentuh 7.0 inci dengan sistem operasi cerdas komprehensif, kepatuhan penuh GLP, manajemen log, kompensasi temperatur suhu tinggi (hingga 130°C), serta port USB dan RS232.",
@@ -8848,8 +8564,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester pH saku tahan air dengan membran sensitif sirkular, kalibrasi tombol tekan 2 titik, dan modul elektroda lepas-pasang.",
     description: [
       "Infitek PH-P10S adalah tester pH saku tahan air yang dirancang untuk pengujian cepat pada kolam renang, spa, akuarium, dan praktikum pendidikan.",
       "Dilengkapi membran sensitif sirkular yang merespon pH cairan secara menyeluruh, kalibrasi 2 titik dengan pengenalan otomatis buffer USA, fungsi Hold pembacaan angka, dan modul elektroda yang dapat diganti mandiri.",
@@ -8903,8 +8617,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter meja standar dengan layar LCD 6 inci, rentang ukur 0.00 μS/cm hingga 100 mS/cm, dan proteksi IP54.",
     description: [
       "Infitek CON-B100B menyediakan solusi pengujian konduktivitas listrik meja yang ekonomis dan mudah digunakan untuk laboratorium kendali mutu umum.",
       "Dilengkapi layar LCD 6.0 inci berlampu latar, mode pembacaan kontinu dengan indikator stabil, konstanta sel yang dapat diatur, serta proteksi bodi IP54.",
@@ -8958,8 +8670,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester salinitas & konduktivitas saku dengan sel platinum presisi, layar LCD baris ganda, kompensasi temperatur otomatis, dan rentang salinitas hingga 80.00 ppt.",
     description: [
       "Infitek SAL-P Series (SAL-P10: 0–10.00 ppt / SAL-P20: 0–80.00 ppt) mengintegrasikan sensor konduktivitas sel platinum untuk pengukuran salinitas, konduktivitas, dan suhu dengan respon sangat cepat.",
       "Dilengkapi kalibrasi 1–3 titik dengan pengenalan otomatis standar konduktivitas, kompensasi temperatur otomatis (ATC 0–60°C), layar LCD baris ganda, serta fungsi Auto-Read pengunci titik akhir stabil.",
@@ -9015,8 +8725,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Meter konduktivitas meja presisi dengan fungsi khusus pengukuran Kadar Abu Konduktivitas Gula (Conductivity Ash pada model BEP-M150) dan memori 1000 data.",
     description: [
       "Infitek BEP-M150 dan BEP-M151 dirancang khusus untuk industri gula dan laboratorium pengujian mutu terakreditasi untuk mengukur konduktivitas, TDS, salinitas, resistivitas, serta kadar abu konduktivitas gula (Conductivity Ash).",
       "Mendukung kalibrasi 1–3 titik otomatis, kompensasi linear/non-linear/air murni, mode salinitas air laut praktis, alarm batas pengukuran, proteksi kata sandi, serta kapasitas simpan 1000 data pengujian.",
@@ -9073,8 +8781,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter meja digital dengan layar LCD kustom, kalibrasi hingga 5 titik (pada M950), dan rentang ukur 0.01 μS/cm hingga 200.0 mS/cm.",
     description: [
       "Infitek seri BEP-M510 (standar EC/TDS) dan BEP-M950 (lengkap EC/TDS/Salinitas/Resistivitas) menawarkan performa fotometri elektrokimia tinggi dengan akurasi hingga ±0.5% FS.",
       "Dilengkapi kalibrasi multi-titik otomatis, diagnosis elektroda mandiri, kompensasi temperatur otomatis (0–100°C), memori simpan hingga 500 data (M950), serta antarmuka komunikasi USB.",
@@ -9129,8 +8835,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter portabel dengan layar LCD kustom 80×60 mm, daya tahan baterai 150 jam, kalibrasi hingga 5 titik, dan memori 500 data.",
     description: [
       "Infitek BEP-M Series menghadirkan 4 pilihan model konduktivitimeter portabel: M520 (Konduktivitas dasar), M530 (+TDS), M531 (+Salinitas), dan M540 (+Resistivitas/TDS/Salinitas).",
       "Dilengkapi kalibrasi multi-titik otomatis, diagnosis elektroda, kompensasi linear/non-linear/air murni, daya tahan baterai hingga 150 jam (3 baterai AA atau adaptor DC 5V), serta port USB.",
@@ -9186,8 +8890,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester konduktivitas saku multi-rentang dengan pilihan mode TDS (CON-P30) & Salinitas (CON-P40), layar LCD baris ganda, dan daya baterai 200 jam.",
     description: [
       "Infitek CON-P Series adalah tester konduktivitas model pena saku yang ringkas dan praktis untuk pengukuran harian di lapangan.",
       "Tersedia model CON-P20 (Konduktivitas), CON-P30 (Konduktivitas + TDS), dan CON-P40 (Konduktivitas + Salinitas) dengan kalibrasi 1–3 titik otomatis, kompensasi temperatur ATC, dan baterai tahan 200 jam.",
@@ -9244,8 +8946,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Tester konduktivitas nirkabel Bluetooth dengan sensor platinum, kepatuhan kompensasi farmakope USP/EP, uji Conductivity Ash, dan proteksi kata sandi.",
     description: [
       "Infitek CON-BT50 Series (CON-BT50-M rentang menengah 10μS–20mS / CON-BT50-H rentang tinggi 100μS–200mS) terhubung langsung via Bluetooth ke smartphone atau tablet untuk analisis kualitas air dan kadar abu konduktivitas gula.",
       "Dilengkapi sensor platinum presisi tinggi, kompensasi temperatur non-linear dan air murni standar USP/EP, alarm batas toleransi, proteksi PIN 6 digit, serta dukungan koneksi simultan bersama tester pH dan DO Bluetooth.",
@@ -9300,8 +9000,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter portabel bersertifikasi IP65 dengan layar sentuh berwarna 4.3 inci, rentang ukur hingga 1000 mS/cm, memori 1000 data GLP, dan baterai lithium.",
     description: [
       "Infitek CON-P310T menghadirkan kenyamanan antarmuka layar sentuh berwarna 4.3 inci ke dalam perangkat pengukur konduktivitas lapangan yang tahan air IP65.",
       "Mendukung pengukuran konduktivitas (hingga 1000 mS/cm), resistivitas, TDS, dan salinitas, kalibrasi 1–3 titik otomatis, kompensasi temperatur linear & air murni, serta kapasitas simpan 1000 data GLP.",
@@ -9358,8 +9056,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Titrator otomatis kelas unggulan dengan sistem saluran masuk 4-kanal simultan, buret internal resolusi 1/150.000, konektivitas cloud server Ethernet, dan dukungan autosampler 16 posisi.",
     description: [
       "Infitek TITR960 Series (TITR960 BASIC dan TITR960 Pro ber-Audit Trail) mengadopsi sistem saluran masuk sinkron campuran 4-kanal (Mixed Synchronous Inlet System) untuk penambahan titran dan reagen pembantu secara otomatis.",
       "Dilengkapi buret internal berkeamanan tinggi dengan resolusi 1/150.000 (pilihan 1/5/10/25 mL), konektivitas Ethernet untuk penyimpanan database ke server Cloud, kontrol PC penuh, serta kompatibilitas dengan autosampler 16 posisi untuk otomasi pengujian tanpa pengawasan manusia.",
@@ -9421,8 +9117,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Titrator potensiometri otomatis dengan layar LCD panduan pintar (smart guide), buret presisi resolusi mekanis 1/10.000 (10mL/20mL), dan multi-mode titrasi (DET, MET, SET, MAT).",
     description: [
       "Infitek TITR-A40 adalah titrator potensiometri otomatis yang mengeliminasi subjektivitas indikator warna manual pada larutan keruh atau pekat dengan akurasi dan repetabilitas tinggi.",
       "Dilengkapi layar LCD dengan sistem panduan pintar, dukungan mode titrasi lengkap (DET, MET, SET, MAT), kalibrasi dan pengukuran pH terintegrasi, penyimpanan 50 data GLP dan 1 kurva titrasi terbaru, serta port USB dan RS232.",
@@ -9476,8 +9170,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter meja dengan layar LCD 6.0 inci, kompensasi temperatur manual (MTC), rentang 0.00 μS/cm hingga 200 mS/cm, dan proteksi IP54.",
     description: [
       "Infitek CON-B200EM menawarkan kepraktisan pengukuran konduktivitas listrik (EC) dan TDS larutan untuk aplikasi manajemen kualitas air industri dan praktikum laboratorium.",
       "Dilengkapi layar LCD 6.0 inci beresolusi tinggi, kalibrasi 1 titik dengan pengenalan otomatis larutan standar (84 μS/cm, 1413 μS/cm, 12.88 mS/cm), konstanta sel yang dapat disesuaikan, serta kapasitas simpan 50 data.",
@@ -9533,8 +9225,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Konduktivitimeter meja presisi tinggi (akurasi ±0.5% FS) dengan layar LCD 7 inci, rentang ukur hingga 1000 mS/cm, kompensasi air murni, dan memori 500 data GLP.",
     description: [
       "Infitek CON-B400F dirancang untuk pengujian analitik kritis kualitas air murni medis, boiler, dan sistem penukar panas bersuhu tinggi (-10 s.d. 135°C).",
       "Mengusung layar LCD 7 inci beresolusi tinggi, akurasi tinggi ±0.5% FS, resistivitas hingga 100 MΩ·cm, kalibrasi 1–3 titik otomatis, kompensasi suhu linear & pure water, serta port USB/RS232.",
@@ -9589,8 +9279,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Titrator potensiometri ekonomis dengan pengaduk magnetik terintegrasi, layar LCD, mode titrasi titik akhir terprogram (SET) dan manual (MAT).",
     description: [
       "Infitek TITR-A20 adalah titrator potensiometri tingkat dasar yang efisien untuk analisis titrasi asam-basa dan redoks pada larutan yang memiliki warna atau kekeruhan pekat.",
       "Dilengkapi pengaduk magnetik (stirrer) bawaan, layar LCD, mode titrasi titik akhir terprogram (SET / Preset Endpoint Titration) dan titrasi manual (MAT), serta kompatibel dengan buret kaca eksternal.",
@@ -9648,8 +9336,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis kualitas air meja multi-parameter (pH, EC, ISE, TDS, Salinitas, Resistivitas) dengan layar LCD 5.7 inci, kalibrasi multi-titik, dan memori 500 data GLP.",
     description: [
       "Infitek BEP-M300A menyediakan solusi pengujian kualitas air multi-parameter meja (pH, konduktivitas hingga 1000 mS/cm, konsentrasi ion spesifik, resistivitas, TDS, dan salinitas) yang lengkap dan ekonomis.",
       "Dilengkapi layar LCD 5.7 inci beresolusi tinggi, kompensasi temperatur otomatis ATC/MTC, memori 500 data per parameter berstandar GLP, serta port USB dan RS232.",
@@ -9704,8 +9390,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis kualitas air portabel bersertifikasi IP65 dengan layar LCD 3.5 inci, pengukuran 5 parameter (pH, EC, ISE, TDS, Salinitas), dan memori 500 data GLP.",
     description: [
       "Infitek BEP-M310A adalah alat ukur kualitas air portabel yang dirancang untuk pengujian parameter elektrokimia lengkap (pH, konduktivitas hingga 500 mS/cm, konsentrasi ion, TDS, dan salinitas) di segala medan lingkungan.",
       "Dilengkapi bodi tahan air dan debu IP65, baterai lithium isi ulang berfitur hemat daya, memori 500 data GLP, serta port USB untuk koneksi ke PC atau printer.",
@@ -9760,8 +9444,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "pH meter portabel tahan air IP65 dengan layar LCD 5 inci, kalibrasi 1–5 titik, kapasitas simpan besar 1000 grup data GLP, dan baterai lithium.",
     description: [
       "Infitek PH-P310T dirancang untuk memenuhi kebutuhan pencatatan data lapangan yang masif dengan kapasitas simpan hingga 1000 grup data berstandar GLP.",
       "Dilengkapi layar LCD 5.0 inci berlampu latar, kalibrasi 1–5 titik dengan pengenalan otomatis buffer NIST, GB, dan DIN, diagnosis elektroda otomatis (slope & offset), serta port USB untuk koneksi ke PC atau printer.",
@@ -9815,8 +9497,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester pH saku tahan air dengan elektroda panjang (panjang bodi 240 mm) khusus pengukuran sampel volume mikro dalam tabung reaksi atau wadah berleher sempit.",
     description: [
       "Infitek PH-P10L dirancang dengan elektroda pH batang panjang yang memudahkan pengukuran pH langsung pada tabung reaksi sempit, botol berleher kecil, atau sampel cairan bervolume minim.",
       "Dilengkapi kalibrasi tombol tekan 2 titik dengan pengenalan otomatis buffer USA, fungsi Hold pembekuan angka, modul elektroda lepas-pasang, serta bodi tahan air.",
@@ -9869,8 +9549,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester pH saku tahan air dengan membran datar (flat surface) resolusi 0.1 pH untuk pengukuran langsung pada semi-padatan, kulit, kertas, dan makanan.",
     description: [
       "Infitek PH-P10F menggunakan membran sensor datar (flat surface) yang memungkinkan pengukuran pH langsung pada permukaan semi-padat seperti kulit, kertas, keju, daging, dan produk kosmetik.",
       "Dilengkapi kalibrasi 2 titik dengan pengenalan otomatis buffer USA, fungsi Hold pembacaan, modul sensor lepas-pasang, serta bodi tahan air yang mudah dibersihkan.",
@@ -9923,8 +9601,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester pH saku resolusi 0.01 pH dengan elektroda bohlam kaca sirkular, kompensasi suhu otomatis 0–60°C, dan bodi tahan air.",
     description: [
       "Infitek PH-P20S adalah tester pH saku ekonomis beresolusi 0.01 pH yang dilengkapi elektroda bohlam kaca sirkular untuk kontak cairan yang optimal.",
       "Dilengkapi Automatic Temperature Compensation (ATC 0–60°C), kalibrasi 2 titik dengan pengenalan otomatis buffer USA, fungsi Hold pembacaan angka, dan modul elektroda lepas-pasang.",
@@ -9977,8 +9653,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester pH saku resolusi 0.01 pH dengan elektroda panjang (240 mm), kompensasi suhu otomatis 0–60°C, dan bodi tahan air.",
     description: [
       "Infitek PH-P20L mengombinasikan resolusi presisi 0.01 pH dengan batang elektroda panjang 240 mm untuk menjangkau sampel dalam wadah berleher sempit atau tabung reaksi dalam.",
       "Dilengkapi kompensasi temperatur otomatis (ATC 0–60°C), kalibrasi 2 titik dengan pengenalan otomatis buffer USA, fungsi Hold, serta modul elektroda lepas-pasang.",
@@ -10032,8 +9706,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Tester pH saku presisi tinggi (akurasi ±0.01 pH) dengan layar LCD baris ganda, elektroda bohlam kaca sirkular, kalibrasi 1–3 titik (USA/NIST), dan daya tahan baterai 200 jam.",
     description: [
       "Infitek PH-P30S menawarkan akurasi analitik tingkat tinggi (±0.01 pH pada rentang -1.00 hingga 15.00 pH) dalam format saku dengan layar LCD baris ganda yang menampilkan pH dan suhu secara bersamaan.",
       "Dilengkapi kalibrasi 1–3 titik dengan pengenalan otomatis buffer USA dan NIST, kompensasi temperatur otomatis (ATC), fungsi Auto-Read pengunci hasil stabil, serta pencatu daya 2 baterai AAA berdaya tahan 200 jam.",
@@ -10088,8 +9760,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Tester pH saku presisi tinggi (akurasi ±0.01 pH) dengan elektroda permukaan datar (flat surface), layar LCD baris ganda, kalibrasi 1–3 titik, dan baterai AAA 200 jam.",
     description: [
       "Infitek PH-P30F menggabungkan akurasi tinggi (±0.01 pH) dengan elektroda kaca permukaan datar khusus untuk pengukuran langsung pada semi-padatan, kulit, kertas, daging, dan kosmetik tanpa melarutkannya.",
       "Dilengkapi layar LCD baris ganda menampilkan pH dan suhu, kalibrasi 1–3 titik (USA/NIST), kompensasi temperatur otomatis (ATC), fungsi Auto-Read, serta baterai 2×AAA berdaya tahan 200 jam.",
@@ -10143,8 +9813,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester pH saku presisi tinggi (akurasi ±0.01 pH) dengan batang elektroda panjang 240 mm, layar LCD baris ganda, kalibrasi 1–3 titik, dan baterai AAA.",
     description: [
       "Infitek PH-P30L memadukan akurasi tinggi (±0.01 pH) dengan batang elektroda panjang (panjang total 240 mm) untuk pengukuran pH dan suhu secara simultan pada tabung reaksi sempit dan wadah dalam.",
       "Dilengkapi kalibrasi 1–3 titik dengan pengenalan otomatis buffer USA dan NIST, kompensasi temperatur otomatis (ATC), fungsi Auto-Read pengunci hasil stabil, serta baterai 2×AAA tahan 200 jam.",
@@ -10199,8 +9867,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Tester pH saku berakurasi tinggi (±0.01 pH) dengan soket BNC universal yang mendukung koneksi ke beragam elektroda pH khusus, layar LCD baris ganda, dan baterai AAA.",
     description: [
       "Infitek PH-P40 adalah tester pH saku unik yang dilengkapi soket konektor BNC standar universal, memungkinkan pengguna menghubungkan berbagai jenis elektroda pH khusus (elektroda kaca mikro, spear tip, flat surface, atau elektroda kabel panjang).",
       "Dilengkapi akurasi tinggi ±0.01 pH, rentang ukur -1.00 hingga 15.00 pH, kalibrasi 1–3 titik otomatis (USA/NIST), kompensasi suhu manual (0–100°C), fungsi Auto-Read, serta daya tahan baterai 200 jam.",
@@ -10253,8 +9919,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester ORP (Potensial Redoks) nirkabel Bluetooth dengan rentang ±2000.0 mV, akurasi ±0.2 mV, kalibrasi offset 1 titik, dan koneksi simultan hingga 3 tester.",
     description: [
       "Infitek ORP-BT20 adalah tester potensial reduksi-oksidasi (ORP) nirkabel berbasis Bluetooth yang terhubung langsung ke perangkat Android untuk pemantauan parameter redoks larutan secara real-time.",
       "Dilengkapi mode pengukuran milivolt relatif dan absolut, akurasi tinggi ±0.2 mV, kalibrasi offset 1 titik, fungsi Auto-Read pengunci hasil stabil, alarm batas pengukuran, serta dukungan koneksi simultan bersama tester pH dan DO.",
@@ -10308,8 +9972,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester konduktivitas saku dengan sel platinum (pilihan rentang rendah CON-P10L, menengah CON-P10M, tinggi CON-P10H), kompensasi suhu otomatis, dan bodi tahan air.",
     description: [
       "Infitek CON-P10 Series menghadirkan 3 opsi tester konduktivitas saku terspesialisasi: CON-P10L (1.0–199.9 μS/cm untuk cairan konduktivitas rendah), CON-P10M (10–1999 μS/cm untuk umum), dan CON-P10H (0.1–19.99 mS/cm untuk larutan konduktivitas tinggi).",
       "Menggunakan sensor sel konduktivitas platinum yang cepat dan stabil, kalibrasi 1 titik dengan tombol tekan, Automatic Temperature Compensation (0–50°C), fungsi Hold pembacaan angka, serta modul sensor lepas-pasang.",
@@ -10365,8 +10027,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Konduktivitimeter meja klasik dengan layar LCD kustom 120×60 mm berlampu latar, kalibrasi 1–3 titik otomatis, dan rentang ukur hingga 200.0 mS/cm.",
     description: [
       "Infitek BEP-12DW adalah meter konduktivitas meja klasik yang andal untuk pengukuran daya hantar listrik cairan di rentang 0.01 μS/cm hingga 200.0 mS/cm.",
       "Dilengkapi pengenalan otomatis 5 larutan standar konduktivitas (10µS s.d. 111.8mS), kompensasi temperatur otomatis/manual (0–100°C), fungsi Auto-Read pengunci titik akhir stabil, serta konstanta sel yang dapat diatur (K=0.1, 1, 10).",
@@ -10420,8 +10080,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Meter kesadahan air meja dengan dukungan multi-satuan (°dH, °fH, °e, mg/L CaCO3/CaO/Ca2+, mmol/L), kalibrasi 2–5 titik, dan memori 500 data USB.",
     description: [
       "Infitek BEP-M922 dirancang khusus untuk penentuan kesadahan air presisi tinggi dengan rentang luas 0.05 hingga 200 mmol/L dan konversi otomatis ke berbagai satuan internasional.",
       "Dilengkapi kalibrasi 2–5 titik konsentrasi, kompensasi temperatur otomatis (0–50°C), layar LCD kustom 125×100 mm, memori 500 set data, alarm pengingat kalibrasi, serta port USB untuk transfer data ke komputer.",
@@ -10474,8 +10132,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Meter kesadahan air portabel dengan dukungan multi-satuan (°dH, °fH, °e, mg/L CaCO3), kalibrasi 2–5 titik, memori 500 data, dan daya baterai AA / USB.",
     description: [
       "Infitek BEP-M322 menghadirkan kemampuan pengukuran kesadahan air laboratorium ke dalam instrumen portabel berbobot ringan (300 gram).",
       "Mendukung pemilihan satuan kesadahan lengkap (mmol/L, mg/L, °dH, °e, °fH), kalibrasi konsentrasi 2–5 titik, kompensasi temperatur otomatis (0–50°C), kapasitas simpan 500 data, serta konektivitas USB.",
@@ -10529,8 +10185,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Tester ion air nirkabel Bluetooth untuk Android dengan 5 metode analisis ion (Direct, Addition, Subtraction), kalibrasi 2–5 titik, dan memori 3 kurva elektroda.",
     description: [
       "Infitek ION-BT30 adalah tester ion selektif (ISE) nirkabel pintar berbasis konektivitas Bluetooth yang terhubung ke smartphone atau tablet Android untuk penentuan konsentrasi ion spesifik secara digital.",
       "Mendukung 5 metode pengukuran ion (Direct Reading, Known Addition/Subtraction, Sample Addition/Subtraction), manajemen penyimpanan hingga 3 kemiringan (slope) elektroda, kalibrasi 2–5 titik, serta rentang potensial ±2000.0 mV.",
@@ -10584,8 +10238,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester TDS saku multi-rentang (hingga 20.00 ppt) dengan layar LCD baris ganda, kalibrasi 1–3 titik otomatis, faktor TDS yang dapat diatur, dan baterai AAA 200 jam.",
     description: [
       "Infitek TDS-P20 adalah tester TDS saku multi-rentang berkinerja tinggi yang mampu mengukur dari 0 hingga 20.00 ppt dengan akurasi ±1% FS.",
       "Dilengkapi layar LCD baris ganda yang menyajikan nilai TDS dan temperatur secara simultan, kalibrasi otomatis 1–3 titik, faktor konversi TDS yang dapat disesuaikan (0.1–1.0), fungsi Auto-Read, serta daya tahan baterai 200 jam.",
@@ -10639,8 +10291,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester TDS saku ekonomis rentang rendah (0.5–100.0 ppm) dengan resolusi 0.1 ppm, kalibrasi 1 titik tombol tekan, dan kompensasi suhu otomatis.",
     description: [
       "Infitek TDS-P10L dirancang khusus untuk mendeteksi padatan terlarut total pada sampel air murni dan air minum deionisasi dengan resolusi halus 0.1 ppm.",
       "Dilengkapi kalibrasi 1 titik tombol tekan menggunakan larutan kustom, kompensasi temperatur otomatis (ATC 0–50°C), fungsi Hold pembekuan angka, serta modul elektroda yang dapat diganti mandiri.",
@@ -10693,8 +10343,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester TDS saku rentang menengah (5–1000 ppm) dengan resolusi 1 ppm, kalibrasi 1 titik, kompensasi temperatur otomatis, dan baterai tahan 150 jam.",
     description: [
       "Infitek TDS-P10M adalah pilihan ideal untuk pengujian harian air keran, air sumur, dan akuarium dengan rentang ukur 5 hingga 1000 ppm.",
       "Menggunakan kalibrasi tombol tekan 1 titik, Automatic Temperature Compensation (0–50°C), fungsi penahan pembacaan (Hold), dan modul sensor lepas-pasang.",
@@ -10747,8 +10395,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester TDS saku rentang tinggi (0.05–10.00 ppt) dengan resolusi 0.01 ppt, kalibrasi 1 titik tombol tekan, dan kompensasi temperatur otomatis.",
     description: [
       "Infitek TDS-P10H dikhususkan untuk sampel cairan berkonsentrasi padatan terlarut tinggi seperti air payau, larutan nutrisi hidroponik pekat, dan limbah cair industri (0.05 hingga 10.00 ppt).",
       "Dilengkapi kalibrasi 1 titik, kompensasi temperatur otomatis (ATC 0–50°C), fungsi Hold pembacaan angka, modul elektroda lepas-pasang, serta bodi saku tahan air.",
@@ -10803,8 +10449,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Tester kesadahan air nirkabel Bluetooth dengan sensor solid-state, konversi 7 satuan kesadahan (°dH, °e, °fH, gpg, CaCO3, CaO, Ca2+), dan kalibrasi 2–5 titik.",
     description: [
       "Infitek HAD-BT40 memanfaatkan teknologi sensor solid-state presisi tinggi yang terhubung via Bluetooth ke smartphone atau tablet Android untuk analisis kesadahan air total secara digital.",
       "Mendukung 7 satuan kesadahan internasional, kalibrasi 2–5 titik konsentrasi (0.01 s.d. 100 mmol/L), rentang potensial ±2000.0 mV, alarm batas pengukuran, proteksi kata sandi, serta koneksi simultan bersama tester konduktivitas dan DO Bluetooth.",
@@ -10861,8 +10505,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Tester ORP saku dengan rentang ±999 mV, akurasi ±2 mV, kalibrasi offset 1 titik, dan pilihan sensor lembaran platinum (P10) atau soket BNC untuk elektroda suhu tinggi (P20).",
     description: [
       "Infitek ORP-P Series (ORP-P10 terintegrasi sensor lembaran platinum / ORP-P20 dengan soket BNC untuk elektroda seri 501/504) menyediakan pengukuran potensial reduksi-oksidasi yang akurat.",
       "Dilengkapi mode pengukuran milivolt absolut dan relatif, kalibrasi offset 1 titik, layar LCD baris ganda, fungsi Auto-Read pengunci hasil stabil, serta daya tahan baterai 200 jam.",
@@ -10921,8 +10563,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kontroler konduktivitas & TDS online industri dengan output analog 4–20 mA, port RS485 Modbus, relai alarm batas High/Low, dan panel mount 96×96 mm.",
     description: [
       "Infitek CON-OL650 adalah pemancar dan kontroler konduktivitas/TDS industri terintegrasi untuk pemantauan berkelanjutan pada sistem pengolahan air murni, air pendingin, dan proses industri.",
       "Dilengkapi elektroda industri IE-50MT (opsional IE-50LT untuk air murni <10μS atau IE-50HT untuk air laut >20mS), kalibrasi 1–3 titik, Automatic Temperature Compensation (0–100°C), output 4–20 mA, komunikasi digital RS485, dan format panel mount 96×96 mm.",
@@ -10984,8 +10624,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kolorimeter klorin portabel metode DPD spektrofotometri untuk pengujian Sisa Klor (0.01–1.5 mg/L) & Klor Total (0.01–3 mg/L) dengan layar LCD 4.3 inci, baterai lithium 10 jam, dan memori 5000 data.",
     description: [
       "Infitek RCTC-Y1030 adalah kolorimeter portabel presisi tinggi yang menggunakan metode spektrofotometri DPD standar untuk menentukan konsentrasi Sisa Klor (Residual Chlorine) dan Klor Total (Total Chlorine) secara langsung tanpa konversi manual.",
       "Dilengkapi layar LCD berwarna 4.3 inci dengan navigasi grafis GUI, panel tombol membran tahan 1 juta tekanan, sumber cahaya dingin pita sempit (masa pakai 100.000 jam), chip prosesor mikro T5L berkapasitas memori 500 MB (menyimpan >5.000 data), serta baterai lithium tahan 10 jam.",
@@ -11049,8 +10687,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis multi-parameter lapangan tangguh berperingkat IP67 dengan GPS terintegrasi, baterai raksasa 9000 mAh, konektor penerbangan IP68, dan dukungan elektroda Amonia Nitrogen (NH4-N) serta DO Optik.",
     description: [
       "Infitek BEP-269 adalah stasiun analisa kualitas air lapangan kelas industri tangguh yang memadukan controller genggam IP67 dengan sensor-sensor submersible IP68 berfitur plug-and-play otomatis.",
       "Dilengkapi modul GPS untuk penandaan lokasi sampling otomatis, baterai lithium berkapasitas besar 9000 mAh, kapasitas simpan 10.000 data per parameter, serta kemampuan mengukur pH, DO Fluoresensi Optik, Konduktivitas 2-kawat grafit, ORP, Amonia Nitrogen (0–100 mg/L), Nitrat (NO₃⁻), Klorida (Cl⁻), TDS, dan Salinitas.",
@@ -11113,8 +10749,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Titrator Karl Fischer all-in-one yang menggabungkan metode Volumetrik (100μg–250mg) dan Kulometrik (3μg–200mg) dengan layar sentuh 7 inci, solvent manager tertutup, dan dukungan metode pemanasan oven.",
     description: [
       "Infitek TITR-50VC adalah instrumen titrasi Karl Fischer mutakhir yang mengintegrasikan metode Volumetrik (untuk kadar air tinggi/konstan) dan Kulometrik (untuk kadar air jejak/mikro ppm) dalam satu sistem terpadu.",
       "Dilengkapi unit Solvent Manager tertutup anti-bocor dan anti-tumpah untuk pengisian dan pembuangan reagen aman, dukungan metode sampler oven untuk sampel padat/gas sukar larut, layar sentuh 7.0 inci, memori 2000 data GLP/GMP, serta manajemen hierarki 3 level pengguna.",
@@ -11176,8 +10810,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Titrator Karl Fischer dengan pilihan model Volumetrik (TITR-41V: 0.1–250 mg) atau Kulometrik (TITR-41C: 10 μg–200 mg), layar sentuh 7 inci, dan solvent manager tertutup.",
     description: [
       "Infitek seri TITR-41 (TITR-41V Volumetrik dan TITR-41C Kulometrik) menyediakan solusi penetapan kadar air otomatis yang handal dan aman.",
       "Dilengkapi solvent manager terintegrasi untuk penanganan reagen bebas tumpahan, layar sentuh berwarna 7.0 inci, koreksi drift latar belakang otomatis/manual, kapasitas simpan 200 data GLP, serta port USB dan RS232.",
@@ -11237,8 +10869,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Titrator Karl Fischer presisi tinggi dengan sistem operasi cerdas, pilihan model Volumetrik (TITR-50V: 100μg–250mg) atau Kulometrik (TITR-50C: 3μg–200mg), dan memori 2000 data GLP/GMP.",
     description: [
       "Infitek TITR-50V (Volumetrik) dan TITR-50C (Kulometrik) menghadirkan presisi analitik tinggi dengan repetabilitas ≤0.3% dan resolusi hingga 0.1 μg untuk pengujian kadar air sesuai regulasi farmasi ketat.",
       "Dilengkapi sistem operasi cerdas dengan manajemen pengguna 3 tingkat, log GMP untuk pelacakan data, kapasitas simpan 2000 kumpulan data pengujian, solvent manager otomatis, serta integrasi printer, barcode scanner, dan timbangan analitik.",
@@ -11296,8 +10926,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis kadar air halogen layar sentuh 5 inci dengan kapasitas 110 g, keterbacaan hingga 0.001 g (0.01% moisture), pemanas halogen 40–160°C, dan kurva dinamis real-time.",
     description: [
       "Infitek MCA110-T Series (T10E 0.01g / T5E 0.005g / T1E 0.001g) dirancang untuk pengukuran cepat kadar air (moisture %) dan kadar padatan (solid content %) pada sampel padat, bubuk, dan cairan.",
       "Dilengkapi layar sentuh berwarna 5 inci, lampu pemanas halogen dengan sensor suhu PT100 (40–160°C), 3 mode pemanasan (Standard, Fast, Soft), 3 mode penghentian (Auto, Manual, Timed), kipas pendingin cepat senyap, serta grafik pengeringan real-time.",
@@ -11354,8 +10982,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis kadar air halogen kapasitas 110 g dengan sensor HBM impor, rentang pemanasan luas 40–199°C, bodi aluminium kokoh, dan ruang uji stainless steel.",
     description: [
       "Infitek MCA Series mengombinasikan sensor penimbangan HBM berkualitas tinggi dengan lampu halogen pemanas berefisiensi tinggi 400W (40–199°C) untuk analisis kadar air dan residu kering yang akurat.",
       "Menggunakan cangkang aluminium berpelindung ruang stainless steel, layar LCD definisi tinggi berlampu latar putih, port komunikasi RS232 standar, serta memori penyimpan 15 metode pengujian.",
@@ -11411,8 +11037,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Timbangan kadar air halogen kapasitas besar 220 g dengan sensor impor seri PW, pemanas cincin tungsten halogen hingga 225°C, layar sentuh 7 inci, dan tampilan simultan 3 kurva (Air, Bobot, Suhu).",
     description: [
       "Infitek BA-M500 adalah penganalisis kadar air canggih berkapasitas besar hingga 220 g dengan sensor penimbangan impor seri PW yang bebas dari penyimpangan suhu (temperature drift) dan waktu.",
       "Dilengkapi lampu pemanas cincin tungsten halogen (suhu awal hingga 225°C), layar sentuh kapasitif 7.0 inci yang menampilkan 3 kurva sekaligus (Kadar Air M, Bobot W, Temperatur T), 4 mode pengujian (termasuk Stage Measurement bertingkat), serta memori 50 data pengujian.",
@@ -11468,8 +11092,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Titrator Karl Fischer serbaguna yang mendukung mode Volumetrik (0.1–250 mg) dan Kulometrik (10 μg–20 mg) dengan pengisian dan pencampuran reagen otomatis.",
     description: [
       "Infitek TITR-40VC menyediakan fleksibilitas analisis kadar air dengan menggabungkan titrasi volumetrik untuk konsentrasi air konstan dan titrasi kulometrik untuk konsentrasi air jejak.",
       "Dilengkapi fitur auto-filling, auto-purging, dan auto-mixing reagen kimia Karl Fischer, koreksi drift otomatis/manual, sel generator berdiafragma, layar LCD, serta penyimpanan 200 data GLP.",
@@ -11523,8 +11145,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis kadar air presisi tinggi 110g / 0.001g (0.01% moisture) dengan layar sentuh 5 inci, sensor HBM impor, pemanas halogen hingga 199°C, serta port RS232 & RJ45.",
     description: [
       "Infitek MCA110-T menggabungkan keterbacaan analitik 0.001 g (1 mg) dan resolusi kadar air 0.01% dengan kenyamanan antarmuka layar sentuh berwarna 5 inci.",
       "Menggunakan sensor penimbangan HBM impor, lampu halogen pemanas 400W (40–199°C), cangkang aluminium beruang uji stainless steel, kurva dinamis real-time, serta konektivitas ganda RS232 dan Ethernet RJ45.",
@@ -11579,8 +11199,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis kadar air berbasis lampu inframerah kapasitas 110 g / 1 mg (0.01% moisture) dengan sensor HBM, pemanasan 40–160°C, dan bodi aluminium.",
     description: [
       "Infitek MCA100-IR memanfaatkan radiasi pemanas lampu inframerah khusus untuk pengeringan sampel yang lembut dan merata tanpa merusak struktur organik bahan.",
       "Dilengkapi kapasitas penimbangan 110 g dengan keterbacaan 1 mg (0.001 g), rentang pemanasan 40–160°C, sensor HBM impor, layar LCD definisi tinggi berlampu latar, dan memori simpan 15 metode pengujian.",
@@ -11634,8 +11252,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Titrator Karl Fischer volumetrik (0.1–250 mg) dengan fitur auto-filling, auto-purging, auto-mixing, dan koreksi background drift otomatis.",
     description: [
       "Infitek TITR-40C dirancang untuk penetapan kadar air volumetrik Karl Fischer dengan tingkat keamanan tinggi melalui otomatisasi pengisian, pembilasan, dan pencampuran reagen kimia.",
       "Mendukung mode KF Titration dan Titer Detection, arus kerja 1 μA dan 50 μA, kapasitas simpan 200 data GLP, serta port RS-232 untuk integrasi printer.",
@@ -11689,8 +11305,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Kulometer Karl Fischer kompak untuk analisis kadar air jejak (trace moisture 10 μg–20 mg) dengan generator cell berdiafragma dan arus kerja bertingkat hingga 100 mA.",
     description: [
       "Infitek TITR-20V adalah instrumen kulometri Karl Fischer berdimensi kompak (hanya 3 kg) untuk penentuan kadar air sangat kecil (trace moisture) pada sampel cair, padat, dan gas.",
       "Menggunakan sel generator berdiafragma, 4 tingkat arus kerja (10, 20, 50, 100 mA) dengan akurasi 0.50%, layar LCD, kapasitas penyimpanan data, serta port komunikasi RS-232.",
@@ -11746,8 +11360,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Titrator Karl Fischer kulometrik cerdas dengan layar sentuh 7 inci, sistem dual CPU, arus elektrolisis besar hingga 430 mA, printer termal 56 mm, dan kurva titrasi berwarna real-time.",
     description: [
       "Infitek TITR-K5 dirancang untuk penentuan kadar air mikro tingkat lanjut (rentang 0.1 μg hingga 9999.9 mg air / 0.001 ppm hingga 10⁶ ppm) dengan kecepatan elektrolisis puncak 2.4 mg air/menit dan arus hingga 430 mA.",
       "Mengadopsi sistem kontrol komposit Dual-CPU dengan kanal daya terpisah untuk elektroda elektrolisis dan pengukur guna meredam gangguan sinyal, kurva tren titrasi berwarna real-time pada layar sentuh 7.0 inci, printer termal bawaan 56 mm, serta fungsi kompensasi blanko mikroprosesor otomatis.",
@@ -11804,8 +11416,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis ukuran partikel laser otomatis terpadu dispersi basah (0.01–3500 μm) dan kering (0.1–3000 μm) dengan lensa Canon, jalur optik Inverse Fourier, dan 116 kanal fotodetektor.",
     description: [
       "Infitek PSA-2L2309A merupakan penganalisis ukuran partikel laser kelas riset profesional yang menggabungkan modul dispersi basah (wet) dan kering (dry) berbasis teori Hamburan Mie (Mie Scattering) dan Difraksi Fraunhofer.",
       "Mengadopsi teknologi jalur optik lipat Inverse Fourier dengan lensa Canon impor berjangkauan sudut deteksi 0.015° hingga 145°, sistem perataan optik otomatis motor stepper mikro presisi, serta software unconstrained free-fitting dengan resolusi 12 tingkat untuk partikel di bawah 2 μm.",
@@ -11866,8 +11476,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis ukuran partikel laser seri klasik dengan lensa Canon Fourier, teknologi laser ganda ortogonal, perataan optik mikro 0.1 μm, dan frekuensi akuisisi data 10 kHz.",
     description: [
       "Infitek Classic Series (PSA-2L2308A terintegrasi basah/kering, PSA-LA2800 khusus basah, dan PSA-LD3008 khusus kering) mengadopsi teknologi jalur optik transformasi Fourier cahaya konvergen dan laser ortogonal ganda.",
       "Dilengkapi lensa Fourier Canon, sistem penjajaran optik 4 motor stepper presisi 0.1 μm, dispersi ultrasonik & mekanis terintegrasi penuh, serta software akuisisi berkecepatan 10 kHz dengan pemodelan statistik lengkap (Free, R-R, Log-Normal, Mesh Size).",
@@ -11925,8 +11533,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis ukuran partikel nano (0.3–10.000 nm) dan Zeta Potensial (-500 hingga +500 mV) dengan fotomultiplier PMT berkepekaan tinggi, kontrol suhu Peltier ±0.1°C, dan korelatif digital HA1024.",
     description: [
       "Infitek PSA-LS901 mengintegrasikan pengukuran distribusi ukuran partikel nano (0.3–10.000 nm) berbasis DLS dan analisis potensial Zeta (-500 mV s.d. +500 mV) berbasis mobilitas elektroforetik untuk mengukur stabilitas dispersi koloid.",
       "Dilengkapi korelatif digital berkecepatan tinggi HA1024, detektor Photo-Multiplier Tube (PMT) bersensitivitas ekstrem, kontrol suhu termoelektrik semikonduktor (5–90°C ±0.1°C), serta sistem pergeseran frekuensi optik berserat optik anti-interferensi.",
@@ -11986,8 +11592,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Penganalisis ukuran partikel laser seri praktis dengan fotodioda cincin multi-elemen, teknologi Fourier konvergen, perataan optik otomatis 0.1 μm, dan pengujian cepat di bawah 2 menit.",
     description: [
       "Infitek Practical Series (PSA-LA2600A 0.01–1000μm, PSA-LA2600B 0.1–1000μm, PSA-LA2018 0.1–450μm, dan PSA-LD3003A kering 0.1–300μm) menawarkan keandalan uji difraksi laser dengan biaya operasional yang sangat kompetitif.",
       "Menggunakan fotodetektor silikon anular berkepekaan tinggi, teknologi unconstrained free fitting untuk distribusi partikel sempit, sistem dispersi bawaan lengkap (ultrasonik, pengaduk, dan sirkulasi), serta pengoperasian otomatis SOP.",
@@ -12045,8 +11649,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis ukuran partikel semprotan (spray droplet) non-kontak rentang 0.1–100 μm dengan sensor ganda paralel, proteksi lensa tirai udara, dan pemicu otomatis saat penyemprotan.",
     description: [
       "Infitek PSA-LS311 dikembangkan khusus untuk pengujian distribusi ukuran butiran/tetesan cairan semprot (droplet size distribution) pada nebulizer medis, obat inhalasi aerosol, dan peralatan spray kecil sesuai standar Farmakope.",
       "Menggunakan teknologi jalur optik paralel lensa ganda dengan 80 kanal detektor array, sistem tirai udara pelindung lensa dari kontaminasi kabut semprot, pengukuran non-kontak terbuka sepanjang 60 mm, serta pemicuan uji seketika saat cairan disemprotkan (spray-triggered testing).",
@@ -12104,8 +11706,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis partikel nano berbasis Hamburan Cahaya Dinamis (DLS / PCS) rentang 0.3 nm hingga 10.000 nm dengan detektor PMT Hamamatsu, korelatif digital CR256 resolusi 8 ns, dan kontrol suhu Peltier ±0.1°C.",
     description: [
       "Infitek PSA-N802 mengadopsi prinsip Dynamic Light Scattering (DLS) dan Photon Correlation Spectroscopy (PCS) untuk menganalisis diameter hidrodinamik partikel nano berdasarkan kecepatan gerak Brown sesuai persamaan Stokes-Einstein.",
       "Dilengkapi detektor Hamamatsu Photomultiplier Tube (PMT) sudut 90°, korelatif digital kecepatan tinggi CR256 beresolusi 8 ns (kecepatan pemrosesan 162 M), sistem serat optik terisolasi, serta kontrol temperatur semikonduktor 5–90°C (±0.1°C) yang mematuhi standar ISO 13321 dan ISO 22412.",
@@ -12165,8 +11765,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis ukuran droplet semprotan industri struktur terpisah (split-type) dengan rentang ukur 1–500 μm, jarak area pengukuran fleksibel 0.1 m hingga 10 m, laser pompa LD tahan 25.000 jam, dan proteksi tirai udara.",
     description: [
       "Infitek PSA-SI319A dirancang dengan struktur terpisah (split-type) modular untuk pengujian distribusi ukuran tetesan cairan semprot (spray droplet) skala industri pada bentang uji terbuka yang dapat disesuaikan dari 0.1 meter hingga 10 meter.",
       "Mengadopsi teknologi optik paralel dan amplifikasi spektral dengan 50 kanal fotodetektor bantu, sumber laser pompa LD 532 nm berumur pakai >25.000 jam, tirai udara pelindung lensa anti-kontaminasi droplet, serta perataan optik otomatis satu tombol.",
@@ -12223,8 +11821,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Viskometer rotasi terprogram untuk analisis cepat karakteristik pengadukan dan gelatinisasi pati sereal (gandum, jagung, beras, kentang) dengan pemanasan blok tembaga hingga 15°C/menit.",
     description: [
       "Infitek VSC-P80 dirancang khusus untuk menguji sifat reologi, karakteristik pengadukan, dan profil gelatinisasi pati pada gandum, jagung, beras, kentang, dan umbi-umbian secara cepat dan presisi.",
       "Dilengkapi sistem pemanas blok tembaga dan pendingin terprogram (laju hingga 15°C/menit), sensor suhu langsung pada mangkuk sampel, sistem pengangkat tower cap motor stepper, serta software reologi lengkap dengan database istilah fisik dan ekspor laporan PDF/Excel."
@@ -12283,8 +11879,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Viskometer digital berbasis mikroprosesor 16-bit dengan layar LCD biru, 4 spindle standar (L1–L4), dan rentang pengukuran hingga 2.000.000 mPa·s.",
     description: [
       "Infitek VSC-N Series (VSC-N4, VSC-N5, VSC-N8) merupakan viskometer rotasi digital yang digerakkan oleh sirkuit kontrol mikroprosesor 16-bit untuk penentuan viskositas absolut fluida Newtonian maupun non-Newtonian.",
       "Layar LCD berlatar biru secara langsung menampilkan nilai viskositas (mPa·s), kecepatan putar spindle (RPM), persentase torsi (torque %), kode spindle terpilih, dan batas viskositas maksimum pada kecepatan yang digunakan."
@@ -12345,8 +11939,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Viskometer digital kecepatan stepless (kontinu tanpa tingkatan) dengan probe suhu RTD real-time, 4 spindle standar, dan rentang pengukuran hingga 80.000.000 mPa·s.",
     description: [
       "Infitek VSC-S Series (VSC-S1, VSC-S2, VSC-S3, VSC-SA) menghadirkan pengaturan kecepatan putar stepless gear (kecepatan variabel bebas bertingkat halus mulai 0.1 RPM) untuk penentuan kurva aliran reologi yang komprehensif.",
       "Dilengkapi probe suhu RTD bawaan untuk pemantauan temperatur cairan secara real-time, akurasi tinggi ±1% FS, layar LCD informatif, serta dukungan software PC untuk akuisisi dan perbandingan riwayat data."
@@ -12407,8 +11999,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Viskometer digital rentang ekstra luas hingga 320.000.000 mPa·s dengan kecepatan stepless 0.1–200 RPM, probe suhu RTD, dan opsi spindle lengkap (L1–L4 / R2–R7).",
     description: [
       "Infitek VSC-E Series (VSC-E1 hingga 99.9 RPM dan VSC-E2 hingga 200 RPM) dirancang untuk cairan dengan rentang viskositas dari sangat encer hingga ultra-kental ekstrem (mencapai 320 juta mPa·s).",
       "Mendukung konfigurasi spindle standar (L1–L4) maupun spindle viskositas tinggi (R2–R7), dilengkapi probe suhu RTD real-time, layar LCD informatif, dan software download kontrol program DV."
@@ -12468,8 +12058,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Viskometer digital suhu tinggi dengan tungku pemanas tanam integral hingga 300°C untuk pengujian viskositas aspal, hot melt adhesive, dan lilin polietilena.",
     description: [
       "Infitek VSC-H Series dirancang khusus untuk mengukur sampel yang berwujud padat pada suhu ruang dan mencair setelah pemanasan suhu tinggi seperti aspal, bitumen, perekat leleh panas (hot melt), dan lilin polietilena.",
       "Dilengkapi tungku pemanas tanam integral (embedded heating furnace) dengan inersia termal rendah (suhu ruang +10°C s.d. 300°C), motor stepper micro-step bebas getaran, spindle tahan suhu tinggi (21, 27, 28, 29), serta visualisasi kurva viskositas-temperatur."
@@ -12532,8 +12120,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Viskometer Stormer digital standar ASTM D562 kecepatan konstan 200 RPM dengan konversi otomatis satuan Krebs (40–141 KU), gram (32–1099 gm), dan cP.",
     description: [
       "Infitek VSC-KU adalah viskometer Stormer digital khusus untuk industri cat, pernis, dan pelapis yang mengukur hambatan fluida pada kecepatan putar konstan 200 RPM sesuai standar internasional ASTM D562.",
       "Layar LCD berlatar biru secara sirkular menampilkan nilai viskositas dalam satuan Krebs (KU), gram (gm), dan centipoise (cP) secara langsung tanpa perlu konversi manual atau tabel interpolasi."
@@ -12594,8 +12180,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Aparatus titik lebur video otomatis dengan kamera HD 720P, sistem operasi Android layar sentuh 10.1 inci, kapasitas 4 kapiler simultan, dan kepatuhan FDA 21 CFR Part 11.",
     description: [
       "Infitek MTP-685 (Suhu Ruang–400°C) dan MTP-682 (Suhu Ruang–360°C) menggunakan kamera resolusi tinggi 720P HD untuk perekaman video dan pemutaran ulang proses peleburan kristal secara langsung pada layar sentuh 10.1 inci.",
       "Dilengkapi kontrol suhu cerdas PID & PWM, kemampuan menguji 4 tabung kapiler sekaligus, pengaturan intensitas cahaya untuk sampel berwarna gelap, memori grafis hingga 40.000 grup data, serta dukungan regulasi farmasi FDA 21 CFR Part 11 dan audit trail.",
@@ -12653,8 +12237,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Aparatus titik lebur digital otomatis dengan kontrol suhu PID & PWM, layar sentuh LCD 7 inci, perekaman kurva peleburan otomatis, dan kapasitas hingga 3 kapiler.",
     description: [
       "Infitek MTP-2 Series (pilihan model MTP-2C hingga 360°C, MTP-1C hingga 400°C, dll.) menyediakan pengukuran titik lebur otomatis yang cepat dan presisi.",
       "Dilengkapi teknologi kontrol temperatur PID & PWM, pencatatan kurva peleburan secara otomatis, kalkulasi nilai rata-rata titik awal dan akhir lebur, memori 1000 data, serta layar sentuh 7.0 inci dengan opsi printer termal terintegrasi.",
@@ -12709,8 +12291,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Aparatus titik lebur mikroprosesor dengan mode ganda (Otomatis & Jendela Visual), layar sentuh 5.6 inci, kapasitas 3 kapiler simultan, dan kalibrasi multi-titik.",
     description: [
       "Infitek MTP-3A menawarkan fleksibilitas pengukuran titik lebur kristal organik (Suhu Ruang–360°C) melalui mode deteksi fotolistrik otomatis maupun observasi visual langsung melalui jendela pengamatan.",
       "Menggunakan kontrol suhu PID, kapasitas 3 tabung kapiler simultan dengan kalkulasi rata-rata otomatis, layar sentuh berwarna 5.6 inci, kalibrasi multi-titik, dan memori internal 100 data.",
@@ -12767,8 +12347,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Aparatus penentuan titik jatuh (dropping point) dan titik lembek (softening point) fotolistrik standar ASTM D3461-97 untuk aspal, resin, lilin, dan salep farmasi.",
     description: [
       "Infitek MTP-DP1 dirancang sesuai standar ASTM D3461-97 untuk menentukan konsentrasi, derajat polimerisasi, dan sifat termal senyawa amorf serta polimer tinggi (seperti aspal, tar, resin, parafin, pelumas, salep medis, dan lemak pangan).",
       "Mengadopsi sistem deteksi fotolistrik otomatis, kontrol suhu terprogram (Suhu Ruang–300°C) dengan laju kenaikan bertingkat, mangkuk uji presisi (cup Φ9.9 mm), serta opsi bola timbal (Lead ball ASTM) dan bola baja (Steel ball GB2728).",
@@ -12825,8 +12403,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Aparatus titik lebur video otomatis kapasitas hingga 5 kapiler simultan dengan sistem Android layar sentuh 10.1 inci, memori 128 GB, perekaman video untuk sampel gelap/dekomposisi, dan kepatuhan farmakope.",
     description: [
       "Infitek MTP-650 (5 kapiler / 600 metode) dan MTP-630 (3 kapiler / 400 metode) mengadopsi teknologi pemrosesan citra digital canggih untuk menganalisis sampel yang sulit, seperti sampel yang berubah gelap, buram setelah meleleh, atau terdekomposisi selama pemanasan.",
       "Mengusung sistem Android pada layar sentuh 10.1 inci, memori 128 GB, kalibrasi multi-titik, kepatuhan ketat standar Farmakope Nasional, GMP, GLP, dan FDA 21 CFR Part 11, serta port komunikasi lengkap termasuk Wi-Fi dan Ethernet.",
@@ -12884,8 +12460,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis termogravimetri (TGA) suhu tinggi hingga 1550°C dengan mikrotimbangan resolusi 0.1 μg, kontrol PID multi-tahap, pengatur aliran gas ganda otomatis, dan layar sentuh 7 inci.",
     description: [
       "Infitek TGA-1550 adalah instrumen analisis termal komprehensif yang mengukur perubahan massa sampel terhadap suhu dan waktu dari Suhu Ruang hingga 1550°C.",
       "Dilengkapi tungku lilitan kawat nikel-kromium ganda berisolasi air termostatik, mikrotimbangan beresolusi 0.1 μg (rentang 0.01 mg s.d. 3 g, dapat diperluas 50 g), prosesor ARM berkecepatan tinggi, perangkat lunak analisis kurva TG/DTG otomatis, serta perangkat atmosfer pengatur aliran gas otomatis multi-tahap.",
@@ -12944,8 +12518,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis termogravimetri (TGA) rentang Suhu Ruang hingga 1150°C dengan mikrotimbangan 0.1 μg, kontrol PID prosesor ARM, layar sentuh 7 inci, dan port gas buang untuk integrasi FTIR.",
     description: [
       "Infitek TGA-1150 dirancang untuk pengujian stabilitas termal, kandungan pengisi, dan kinetika degradasi material polimer, karet, dan farmasi pada rentang suhu hingga 1150°C.",
       "Dilengkapi tungku nikel-kromium lilitan ganda dengan isolasi termal ganda, mikrotimbangan resolusi 0.1 μg, prosesor ARM berkecepatan sampling tinggi, port keluaran gas buang (tail gas) untuk integrasi peralatan eksternal seperti FTIR, serta layar sentuh 7 inci.",
@@ -13000,8 +12572,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Aparatus titik lebur visual berbasis media penghantar minyak silikon (Suhu Ruang–280°C) dengan kapasitas 3 kapiler simultan dan kalkulasi rata-rata otomatis.",
     description: [
       "Infitek MTP-VL menggunakan media penghantar panas minyak silikon (silicone oil) untuk distribusi termal yang merata dan pengamatan visual titik awal serta akhir lebur kristal organik.",
       "Mampu menguji 3 tabung kapiler (panjang 120 mm) secara bersamaan dengan penghitungan nilai rata-rata otomatis, laju kenaikan suhu linier bertingkat (0.5, 1.0, 1.5, 3.0 °C/min), layar LCD, dan port RS232.",
@@ -13055,8 +12625,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Aparatus titik lebur terintegrasi mikroskop (Suhu Ruang–320°C) dengan pemuatan sampel kapiler atau meja panas (hot table), dan opsi mikroskop stereoskopik binokuler zoom 40X–100X.",
     description: [
       "Infitek MTP-4 Series (MTP-4B stereoskopik binokuler zoom 40X–100X, MTP-4A binokuler, dan MTP-4 monokuler) menggabungkan pemanas termal presisi dengan sistem optik mikroskop untuk observasi visual langsung perubahan fasa kristal.",
       "Mendukung pemuatan sampel fleksibel melalui tabung kapiler maupun meja panas (hot table menggunakan kaca preparat slide & cover glass) pada rentang Suhu Ruang hingga 320°C."
@@ -13110,8 +12678,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Timbangan analitik presisi tinggi 4 desimal (0.0001 g / 0.1 mg) dengan sensor gaya elektromagnetik, pelindung angin kaca (draft shield), dan waktu stabil ≤3 detik.",
     description: [
       "Infitek BA-E Series (100g, 120g, 200g, 220g) adalah timbangan analitik sub-miligram yang menggunakan sensor gaya elektromagnetik (electromagnetic force restoration) untuk penimbangan presisi pada analisis kimia kuantitatif.",
       "Dilengkapi layar LCD berlatar putih dengan teks hitam kontras tinggi, pelindung angin kaca luas berdimensi 180×175×200 mm, fungsi tara, penghitungan jumlah partikel (counting), konversi satuan, alarm beban berlebih (overload), serta port komunikasi RS232C.",
@@ -13170,8 +12736,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Timbangan analitik 0.0001 g (0.1 mg) dengan kalibrasi internal otomatis satu tombol (One-Key / Time-Triggered), bodi aluminium cor, dan pelindung angin ekstra luas.",
     description: [
       "Infitek BA-N Series (110g, 120g, 200g, 220g) dilengkapi mekanisme kalibrasi bobot internal otomatis yang dapat dipicu secara manual dengan satu tombol maupun secara otomatis berdasarkan waktu untuk menjaga akurasi konstan.",
       "Mengadopsi sensor gaya elektromagnetik dengan bodi aluminium anti-statis, ruang pelindung angin kaca berdimensi 240×190×265 mm, fitur penimbangan bawah timbangan (under weighing), serta konversi multi-satuan (g, mg, ct, oz)."
@@ -13229,8 +12793,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Timbangan presisi 0.01 g dengan kapasitas hingga 3100 g, piringan stainless steel Φ130 mm, waktu stabil cepat ≤2 detik, dan catu daya ganda AC/DC.",
     description: [
       "Infitek BP-2C Series (210g s.d. 3100g) menyediakan penimbangan presisi 2 desimal (0.01 g) yang andal dan fleksibel untuk pengujian di meja laboratorium maupun lapangan.",
       "Mendukung catu daya ganda (AC dan baterai DC), piringan timbang stainless steel berdiameter Φ130 mm, fungsi tara cepat, penghitungan jumlah partikel, alarm kelebihan beban, serta opsi port RS232."
@@ -13284,8 +12846,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Timbangan presisi 0.01 g kapasitas besar (3000g, 4000g, 5000g) dengan cangkang aluminium kokoh dan piringan timbang persegi 180×180 mm.",
     description: [
       "Infitek BP-C Series (3000g, 4000g, 5000g) dirancang untuk kebutuhan penimbangan sampel bervolume/bobot berat dengan tetap mempertahankan presisi 2 desimal (0.01 g).",
       "Menggunakan cangkang aluminium tahan benturan, piringan penimbangan persegi luas 180×180 mm, layar LCD terang, fungsi tara, penghitungan komponen, dan alarm beban berlebih."
@@ -13340,8 +12900,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Timbangan analitik 0.0001 g dengan panel layar sentuh 5 inci, kalibrasi internal otomatis, sensor gaya elektromagnetik, dan fungsi penentuan densitas.",
     description: [
       "Infitek BA-T Series (120g, 200g, 220g) menghadirkan kemudahan operasional modern melalui panel kontrol layar sentuh 5 inci yang intuitif.",
       "Dilengkapi sistem kalibrasi internal otomatis (terpicu satu tombol atau jadwal waktu), sensor gaya elektromagnetik, cangkang aluminium berpelindung angin kaca luas (240×190×265 mm), serta fitur aplikasi lengkap termasuk penentuan massa jenis (density), persentase, dan under-weighing."
@@ -13397,8 +12955,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Timbangan miligram 0.001 g (1 mg) kapasitas hingga 600 g dengan kalibrasi internal bermotor, sensor elektromagnetik, dan pelindung angin kaca.",
     description: [
       "Infitek BA-N Milligram Series (200g, 300g, 500g, 600g) menyediakan penimbangan presisi 3 desimal (0.001 g / 1 mg) dengan kapasitas beban lebih besar.",
       "Menggunakan mekanisme kalibrasi internal otomatis, sensor gaya elektromagnetik, cangkang aluminium berpelindung angin kaca luas (240×190×265 mm), port komunikasi RS232C & RS485, serta opsi penimbangan bawah (under-weighing)."
@@ -13454,8 +13010,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Timbangan analitik elektronik 0.0001 g (0.1 mg) dengan sensor elektromagnetik, kalibrasi eksternal (disertai anak timbang 200g), dan pelindung angin kaca 3 pintu.",
     description: [
       "Infitek BA-W 4-Desimal Series (100g s.d. 220g) adalah instrumen penimbangan analitik standar laboratorium kimia dengan rentang keterbacaan 0.1 mg.",
       "Menggunakan cangkang aluminium berpelindung angin kaca besar (240×190×265 mm), sensor gaya elektromagnetik yang stabil, waktu respon ≤3 detik, serta paket standar yang sudah memuat anak timbang kalibrasi 200 g."
@@ -13515,8 +13069,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Timbangan presisi 0.001 g (1 mg) berkapasitas besar hingga 1200 g dengan sensor magnetik generasi baru, pelindung angin kaca 3 pintu geser, dan bodi aluminium cor.",
     description: [
       "Infitek BA-W Milligram Series (200g s.d. 1200g) memadukan sensitivitas 1 mg dengan daya tampung beban besar hingga 1.2 kg menggunakan sensor magnetik elektromagnetik generasi mutakhir.",
       "Dilengkapi pelindung angin kaca 3 pintu geser transparan, bodi aluminium cor presisi anti-statis, layar LCD besar 5 tombol navigasi, kalibrasi eksternal (disertai anak timbang 200g/500g), serta port RS232."
@@ -13572,8 +13124,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Timbangan analitik presisi 0.001 g (1 mg) berbasis sensor load cell dengan pelindung angin kaca, catu daya ganda AC/DC, dan piringan timbang Φ90 mm.",
     description: [
       "Infitek BA-WP Series (110g, 210g, 310g) dirancang sebagai timbangan presisi 1 mg yang ekonomis dan fleksibel dengan dukungan daya AC dan baterai DC.",
       "Dilengkapi sensor load cell presisi tinggi, pelindung angin kaca (177×173×205 mm), layar LCD kontras tinggi, fungsi tara, penghitungan jumlah partikel, serta opsi port komunikasi ganda RS232C & RS485."
@@ -13631,8 +13181,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Timbangan massa jenis cairan digital (Archimedes Displacement Method) dengan resolusi 0.001 g/cm³, waktu ukur 5 detik, kebutuhan sampel 50 cc, dan rangka stainless steel.",
     description: [
       "Infitek ELD-300 menggabungkan hukum perpindahan Archimedes dengan teknologi penimbangan elektronik modern untuk pembacaan langsung massa jenis cairan (0.001–99.999 g/cm³) dalam waktu sekitar 5 detik.",
       "Mengeliminasi kerumitan metode piknometer atau neraca Wechsler konvensional, kompatibel dengan sampel bersuhu hingga 100°C, cairan korosif/asam pekat/minyak, serta dilengkapi rakitan pengukur cairan standar AR-20A dan port RS-232C."
@@ -13691,8 +13239,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Timbangan presisi 0.1 g (1 desimal) dengan kapasitas hingga 2100 g, piringan bundar Φ130 mm, dan catu daya ganda AC/DC.",
     description: [
       "Infitek BP-B Series (BP-1K-B 1100g dan BP-2K-B 2100g) merupakan timbangan presisi 1 desimal (0.1 g) berdesain ringkas dan modis untuk penimbangan harian.",
       "Dilengkapi layar LCD berlampu latar putih, waktu stabilisasi ≤3 detik, piringan penimbangan stainless steel Φ130 mm, fungsi tara dan counting, serta dukungan daya baterai DC untuk kemudahan mobilitas."
@@ -13746,8 +13292,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Timbangan presisi 0.1 g kapasitas tinggi (3100 g & 5100 g) dengan piringan stainless steel persegi besar 160×160 mm dan respon cepat ≤2 detik.",
     description: [
       "Infitek BP-BF Series (3100g dan 5100g) dirancang untuk penimbangan sampel berukuran besar dengan stabilitas tinggi dan waktu respon cepat ≤2 detik.",
       "Menggunakan piringan stainless steel persegi 160×160 mm, layar LCD kontras tinggi, catu daya ganda AC/DC, fungsi tara, penghitungan jumlah unit (counting), dan alarm beban berlebih."
@@ -13803,8 +13347,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Timbangan hidrostatis presisi (3100 g & 5100 g / 0.1 g) lengkap dengan braket penopang hidrostatis, ember penampung, dan keranjang gantung untuk uji berat jenis material teknik sipil & tekstil.",
     description: [
       "Infitek HB-K Series dirancang khusus untuk industri konstruksi jalan raya (highway engineering), teknik sipil, dan industri tekstil guna menentukan berat jenis dan volume benda padat (agregat batu, aspal padat, beton, serat) melalui penimbangan di udara dan di dalam air.",
       "Dilengkapi rangka braket logam hidrostatis kokoh (310×300×350 mm), ember air Φ200×220 mm, keranjang gantung stainless steel Φ140×150 mm, layar LED hijau kontras tinggi, dan kapasitas penimbangan hingga 5.1 kg."
@@ -13864,8 +13406,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop biologi optik tak hingga (infinity) dengan penerangan Kohler LED, lensa okuler field width 22 mm high-eyepoint, dan pegangan jinjing terintegrasi.",
     description: [
       "Infitek MSC-B31M dilengkapi sistem optik akromatik tak hingga (Infinity Optical System) independen yang memberikan resolusi gambar tajam, kontras tinggi, dan konsistensi perbesaran saat beralih metode observasi.",
       "Mengusung kepala Siedentopf trinokuler miring 30°, lensa okuler bidang pandang luas WF10X/22mm ramah kacamata, iluminasi Kohler LED dengan intensitas variabel kontinu, meja mekanis ganda 210×140 mm, serta port kamera digital khusus TV1XC-MO."
@@ -13922,8 +13462,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop biologi pintar dengan layar LCD status terintegrasi, revolver berkode 5-posisi (quintuple coded nosepiece) dengan memori kecerahan, sensor ECO auto-off, dan siaran suara perbesaran.",
     description: [
       "Infitek MSC-B45 menghadirkan era baru mikroskopi pintar dengan layar LCD terpasang yang menampilkan perbesaran objektif aktif, tingkat kecerahan, status siaran suara, dan mode ECO secara real-time.",
       "Dilengkapi sensor inframerah ECO (mati otomatis saat pengguna menjauh dan menyala saat kembali), revolver berkode 5-posisi yang secara otomatis mengingat tingkat kecerahan ideal untuk tiap lensa objektif, lampu LED 3W dengan suhu warna dapat diatur, serta dukungan daya power bank portabel."
@@ -13981,8 +13519,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop biologi riset kelas atas dengan lensa objektif Plan Semi-Apochromatic (Plan Fluor), bidang pandang ultra-luas F.N. 25 mm, meja lapis keramik anti-gores, dan Light Intensity Manager.",
     description: [
       "Infitek MSC-B51N dirancang untuk riset biomedis tingkat lanjut yang menuntut resolusi, kontras, dan kejernihan warna mutlak berkat lensa objektif Plan Semi-Apochromatic (Plan Fluor) ber-apertur numerik tinggi.",
       "Mengusung bingkai berdesain kupu-kupu dengan basis Y yang sangat kokoh meredam getaran, lensa okuler ultra-wide F.N. 25 mm, meja mekanis berlapis keramik tahan gores, lampu warm white LED ber-Light Intensity Manager, serta pembagian fokus mikro ultra-halus 1 μm."
@@ -14041,8 +13577,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop fluoresensi riset tingkat tinggi dengan turet 6-posisi filter kubus, sumber LED spektrum luas MG-100 (350–760 nm), kontroler layar sentuh, dan objektif Semi-Apochromatic FLN.",
     description: [
       "Infitek MSC-F43N dirancang untuk aplikasi fluoresensi canggih seperti FISH, FRET, dan deteksi CTC dengan rasio signal-to-noise luar biasa dan sensitivitas fluoresensi tinggi.",
       "Dilengkapi iluminator epi-fluoresensi turet 6-posisi dengan filter kubus lepas-pasang tanpa alat (standar kanal UV, Blue, Green), sumber cahaya LED berdaya tinggi (350–760 nm tanpa waktu pemanasan), kontroler touch-screen, meja berlapis keramik, serta kompatibilitas penuh dengan metode Brightfield, Phase Contrast, dan Darkfield."
@@ -14099,8 +13633,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop biologi inverted (terbalik) dengan lensa objektif jarak kerja panjang (LWD Plan & Phase Contrast), kondensor push-pull 55 mm, dan 4 ukuran pemegang cawan Petri.",
     description: [
       "Infitek MSC-IV52BN dirancang khusus untuk pengamatan sel hidup, jaringan cair transparan, dan pemantauan kultur secara langsung di dalam botol labu atau cawan Petri tanpa mengganggu lingkungan biologi sampel.",
       "Mengadopsi sistem optik tak hingga dengan kepala Siedentopf miring 45°, lensa objektif Long Working Distance (LWD Plan 4X, 40X dan LWD Phase Contrast 10X, 20X PH), kondensor push-pull (WD 55 mm), adaptor kamera C-mount 0.75X terpasang di samping bawah meja, serta set dudukan cawan Petri fleksibel."
@@ -14160,8 +13692,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop fluoresensi inverted (terbalik) dengan iluminasi LED dingin 3-kanal (UV, Blue, Green), objektif LWD Plan Achromatic & Phase Contrast, dan bodi anti-getaran berbobot stabil.",
     description: [
       "Infitek MSC-IV52FN mengombinasikan keunggulan mikroskop inverted untuk pengamatan kultur jaringan hidup dengan modul epi-fluoresensi modular LED dingin yang bebas penyelarasan rumit.",
       "Dilengkapi kubus filter fluoresensi standar 3 warna (UV: 330–380nm, Blue: 460–490nm, Green: 510–550nm, dapat di-upgrade 5 kanal), pelindung fluoresensi (fluorescence shield), lensa LWD Plan dan Phase Contrast, serta 4 dudukan cawan Petri."
@@ -14216,8 +13746,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Mikroskop fluoresensi tegak (upright) dengan sistem eksitasi Blue LED (420–480 nm), penerangan transmisi Kohler LED, dan lensa Infinity Plan Achromatic.",
     description: [
       "Infitek MSC-F31 dirancang untuk memenuhi kebutuhan pengujian imunofluoresensi diagnostik medis dan pendidikan biologi secara efisien dan ekonomis.",
       "Dilengkapi sistem iluminasi eksitasi Blue LED berdaya tinggi (EF 420–480 nm, DM >500 nm, BF >510 nm) untuk citra pendaran tajam berlatar belakang gelap, transmisi Kohler LED untuk pengamatan medan terang (brightfield), lensa okuler WF10X/22mm, dan adaptor kamera C-mount 0.5X."
@@ -14271,8 +13799,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Mikroskop metalurgi optik tak hingga dengan lensa objektif jarak kerja ekstra panjang (LWD Plan hingga 100X), iluminasi pantul Epi-Kohler, dan dukungan observasi polarisasi.",
     description: [
       "Infitek MSC-M31J dirancang khusus untuk analisis struktur mikro permukaan logam buram, wafer semikonduktor, dan komponen elektronik presisi.",
       "Menggunakan lensa objektif Long Working Distance Plan (L Plan 5X, 10X, 20X, 50X, dan opsi 100X), sistem pencahayaan pantul Epi-Kohler lengkap dengan filter warna (hijau, biru, kuning) dan unit polarisasi, serta pencahayaan transmisi LED untuk spesimen transparan/semi-transparan."
@@ -14326,8 +13852,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Mikroskop polarisasi dengan meja putar 360° (Φ120 mm), polarisator & analisator geser, lensa objektif akromatik bebas tegangan (strain-free), dan lampu halogen 6V/20W.",
     description: [
       "Infitek MSC-P20M adalah mikroskop polarisasi (petrografi) yang dirancang untuk analisis sifat optik mineral, sayatan tipis batuan, dan kristal polimer birefringent.",
       "Dilengkapi meja objek bundar yang dapat diputar 360° penuh (Φ120 mm), polarisator 360° dan analisator tipe geser, lensa objektif akromatik bebas tegangan (4X, 10X, 40X, 100X Oil), serta pencahayaan halogen transmisi 6V/20W dengan pengaturan kecerahan."
@@ -14383,8 +13907,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop polarisasi riset profesional optik tak hingga dengan lensa Bertrand konoskopi, pelat kompensator (Gypsum λ, Mika 1/4λ, Baji Kuarsa), meja putar Φ150 mm vernier 6', dan iluminasi ganda 6V/30W.",
     description: [
       "Infitek MSC-P41M adalah mikroskop polarisasi kelas riset tertinggi untuk investigasi ortoskopi dan konoskopi mendalam pada bidang geologi, kimia polimer kristal cair, dan farmasi.",
       "Dilengkapi lensa Bertrand dorong berpusat-atur untuk gambar interferensi konoskopi, set kompensator lengkap (Gypsum λ, Mika ¼λ, Quartz Wedge), meja mekanis putar presisi Φ150 mm berskala vernier 6', lensa objektif polarisasi tak hingga bebas tegangan LWD, serta pencahayaan ganda halogen 6V/30W pantul dan transmisi."
@@ -14442,8 +13964,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop metalurgi canggih dengan lensa objektif Semi-Apochromatic Plan Fluor EPI, iluminasi pantul LED spektrum penuh 3W, kit polarisasi, sensor ECO, dan siaran suara perbesaran.",
     description: [
       "Infitek MSC-M60X dibangun di atas platform optik tak hingga mutakhir yang dipadukan dengan lensa objektif Semi-Apochromatic Plan Fluor EPI untuk pengamatan struktur logam beresolusi tajam.",
       "Menggunakan sumber cahaya LED putih spektrum penuh 3W dengan suhu warna konstan, kit polarisasi terintegrasi, meja metalografi mekanis X-Y berpelat tetesan air untuk spesimen besar, kenop fokus koaksial posisi rendah, serta fitur pintar sensor ECO dan voice broadcast."
@@ -14498,8 +14018,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Mikroskop biologi Siedentopf binokuler miring 30° dengan transmisi optik ≥95%, 4 lensa objektif akromatik (4X–100X), dan lampu LED 3W / Halogen 20W.",
     description: [
       "Infitek MSC-B208 adalah mikroskop biologi standar yang sangat populer untuk kebutuhan pengujian mikroskopis rutin di klinik, sekolah, dan laboratorium pengujian.",
       "Dilengkapi kepala Siedentopf binokuler miring 30° (interpupiler 55–75 mm), lapisan optik transmisi tinggi (≥95%), meja mekanis ganda 140×135 mm, kondensor Abbe N.A. 1.25, serta opsi penerangan LED 3W hemat energi atau halogen 6V/20W."
@@ -14556,8 +14074,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop video digital terintegrasi layar LCD 10 inci dan kamera digital 5 MP untuk pengamatan visual langsung, pengambilan foto mikrograf, dan pengajaran kelas.",
     description: [
       "Infitek MSC-V208 menggabungkan mikroskop biologi optik presisi dengan monitor layar LCD 10 inci dan sensor kamera digital 5 Megapiksel di bagian atas kepala mikroskop.",
       "Mengeliminasi kelelahan mata akibat mengintip lensa okuler secara terus-menerus, dilengkapi lensa objektif Plan Achromatic (4X, 10X, 40X, 100X), meja mekanis ganda 140×135 mm, adaptor C-Mount 0.5X/1X, serta pencahayaan LED 3W."
@@ -14614,8 +14130,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Mikroskop stereo zoom performa tinggi dengan rasio perbesaran kontinu 1:8.3 (6X–50X), jarak kerja panjang 95 mm, citra 3D non-koaksial tajam, dan sistem pencahayaan ganda.",
     description: [
       "Infitek MSC-ST830 adalah mikroskop stereoskopik zoom kelas tinggi dengan rasio pembesaran kontinu 1:8.3 (objektif zoom 0.6X–5X menghasilkan perbesaran total 6X hingga 50X).",
       "Mengadopsi teknologi citra non-koaksial untuk ketajaman tepi bidang pandang dan persepsi tiga dimensi (3D) yang sangat kuat, jarak kerja panjang 95 mm, platform kerja luas, kepala binokuler Siedentopf 45° yang dapat diputar 360°, serta pencahayaan ganda atas (halogen) dan bawah (fluoresen 5W)."
@@ -14669,8 +14183,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Mikroskop biologi edukasi berkepala Siedentopf binokuler ergonomis dengan transmisi optik ≥95%, 4 lensa objektif akromatik (4X–100X), dan lampu LED hemat energi.",
     description: [
       "Infitek MSC-T08B dirancang khusus untuk memenuhi kebutuhan pengajaran di laboratorium sekolah dan universitas pada bidang biologi, sitologi, dan histologi.",
       "Dilengkapi kepala Siedentopf binokuler yang nyaman, lapisan optik anti-pantul transmisi tinggi (≥95%), meja geser 2 lapis 105×115 mm, kondensor Abbe N.A. 1.25, fokus koaksial mikro-grid 0.01 mm, serta lampu LED bertenaga efisien."
@@ -14726,8 +14238,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Mikroskop metalurgi inverted (terbalik) dengan lensa objektif LWD Plan (hingga SPL 100X), okuler berskala garis silang (crosshair), meja besar 180×150 mm, dan unit polarisasi halogen 6V/20W.",
     description: [
       "Infitek MSC-M4XC mengusung desain inverted (terbalik) yang memungkinkan penempatan spesimen logam, coran, dan potongan pelat berat tanpa batasan tinggi sampel.",
       "Dilengkapi lensa okuler WF10X/18mm bergaris silang (crosshair scale), lensa objektif Long Working Distance (PL L10X, L20X, L40X, SPL 100X), meja mekanis ganda luas 180×150 mm, sistem iluminasi halogen 6V/20W dengan polarisator/analisator, serta dukungan software analisis ukuran butiran logam (Grain Size Analysis)."
@@ -14782,8 +14292,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Mikroskop biologi inverted (terbalik) dengan kepala Siedentopf trinokuler 45°, lensa objektif LWD Plan (4X–40X), kondensor Abbe jarak kerja panjang 75 mm, dan lampu halogen 12V/30W.",
     description: [
       "Infitek MSC-IV403 dirancang untuk observasi kultur sel, mikroorganisme, dan jaringan cair di dalam cawan Petri atau labu kultur berkat konfigurasi optik terbalik (inverted) dan jarak kerja kondensor yang panjang (WD 75 mm).",
       "Dilengkapi kepala Siedentopf trinokuler miring 45°, lensa okuler bidang luas WF10X/20mm, lensa objektif Long Working Distance (LWDPL 4X, 10X, 20X, 40X), meja mekanis 2-lapis luas 242×172 mm dengan pelat tengah Φ110 mm, serta pencahayaan halogen 12V/30W yang dapat diatur kecerahannya."
@@ -14839,8 +14347,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Mikroskop biologi trinokuler Siedentopf miring 30° dengan transmisi optik ≥95%, 4 lensa objektif akromatik (4X–100X Oil), dan port kamera digital / tablet Win10.",
     description: [
       "Infitek MSC-B208T adalah versi trinokuler dari seri B208 yang dilengkapi tabung kamera vertikal khusus untuk integrasi kamera mikroskop digital atau tablet Windows 10.",
       "Mengadopsi kepala Siedentopf trinokuler miring 30°, lapisan optik anti-pantul transmisi tinggi (≥95%), meja mekanis ganda 140×135 mm, kondensor Abbe N.A. 1.25 dengan diafragma iris, serta opsi pencahayaan LED 3W hemat energi atau halogen 6V/20W."
@@ -14897,8 +14403,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Mikroskop stereo zoom binokuler dengan perbesaran kontinu 7X–45X (rasio zoom 6.4:1), okuler WF10X/20mm high-eyepoint, tiang vertikal 240 mm, dan pencahayaan LED ganda.",
     description: [
       "Infitek MSC-ST45 adalah mikroskop stereoskopik binokuler yang dirancang untuk pengamatan tiga dimensi (3D) objek makro dan pekerjaan manipulasi mikro berpresisi tinggi.",
       "Dilengkapi objektif zoom kontinu 0.7X–4.5X (rasio zoom 6.4:1, perbesaran total 7X–45X, dapat diperluas 3.5X–270X), lensa okuler WF10X/20mm ramah pengguna berkacamata, tiang penopang vertikal 240 mm (Φ32 mm), serta pencahayaan LED transmisi (bawah) dan refleksi (atas)."
@@ -14953,8 +14457,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Mikroskop biologi monokuler vertikal untuk edukasi sekolah dengan 4 lensa objektif akromatik (4X–100X), meja mekanis 2-lapis 105×115 mm, dan lampu LED.",
     description: [
       "Infitek MSC-T08 adalah mikroskop monokuler tingkat pengenalan yang kokoh, mudah dirawat, dan ekonomis untuk laboratorium sekolah.",
       "Dilengkapi tabung observasi monokuler vertikal, lensa okuler WF10X (opsi WF16X), 4 lensa objektif akromatik (4X, 10X, 40X, 100X Oil), meja mekanis bergerak 2-lapis 105×115 mm, kondensor Abbe N.A. 1.25, serta penerangan lampu LED dengan pengatur intensitas cahaya."
@@ -15010,8 +14512,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Mikroskop stereo zoom trinokuler 7X–45X (rasio zoom 6.4:1) dengan port kamera C-Mount 1X, kepala miring 45°, tiang vertikal 240 mm, dan pencahayaan LED atas-bawah.",
     description: [
       "Infitek MSC-ST45T menambahkan tabung trinokuler kamera terdedikasi pada seri ST45 untuk kemudahan pemasangan kamera mikroskop digital, display monitor, atau tablet Windows 10.",
       "Mengadopsi objektif zoom kontinu 0.7X–4.5X (perbesaran 7X–45X), okuler WF10X/20mm high-eyepoint, tiang silinder vertikal 240 mm, basis kerja kokoh 200×255×60 mm, serta sistem pencahayaan LED ganda transmisi dan refleksi."
@@ -15068,8 +14568,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop stereo zoom trinokuler perbesaran 6.7X–45X (rasio 6.7:1) dengan dudukan rel vertikal presisi (track stand 300 mm), okuler F.N. 22 mm, dan kontrol independen LED atas-bawah.",
     description: [
       "Infitek MSC-ST7045T menghadirkan fleksibilitas pengamatan makro-mikro tingkat lanjut dengan rasio zoom 6.7:1 (objektif 0.67X–4.5X menghasilkan perbesaran 6.7X hingga 45X).",
       "Menggunakan dudukan rel terintegrasi (track stand vertikal 300 mm dengan jarak fokus 106 mm), lensa okuler ekstra luas WF10X/22mm, kepala trinokuler miring 45°, sistem pencahayaan LED atas dan bawah dengan kendali intensitas mandiri, serta adaptor kamera MSC 1X C-Mount."
@@ -15124,8 +14622,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Mikroskop stereo zoom binokuler perbesaran 6.7X–45X (rasio 6.7:1) dengan dudukan rel track stand 300 mm, okuler WF10X/22mm, dan pencahayaan LED ganda independen.",
     description: [
       "Infitek MSC-ST7045 adalah mikroskop stereo zoom binokuler ergonomis dengan rasio pembesaran kontinu 6.7:1 (0.67X–4.5X) yang dipasang pada dudukan rel (track stand) vertikal 300 mm.",
       "Memberikan citra tiga dimensi yang tajam dan bebas distorsi tepi berkat lensa okuler WF10X/22mm high-eyepoint, jarak kerja vertikal 104 mm, serta sistem iluminasi LED atas dan bawah dengan pengatur kecerahan terpisah."
@@ -15181,8 +14677,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikroskop biologi optik tak hingga UIS dengan inovasi lampu LED dua warna (peralihan instan cahaya kuning dan putih), penerangan Kohler, dan lensa Plane Infinite 40X–1000X.",
     description: [
       "Infitek MSC-B400W mengadopsi teknologi optik tak hingga UIS (Universal Infinity System) yang dipadukan dengan inovasi sumber cahaya LED dua warna (Dual-Color LED) yang memungkinkan pengguna beralih instan antara cahaya putih terang dan cahaya kuning lembut (menyerupai lampu halogen klasik).",
       "Dilengkapi kepala Siedentopf binokuler 30° yang dapat diputar 360°, lensa okuler plan field 10X/22mm, lensa objektif Plane Infinite Achromatic (4X, 10X, 40X, 100X Oil), meja mekanis ganda 140×160 mm, serta fokus koaksial 30 mm berskala halus 0.002 mm."
@@ -15236,8 +14730,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf vertikal Class N dengan struktur pembuka cepat handwheel, kontrol mikroprosesor layar digital, proteksi interlock ganda, dan pilihan volume 35L hingga 100L.",
     description: [
       "Infitek STV-AI Series (35L, 50L, 75L, 100L) adalah autoklaf uap vertikal berbahan stainless steel berkualitas tinggi yang mengadopsi mekanisme translasi handwheel untuk pembukaan pintu yang cepat dan aman.",
       "Dilengkapi program siklus 3-tahap kenaikan dan penurunan suhu untuk saturasi uap optimal, pembuangan udara dingin otomatis, pengurasan uap pasca-sterilisasi otomatis, serta sistem interlock pengaman pintu saat terdapat tekanan di dalam ruang bejana."
@@ -15298,8 +14790,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Sterilisator panas inframerah suhu tinggi (900°C ±30°C) untuk sterilisasi jarum/ose inokulasi dalam 2 detik tanpa api terbuka dengan sudut pemanas yang dapat diatur.",
     description: [
       "Infitek BCS Series (BCS-I port Φ36 mm / BCS-II port Φ22 mm) memanfaatkan pemanasan inframerah keramik alumina 95% untuk sterilisasi cepat jarum inokulasi, ose, dan mulut tabung reaksi tanpa menghasilkan jelaga atau nyala api terbuka.",
       "Mencapai suhu sterilisasi maksimum 900°C ±30°C yang mampu mensterilkan alat inokulasi hanya dalam 2 detik, aman digunakan di dalam Biosafety Cabinet (BSC) karena tidak memicu turbulensi aliran udara laminar, serta sudut pemanas dapat dimiringkan hingga 45° dan diangkat hingga 75°."
@@ -15356,8 +14846,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf meja Class B standar Eropa (18L & 23L) dengan sistem pra-vakum 3 kali (three times pre-vacuum), pengeringan vakum, built-in printer, dan uji Bowie-Dick / Helix.",
     description: [
       "Infitek STB-BB Series (STB-B18B 18L dan STB-B23B 23L) adalah autoklaf meja Class B standar medis Eropa yang menggunakan pompa vakum terintegrasi untuk mengevakuasi udara sebelum siklus uap jenuh dimulai.",
       "Mampu mensterilkan instrumen padat, berpori, berongga rumit (seperti dental handpiece drill), dan instrumen terbungkus kantong pouch, dilengkapi 3 siklus pra-vakum, uji diagnostik BD/Helix/Vacuum, tangki air tipe terbuka atas, serta printer termal bawaan untuk rekam data siklus."
@@ -15418,8 +14906,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Autoklaf vertikal Class N dengan sistem pendingin udara cepat (rapid cooling), fungsi pelelehan/pra-pemanasan media agar, mekanisme tuas multi-link, dan bodi stainless steel 304.",
     description: [
       "Infitek STV-FL Series (30L, 50L, 75L; tersedia tipe Semi-Auto dan Full-Auto) mengintegrasikan perangkat pendingin udara berkecepatan tinggi (air-cooled rapid cooling) untuk mempercepat pendinginan bejana pasca-sterilisasi sehingga tutup dapat dibuka lebih cepat.",
       "Dilengkapi fungsi pra-pemanasan dan pencairan media agar (preheating & melting function), reservasi waktu sterilisasi terjadwal, mekanisme pembukaan pintu tuas teleskopik multi-link, bodi stainless steel 304 food grade, serta sistem interlock keselamatan ganda elektromekanik."
@@ -15477,8 +14963,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf meja Class B dengan sistem sakelar pintu otomatis (automatic door switch), generator uap independen berkecepatan tinggi, 3 kali pra-vakum, dan kapasitas hingga 45L.",
     description: [
       "Infitek STB-BZ Series (18L, 23L, dan kapasitas besar 45L) menghadirkan kemewahan operasional sterilisasi Class B dengan mekanisme penutupan dan penguncian pintu otomatis bertenaga motor.",
       "Dilengkapi generator uap mandiri terintegrasi untuk saturasi uap kilat, sistem pra-vakum 3 tahap, uji diagnostik lengkap (BD, Helix, Vacuum Leak), layar LED dengan kontrol sentuh induktif, printer termal internal, dan pengeringan vakum sempurna."
@@ -15536,8 +15020,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf horizontal silinder berjaket (jacketed) kapasitas 150L–400L dengan kontrol antarmuka HMI layar sentuh, perhitungan nilai F0 otomatis, dan seal pintu pneumatik.",
     description: [
       "Infitek STH-ND Series (150L, 200L, 300L, 400L) adalah autoklaf uap horizontal berkapasitas besar dengan struktur bejana berlapis jaket (jacketed structure) untuk efisiensi termal tinggi dan pengeringan optimal.",
       "Menggunakan sistem kontrol HMI layar sentuh mikroprosesor dengan rekaman sterilisasi ganda berbasis nilai F0 dan suhu-waktu, pintu pengunci elektrik dengan segel pneumatik, perpipaan stainless steel SUS304 dengan klem rilis cepat, serta printer internal dan port USB."
@@ -15593,8 +15075,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Sterilisator uap bertekanan portabel (18L & 24L) berbahan stainless steel dengan dukungan sumber pemanas ganda (Listrik AC dan Kompor Gas LPG).",
     description: [
       "Infitek STP-A Series (18L dan 24L) adalah sterilisator uap model panci tekan portabel yang fleksibel dan dapat dioperasikan menggunakan elemen pemanas listrik bawaan maupun diletakkan di atas kompor gas pada daerah terpencil.",
       "Dilengkapi manometer penunjuk tekanan skala ganda, katup pelepas tekanan otomatis pengaman beban lebih, struktur buka-tutup cepat dengan paking self-inflating, serta bodi stainless steel yang tahan lama."
@@ -15650,8 +15130,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sterilisator plasma hidrogen peroksida (H2O2) suhu rendah (50°C ±5°C) siklus cepat 30–60 menit dengan pintu angkat elektrik otomatis, kontrol PLC Siemens, dan layar sentuh 7 inci.",
     description: [
       "Infitek STV Series (108L, 135L, 192L) adalah sterilisator plasma gas H₂O₂ suhu rendah (50°C) yang dirancang untuk instrumen medis sensitif panas dan kelembapan seperti endoskopi, laparoskopi, kabel serat optik, dan lensa optik.",
       "Menggunakan sistem ruang aluminium 5052 persegi berefisiensi muat tinggi, pintu angkat elektrik otomatis dengan sensor anti-jepit, kontrol PLC Siemens Smart Series, layar sentuh 7.0 inci, printer mikro perekam per menit, serta inkubator indikator biologi terintegrasi."
@@ -15709,8 +15187,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Sterilisator panas kering (dry heat) konveksi udara paksa hingga 250°C dengan kontroler cerdas PID LCD, ruang dalam stainless steel mirror, dan insulasi serat aluminium silikat 6 sisi.",
     description: [
       "Infitek DOF-HAS-A Series (34L, 51L, 70L, 138L, 188L) memanfaatkan udara panas kering bersuhu tinggi (Suhu Ruang +10°C hingga 250°C) untuk sterilisasi dan depirogenasi alat gelas serta bahan yang tidak tahan uap basah.",
       "Mengadopsi sistem sirkulasi udara konveksi paksa vertikal dengan kipas impeller besar, ruang dalam stainless steel tahan korosi dengan sudut lengkung mudah dibersihkan, insulasi termal katun aluminium silikat tebal, jendela pengamatan kaca tempered ganda, serta pengatur suhu PID mikroprosesor."
@@ -15765,8 +15241,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Sterilisator jarum/ose inokulasi inframerah 825°C ±25°C dengan waktu sterilisasi 5–7 detik, zona pemanas 140 mm, dan kompatibel untuk ruang anaerobik (anaerobic chamber).",
     description: [
       "Infitek BCS-800A adalah sterilisator inframerah keramik bersuhu tinggi 825°C yang menggantikan penggunaan lampu spiritus (bunsen) secara aman dan higienis.",
       "Hanya membutuhkan waktu 5–7 detik untuk mensterilkan jarum inokulasi, berdiameter lubang sterilisasi Φ15 mm dengan panjang zona pemanas 140 mm, serta aman digunakan di dalam ruang anaerobik (anaerobic chamber) tanpa risiko konsumsi oksigen."
@@ -15820,8 +15294,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf kaset ultra-cepat (siklus total non-wrapped hanya 9 menit) kapasitas 6.0 Liter dengan generator uap mandiri 1.2 kVA untuk sterilisasi instrumen dental dan bedah mata.",
     description: [
       "Infitek STC-6000 adalah autoklaf kaset berkecepatan tinggi yang mampu menyelesaikan siklus sterilisasi instrumen tanpa pembungkus (non-wrapped) hanya dalam waktu 9 menit untuk mempercepat perputaran alat medis antar tindakan pasien.",
       "Dilengkapi kotak kaset sterilisasi stainless steel (ukuran luar 57×21×8 cm, volume 6.0 L), sistem generator uap terdedikasi 1.2 kVA, deteksi mandiri kerusakan otomatis, tampilan layar digital, serta kemampuan menghentikan siklus dengan aman kapan saja."
@@ -15876,8 +15348,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Sterilisator manik kaca (glass bead) digital suhu tinggi 100–300°C untuk dekontaminasi instrumen bedah kecil (pinset, gunting, skalpel) dalam 10–15 detik tanpa gas atau cairan kimia.",
     description: [
       "Infitek BGS-300L menggunakan media manik-manik kaca (glass beads 150 g) yang dipanaskan hingga 300°C untuk membasmi seluruh bakteri, spora, dan mikroorganisme patogen pada ujung instrumen logam dalam waktu 10–15 detik.",
       "Bebas dari penggunaan bahan kimia berbahaya atau api terbuka sehingga aman digunakan di dalam laminar air flow hood, dilengkapi pengatur suhu digital pada layar LCD, wadah stainless steel Φ40×80 mm, serta proteksi suhu berlebih."
@@ -15936,8 +15406,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Autoklaf vertikal Class N kapasitas 40L, 60L, dan 80L dengan mekanisme penutup tuas multi-link, pendingin udara cepat (rapid cooling), dan fungsi pencairan media.",
     description: [
       "Infitek STV-ML Series (40L, 60L, 80L; konfigurasi Semi-Auto dan Full-Auto) menghadirkan keandalan sterilisasi uap jenuh dengan bodi stainless steel 304 food-grade dan casing termoplastik tahan benturan suhu tinggi.",
       "Dilengkapi perangkat pendingin cepat berhembusan udara, fungsi pelelehan dan reservasi waktu sterilisasi, pemilihan program satu tombol, katup pembuangan udara dingin otomatis, interlock pengaman mekanik-elektrik, serta opsi pencetakan data."
@@ -15992,8 +15460,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf vertikal struktur baut (bolt structure) dengan rentang kapasitas luas 35L hingga 150L, kontrol mikroprosesor layar digital, dan paking kedap self-expanding.",
     description: [
       "Infitek STV-I Series (35L, 50L, 75L, 100L, 120L, 150L) adalah autoklaf vertikal berkekuatan tinggi dengan struktur penguncian baut kokoh untuk kapasitas tampung hingga 150 Liter.",
       "Dilengkapi sistem kontrol mikroprosesor dengan tombol sentuh dan layar digital, program pemanasan 3-tahap untuk saturasi uap tinggi, katup pelepas uap otomatis, ember stainless steel, serta sistem keselamatan interlock dan anti-kering."
@@ -16048,8 +15514,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf uap horizontal kapasitas besar 150L hingga 500L dengan fungsi pengeringan pakaian/kassa (drying function), interlock tekanan 0.027 MPa, dan bejana stainless steel.",
     description: [
       "Infitek STH Series (150L, 200L, 280L, 400L, 500L) dirancang untuk kebutuhan sterilisasi skala besar di rumah sakit dan fasilitas manufaktur farmasi dengan siklus otomatis penuh.",
       "Dilengkapi fungsi pengeringan terintegrasi untuk pakaian bedah dan kassa medis, mekanisme interlock pintu yang mencegah pembukaan hingga tekanan turun ke 0.027 MPa, katup pelepas uap otomatis 0.24 MPa, serta alarm dan pemutus daya otomatis saat kekurangan air."
@@ -16104,8 +15568,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf Class B standar Eropa (35L & 50L) dengan sistem pra-vakum denyut (pulse pre-vacuum) hingga -0.8 bar, kelembapan sisa <0.2%, generator uap cepat, dan micro-printer terpasang.",
     description: [
       "Infitek STB-APV Series (STB-APV35DV 35L dan STB-APV50DV 50L) memenuhi standar sterilisasi medis Eropa Class B dengan kemampuan menghasilkan tingkat vakum hingga -0.8 bar untuk evakuasi udara sempurna dari instrumen berongga kompleks Kelas A.",
       "Dilengkapi pengeringan pasca-vakum dengan sisa kelembapan instrumen <0.2%, uji Bowie-Dick dan Vacuum Test, generator uap mandiri cepat, layar LCD dengan tombol sentuh, serta micro-printer terpasang untuk pencatatan riwayat siklus sterilisasi."
@@ -16160,8 +15622,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Autoklaf meja Class N (18L & 23L) dengan generator uap mandiri terintegrasi, siklus otomatis suhu 121°C dan 134°C, tombol sentuh, dan program saturasi 3-tahap.",
     description: [
       "Infitek STB-NA Series (18L dan 23L) dirancang sesuai standar European Class N untuk sterilisasi instrumen padat tanpa pembungkus pada klinik medis, gigi, dan laboratorium.",
       "Dilengkapi generator uap internal untuk pasokan uap jenuh yang cepat, kontrol mikroprosesor dengan preset suhu 121°C dan 134°C, program 3-tahap kenaikan suhu untuk efisiensi sterilisasi optimal, serta katup pembuangan uap dan udara dingin otomatis."
@@ -16216,8 +15676,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Sterilisator uap bertekanan portabel digital (18L & 24L) berbahan stainless steel SUS 304 penuh dengan kontrol mikroprosesor, pengatur suhu 105–126°C, dan timer 0–99 menit.",
     description: [
       "Infitek STP-E Series (18L dan 24L) menghadirkan kepraktisan autoklaf model panci bertekanan portabel yang disempurnakan dengan kontrol digital mikroprosesor.",
       "Seluruh bodi terbuat dari stainless steel SUS 304 tahan karat, dilengkapi layar digital untuk pengaturan suhu (105–126°C) dan waktu (0–99 menit), manometer skala ganda, katup pelepas tekanan otomatis, serta segel self-inflating yang aman dan andal."
@@ -16272,8 +15730,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Autoklaf meja Class N berkecepatan tinggi (sterilisasi cepat 4–6 menit pada 134°C) kapasitas 16L & 24L dengan konstruksi stainless steel penuh dan 3 baki sterilisasi.",
     description: [
       "Infitek STB-NJ Series (16L dan 24L) dirancang khusus untuk sterilisasi uap cepat instrumen bedah, instrumen dental, dan alat laboratorium yang tahan uap jenuh hanya dalam waktu 4–6 menit pada suhu 134°C.",
       "Bekerja otomatis penuh tanpa perlu pengawasan manual, dilengkapi proteksi kekurangan air, alarm dan pemutus daya otomatis pasca-sterilisasi, 3 baki stainless steel (340×200×30 mm), serta bodi stainless steel yang kokoh."
@@ -16333,8 +15789,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf vertikal Class N multifungsi dilengkapi fungsi pengeringan (drying 0–240 menit), pembuka handwheel cepat, kontrol mikroprosesor layar digital, dan volume 35L–100L.",
     description: [
       "Infitek STV-III Series (35L, 50L, 75L, 100L) menggabungkan keandalan sterilisasi uap jenuh vertikal dengan fungsi pengeringan terintegrasi (drying time 0–240 menit) agar instrumen dan kassa medis keluar dalam kondisi kering.",
       "Menggunakan mekanisme pembuka cepat handwheel translasi, paking kedap self-expanding, program 3-tahap suhu untuk efisiensi sterilisasi, interlock pintu keselamatan, serta opsi penambahan printer eksternal."
@@ -16390,8 +15844,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf vertikal Class N dengan sistem sirkulasi uap internal tertutup (tanpa buangan uap ke ruangan), fungsi pengeringan otomatis (0–240 min), dan opsi pengisian air otomatis.",
     description: [
       "Infitek STV-AII Series (35L, 50L, 75L, 100L) mengadopsi teknologi sirkulasi uap internal (Internal Steam Cycle) yang mengembunkan uap di dalam unit sehingga lingkungan kerja laboratorium tetap kering, bersih, dan bebas kelembapan berlebih.",
       "Dilengkapi fungsi pengeringan otomatis (0–240 menit), pembuka handwheel cepat, kontrol mikroprosesor layar digital, opsi fungsi pengisian air otomatis (auto water inlet), serta opsi printer eksternal."
@@ -16446,8 +15898,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Autoklaf portabel semi-otomatis kapasitas 18L, 24L, dan 30L dengan kontrol digital LED, sistem interlock suhu-tekanan, dan memori penyimpanan program terakhir.",
     description: [
       "Infitek STP-AL Series (18L, 24L, 30L) adalah autoklaf portabel dengan sistem kontrol digital mikroprosesor yang memantau suhu dan tekanan ruang bejana secara real-time.",
       "Tutup bejana hanya dapat dibuka saat suhu dan tekanan berada pada batas aman berkat sistem interlock keselamatan, dilengkapi memori penyimpanan program sterilisasi terakhir, rentang suhu 50–126°C, timer hingga 999 menit, serta bodi stainless steel tebal 2.0 mm."
@@ -16502,8 +15952,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf vertikal kapasitas besar (100L, 150L, 200L) dengan dinding bejana tebal 3.0 mm, pemanas daya tinggi 6 kW (380V), interlock elektrik-mekanik, dan keranjang bertingkat hingga 4 susun.",
     description: [
       "Infitek STV-SL Series (100L, 150L, 200L) dibangun untuk beban sterilisasi berat berkelanjutan dengan bejana stainless steel berdiameter luas φ500 mm dan ketebalan dinding 3.0 mm.",
       "Dilengkapi penutup putar handwheel yang kokoh, sistem interlock keselamatan interaktif elektrik-mekanik, pengatur waktu hingga 99 jam, antarmuka verifikasi multi-titik suhu-tekanan, pemanas 380V/6kW, serta keranjang stainless steel bertingkat (2 hingga 4 susun)."
@@ -16559,8 +16007,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Autoklaf vertikal otomatis (60L & 80L) dengan segel ulir putar ganda (double-screw spinning seal), tangki pengumpul uap bawaan, kipas pendingin cepat, dan roda kastor.",
     description: [
       "Infitek STV-JLA Series (60L dan 80L) mengadopsi mekanisme penutup segel ulir putar ganda yang sangat mudah dioperasikan, aman, dan tahan bocor.",
       "Dilengkapi tangki penampung kondensasi uap bawaan (sehingga tidak ada uap panas yang dibuang bebas ke ruangan), kipas pendingin standar untuk percepatan pendinginan bejana, pemilihan mode sterilisasi padatan/cairan, 3 level metode pembuangan uap, koreksi deviasi suhu, serta roda kastor pada bagian dasar untuk kemudahan mobilitas."
@@ -16616,8 +16062,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Sterilisator uap bertekanan portabel kapasitas besar 39 Liter (φ340×430 mm) dengan tabung pemanas celup 2.5 kW, kompatibel pemanas kompor gas LPG, dan bodi stainless steel 0Cr19Ni9.",
     description: [
       "Infitek STP-39LM adalah autoklaf portabel berkapasitas terbesar di kelasnya (39 Liter) untuk mensterilkan instrumen bedah bervolume banyak dan bejana laboratorium pada fasilitas kesehatan terpencil.",
       "Menggunakan tabung pemanas listrik celup berkecepatan naik suhu tinggi dan konsumsi daya hemat (2.5 kW), dapat dioperasikan dengan kompor gas LPG, bodi baja tahan karat 0Cr19Ni9, manometer dengan penunjuk megabar dan suhu, serta katup pelepas udara dan katup pengaman otomatis."
@@ -16673,8 +16117,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf vertikal khusus kemasan makanan (counter pressure) kapasitas 35L hingga 150L dengan proteksi anti-pecah kemasan retort, tabung pemanas celup anti-kering, dan pemutus daya suhu lebih 140°C.",
     description: [
       "Infitek STV-LDC Series (35L, 50L, 75L, 100L, 150L) dirancang khusus untuk uji sterilitas dan sterilisasi kemasan makanan, pouch retort, kaleng, dan wadah tertutup yang memerlukan kontrol tekanan balik (counter pressure).",
       "Seluruh bodi terbuat dari stainless steel berkualitas tinggi, dilengkapi tabung pemanas celup anti-kering dengan alarm otomatis saat kekurangan air, pelepas tekanan otomatis pada 0.25 MPa, pemutus daya otomatis saat suhu melampaui 140°C, serta pengatur waktu digital."
@@ -16727,8 +16169,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Sterilisator panas kering suhu tinggi (Suhu Ruang +10°C hingga 300°C) dengan saluran udara ganda horizontal, ruang dalam mirror stainless steel, insulasi rock wool bersertifikasi CE, dan kapasitas hingga 230L.",
     description: [
       "Infitek DOF-HAS E Series (30L, 45L, 65L, 85L, 125L, 230L) dirancang untuk sterilisasi panas kering suhu tinggi mencapai 300°C dengan sirkulasi udara konveksi paksa saluran ganda (double air ducts).",
       "Dilengkapi ruang dalam baja tahan karat cermin (mirror stainless steel), pemanas baja tahan karat SUS304, papan insulasi wol batu (rock wool) berstandar CE, pengatur suhu cerdas PID dua seksi dengan tampilan tabung nixie 4 digit, gagang pintu anti-panas, serta lubang uji/buang Φ35 mm di bagian atas."
@@ -16784,8 +16224,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Autoklaf kaset berkecepatan tinggi kapasitas 5.2 Liter dengan waktu siklus non-wrapped hanya 9 menit, generator uap mandiri 1.2 kVA, dan sistem deteksi kerusakan mandiri.",
     description: [
       "Infitek STC-5000 menyediakan siklus sterilisasi instrumen medis dan dental tanpa pembungkus hanya dalam waktu 9 menit untuk mengatasi kebutuhan darurat dan mempercepat antrean tindakan bedah.",
       "Menggunakan kotak kaset luar berukuran 48×19.6×8 cm (ruang bejana 38×18×7.8 cm, volume 5.2 L), generator uap terdedikasi 1.2 kVA, sistem self-detection dengan tampilan kode galat pada layar, dan kemampuan interupsi program secara aman."
@@ -16839,8 +16277,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf kaset ultra-cepat dengan siklus sterilisasi non-wrapped hanya 6 menit kapasitas 1.8 Liter untuk instrumen kecil stomatologi, gigi, dan oftalmologi.",
     description: [
       "Infitek STC-2000 adalah model autoklaf kaset tercepat yang mampu menuntaskan seluruh proses sterilisasi instrumen kecil tanpa pembungkus hanya dalam waktu 6 menit.",
       "Sangat cocok untuk departemen stomatologi dan bedah mata, dilengkapi kotak kaset luar 39×19.6×4 cm (ruang bejana 28×18×3.8 cm, volume 1.8 L), generator uap mandiri 1.2 kVA, deteksi kesalahan otomatis pada layar, serta dimensi alat yang ringkas (57×41.5×17 cm)."
@@ -16893,8 +16329,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Autoklaf vertikal Class N cepat 28 Liter (φ270×500 mm) dengan waktu sterilisasi 4–6 menit, pembuka handwheel cepat, kontroler tekanan/suhu elektronik, dan pemanas 2 kW.",
     description: [
       "Infitek STV-28HD adalah autoklaf vertikal kompak berbahan stainless steel penuh yang menawarkan siklus sterilisasi cepat hanya dalam 4–6 menit setelah suhu dan tekanan tercapai.",
       "Dilengkapi pengontrol suhu dan tekanan elektronik otomatis, mekanisme buka-cepat handwheel dengan segel self-expanding dan interlock pengaman, tabung pemanas celup efisiensi tinggi 2 kW, ember sterilisasi stainless steel, serta proteksi kekurangan air dan panas berlebih."
@@ -16950,8 +16384,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf vertikal Class B pra-vakum denyut 3 kali (three times pre-vacuum) dengan fungsi pengeringan vakum (0–240 min), generator uap mandiri, pengisian air otomatis, dan printer internal.",
     description: [
       "Infitek STV-APV Series (35L, 50L, 75L, 100L) menggabungkan kemudahan muat bejana vertikal berkapasitas besar dengan standar sterilisasi tertinggi Class B berbasis sistem pra-vakum 3 tahap untuk instrumen berongga dan tekstil.",
       "Dilengkapi generator uap mandiri bawaan, pengisian air otomatis, layar sentuh LED, printer termal internal untuk rekaman siklus, fungsi pengeringan vakum sempurna (0–240 menit), pembuka handwheel cepat, dan port USB."
@@ -17007,8 +16439,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf meja Class N kapasitas 35L & 50L dengan sistem sirkulasi uap-air internal (bebas buangan uap ke ruangan), fungsi pengeringan, 4 baki stainless steel, dan sterilisasi cepat 4–6 menit.",
     description: [
       "Infitek STB-ND Series (STB-N35D 35L dan STB-N50D 50L) menawarkan solusi sterilisasi meja berkapasitas besar dengan sistem sirkulasi internal uap-air tertutup sehingga lingkungan laboratorium tetap kering dan bersih tanpa pelepasan uap panas.",
       "Menyediakan proses otomatis penuh (pengisian air, pemanasan, sterilisasi cepat 4–6 menit pada 134°C, pembuangan uap, dan pengeringan), dilengkapi 4 baki stainless steel bertingkat, interlock pintu pengaman, serta fungsi mematikan daya otomatis dengan bunyi alarm."
@@ -17066,8 +16496,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Autoklaf vertikal Class N (60L & 80L) dengan segel ulir putar ganda (double-screw spinning seal), kipas pendingin udara cepat, pembuangan udara dingin otomatis, dan roda kastor.",
     description: [
       "Infitek STV-JL Series (60L dan 80L) menghadirkan konstruksi bejana stainless steel SUS304 food-grade dengan mekanisme penutup segel ulir putar ganda yang aman, kokoh, dan mudah diputar.",
       "Dilengkapi kipas pendingin udara standar untuk mempercepat pendinginan bejana pasca-sterilisasi, pemilihan suhu sterilisasi satu tombol (50–134°C), fungsi koreksi deviasi suhu, port verifikasi kalibrasi, serta roda kastor pada bagian dasar untuk kemudahan mobilitas."
@@ -17122,8 +16550,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Sterilisator inframerah 825°C ±25°C berlubang lebar (diameter barang steril hingga Φ35 mm) dengan waktu sterilisasi 5–7 detik, daya 250W, dan kompatibel untuk ruang anaerobik.",
     description: [
       "Infitek BCS-800B menghadirkan lubang pemanas berdiameter lebih lebar (maksimum diameter barang steril hingga Φ35 mm) untuk mensterilkan mulut tabung reaksi besar, botol kultur, spatula, serta jarum inokulasi.",
       "Menghasilkan suhu zona tengah 825°C ±25°C yang mematikan mikroorganisme dalam 5–7 detik tanpa percikan aerosol berbahaya, berdaya 250W, serta aman dioperasikan di dalam anaerobic chamber maupun laminar flow hood."
@@ -17176,8 +16602,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Sterilisator manik kaca bejana dalam (diameter 40 mm × kedalaman 140 mm) dengan kapasitas manik kaca 300 g, kontrol suhu digital hingga 300°C, dan daya 250W.",
     description: [
       "Infitek BGS-300H dirancang dengan ruang bejana stainless steel ekstra dalam (kedalaman 140 mm) dan kapasitas manik kaca 300 gram untuk mensterilkan instrumen bedah bergagang panjang (pinset panjang, gunting bedah, trokar).",
       "Mencapai suhu sterilisasi hingga 300°C untuk mematikan spora dan bakteri dalam 10–15 detik, bebas dari asap atau cairan kimia, dilengkapi pengatur suhu digital berlayar LCD, timer hingga 99 jam 59 menit, serta proteksi suhu berlebih."
@@ -17238,8 +16662,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Autoklaf vertikal khusus laboratorium Biosafety P2 dan bank darah (75L) dengan filter HEPA gas buang anti-aerosol, sistem sirkulasi uap internal bebas emisi uap luar, dan daya 4.5 kW.",
     description: [
       "Infitek STV-75HG dirancang khusus untuk laboratorium biosafety level 2 (P2), unit transfusi darah, dan fasilitas isolasi medis untuk mencegah pelepasan aerosol patogen berbahaya ke lingkungan.",
       "Dilengkapi filter berefisiensi tinggi (HEPA filter) pada saluran pembuangan, sistem sirkulasi uap-air internal dengan pendingin kondensasi tertutup tanpa emisi uap ke ruangan, pembuka handwheel cepat dengan interlock keselamatan, keranjang stainless steel ganda, serta pengatur waktu hingga 99 jam 59 menit."
@@ -17302,8 +16724,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sterilisator uap horizontal pulsasi vakum kapasitas 150L hingga 1500L dengan ruang ganda persegi, kontrol PLC Siemens & layar sentuh HMI, denyut vakum 0–9 kali, pemantauan nilai F0, dan opsi pintu ganda (pass-through).",
     description: [
       "Infitek STH-NS Series (150L s.d. 1500L; pilihan Single Door 'D' atau Double Door 'S' bertipe Pulse Vacuum 'M') adalah sterilisator uap horizontal berkapasitas raksasa untuk CSSD rumah sakit dan industri farmasi.",
       "Mengadopsi bejana ganda berjaket persegi horizontal, sistem kontrol otomatis PLC + layar sentuh HMI, siklus denyut vakum dapat diatur 0–9 kali (tingkat vakum -0.086 MPa), pemantauan jaminan sterilisasi ganda nilai F0 dan suhu-waktu, segel pintu pneumatik, serta troli transfer muatan terintegrasi untuk model ≥600L."
@@ -17361,8 +16781,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Pembersih ultrasonik multifungsi 40 kHz (kapasitas 1.3L hingga 45L) dengan fungsi sweep & degassing, peredam suara isolasi bising, layar LCD besar, daya 10%–100%, dan pemanas hingga 60°C/80°C.",
     description: [
       "Infitek USC-M Series (pilihan kapasitas 1.3L hingga 45L) dirancang dengan teknologi peredam suara terpasang (sound insulation paste) untuk operasional bising ultra-rendah di laboratorium.",
       "Dilengkapi fungsi Sweep (penyebaran gelombang merata) dan Degas (penghilangan gelembung udara pelarut), daya ultrasonik variabel 10%–100%, pemanas terintegrasi hingga 60°C (opsi 80°C), timer digital 1–99 menit, katup pembuangan cairan (drain valve untuk model ≥3.2L), serta bodi dan keranjang berbahan stainless steel 304 penuh."
@@ -17423,8 +16841,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin pencuci alat gelas laboratorium otomatis kapasitas ruang 90L dengan pemanas 3 kW (suhu hingga 93°C tingkat disinfeksi), pompa sirkulasi Eropa, ruang SUS316L, dan kapasitas 120 tabung/vial.",
     description: [
       "Infitek LWD-60 adalah mesin pencuci botol dan alat gelas laboratorium otomatis berukuran kompak yang dapat ditempatkan di atas meja lab (benchtop) maupun ditanam di bawah meja (undercounter).",
       "Menggunakan air bertekanan dan bersuhu tinggi (hingga 93°C) dengan pompa sirkulasi impor Eropa, ruang dalam stainless steel SUS316L tahan korosi, sistem pasokan air paralel belakang dengan koneksi PTFE elastis, penyemprotan berputar 360° tanpa sudut mati, serta jaminan residu organik <0.1 mg/L dan ion logam <0.02 mg/L."
@@ -17486,8 +16902,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin pencuci dan pengering alat gelas laboratorium undercounter kapasitas 120L dengan kontrol PLC layar sentuh 7 inci, pemanas air 5 kW, pemanas udara kering 2.1 kW, dan 99 program kustom.",
     description: [
       "Infitek LWD-120 mengintegrasikan seluruh tahapan pencucian terprogram, disinfeksi termal, dan pengeringan udara panas untuk alat gelas laboratorium (beker, labu ukur, pipet, buret, cawan Petri).",
       "Mengusung kontroler PLC mikroprosesor anti-interferensi elektromagnetik dengan layar sentuh 7.0 inci, memori 99 program kustom, proteksi kata sandi 4 tingkat, pintu berselot elektromagnetik, serta opsi sensor konduktivitas air bilasan dan printer rekaman siklus."
@@ -17545,8 +16959,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin pencuci alat gelas otomatis kapasitas ≥200L (2 susun rak untuk 420 vial atau 72 labu ukur) dengan pompa sirkulasi Eropa 800 L/min, ruang SUS316L, dan pemanas 93°C.",
     description: [
       "Infitek LWD-200I adalah mesin pencuci alat gelas laboratorium berkapasitas besar (≥200 Liter) dengan 2 tingkat rak yang mampu mencuci 420 vial autosampler atau 72 labu ukur/beker sekaligus dalam satu siklus.",
       "Menggunakan pompa sirkulasi impor Eropa bertenaga semprot 800 L/menit (tahan suhu >93°C), ruang dalam stainless steel SUS316L, pintu logam berinsulasi busa ganda, 12 program standar + 99 program kustom, fungsi memori Black Box pencatat riwayat kerja, serta jaminan residu ion logam <0.02 mg/L."
@@ -17609,8 +17021,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin pencuci dan pengering alat gelas otomatis kapasitas ≥200L dengan pintu kaca vakum ganda, sistem pengeringan injeksi udara panas HEPA 99.99% (hingga 120°C), dan kontroler PLC industri 7 inci.",
     description: [
       "Infitek LWD-200 menghadirkan efisiensi pencucian dan pengeringan alat gelas kapasitas besar (mampu memuat 520 vial 2 mL atau 120 labu ukur) yang dilengkapi pintu kaca vakum ganda transparan berinsulasi termal tinggi.",
       "Mengadopsi pengeringan injeksi udara panas langsung ke dalam pipa semprot melalui filter HEPA efisiensi 99.99% (suhu udara hingga 120°C), kondensor uap ganda pencegah polusi uap ruangan, kontrol PLC industri anti-interferensi elektromagnetik pada layar sentuh 7 inci, pompa sirkulasi 800 L/min, dan kunci pintu 2-titik atas anti-bocor."
@@ -17672,8 +17082,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin pencuci dan pengering alat gelas tipe berdiri (floor-standing) kapasitas 220L (2 level muatan) dengan pemanas air hingga 15 kW, pengering udara 3.6 kW, dan kontrol PLC 7 inci.",
     description: [
       "Infitek LWD-220 adalah mesin pencuci dan pengering alat gelas tipe berdiri berkapasitas 220 Liter dengan 2 tingkatan rak muatan yang dirancang untuk laboratorium berkapasitas pengujian tinggi.",
       "Mengadopsi konstruksi baja tahan karat SUS304/SUS316L, daya pemanas air hingga 15 kW untuk kenaikan suhu cepat, pemanas pengering 3.6 kW, kontroler PLC layar sentuh 7.0 inci dengan 99 program kustom, proteksi keamanan elektrik menyeluruh, serta tingkat kebisingan rendah <55 dBA."
@@ -17729,8 +17137,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin pencuci dan pengering alat gelas kapasitas besar 320L dengan 3 tingkatan rak muatan (3-level load), pemanas air hingga 15 kW, pengering 3.6 kW, dan kontrol PLC 7 inci.",
     description: [
       "Infitek LWD-320 adalah mesin pencuci dan pengering alat gelas laboratorium berkapasitas ekstra besar 320 Liter dengan 3 tingkatan rak pembersih untuk volume throughput masif.",
       "Mengusung pompa sirkulasi air bertenaga hingga 2.8 kW, pemanas air 15 kW (380V), pengering udara panas 3.6 kW, kontroler PLC layar sentuh 7.0 inci dengan penyimpanan 99 siklus program, sistem pengaman pintu elektrik, serta bodi stainless steel SUS304/SUS316L kokoh."
@@ -17786,8 +17192,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin pencuci dan pengering alat gelas skala industri kapasitas raksasa 420L dengan printer validasi terintegrasi, pemanas air 15 kW, pompa cuci 2.8 kW, dan bodi stainless steel SUS304/SUS316L.",
     description: [
       "Infitek LWD-420M adalah varian terbesar dari lini mesin pencuci dan pengering alat gelas laboratorium dengan kapasitas ruang bejana 420 Liter yang dilengkapi printer bawaan untuk rekaman data validasi.",
       "Ditenagai pompa pencucian industri 2.8 kW, pemanas air bertenaga 15 kW (380V), pemanas pengering udara panas 3.6 kW, ruang kerja stainless steel 316L ekstra luas (688×700×703 mm), kontroler PLC layar sentuh 7.0 inci dengan 99 program kustom, serta kunci pengaman pintu elektromagnetik."
@@ -17848,8 +17252,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Pembersih ultrasonik daya variabel 40 kHz (kapasitas 3L hingga 30L) dengan transduser keramik piezoelektrik PZT, kontroler LED CNC, pemanas hingga 80°C, dan timer 0–480 menit.",
     description: [
       "Infitek USC-DP Series (3L, 4L, 6L, 10L, 15L, 22.5L, 30L) dirancang khusus untuk pembersihan mendalam komponen presisi dan preparasi sampel analitik (homogenisasi, ekstraksi, dispersi, emulsifikasi).",
       "Menggunakan transduser piezoelektrik keramik PZT (Lead Zirconate Titanate) CTV33 dengan sirkuit proteksi ganda, daya ultrasonik yang dapat diatur 10%–100%, sistem pemanas termostatik hingga 80°C, timer dapat disesuaikan 0–480 menit, antarmuka LED CNC stabil, serta sistem drainase pada model ≥6L."
@@ -17906,8 +17308,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Pembersih ultrasonik digital layar LCD 3.2 inci (10L, 15L, 22.5L) dengan teknologi Degas cepat, timer hingga 9999 menit, pemanas hingga 80°C, dan tangki stainless steel 304 cetak utuh.",
     description: [
       "Infitek USC-DII Series (10L, 15L, 22.5L) dilengkapi layar LCD 3.2 inci yang secara simultan menampilkan daya, frekuensi, waktu, dan suhu aktual cairan pembersih.",
       "Mengadopsi teknologi Degas eksklusif untuk pelepasan gas cair seketika, tangki dalam cetak presisi stainless steel 304 tanpa sambungan las, penutup peredam suara (sound-reduction lid), sistem drainase, daya ultrasonik variabel 10%–100%, serta timer yang dapat diatur hingga 9999 menit."
@@ -17964,8 +17364,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pembersih ultrasonik industri kapasitas besar 23L hingga 250L dengan generator ultrasonik mandiri terpisah, transduser daya tinggi tahan kerja 24 jam, pemanas hingga 110°C, dan bodi SUS304 tebal.",
     description: [
       "Infitek USC2840-I Series (23L hingga 250L) dibangun untuk pembersihan industri berat dan penghilangan oli, kerak, serta karbon pada suku cadang mesin, blok silinder, cetakan, dan peralatan aviasi.",
       "Dilengkapi generator ultrasonik digital terpisah (separated generator) yang mendukung operasi non-stop 24 jam, pilihan frekuensi 28 kHz atau 40 kHz, pemanas bertenaga tinggi hingga 110°C, sistem drainase industri, serta keranjang stainless steel SUS304 ekstra kuat."
@@ -18020,8 +17418,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Pembersih ultrasonik portabel model tongkat celup (wand type) berfrekuensi tinggi 50.000 Hz (50 kHz) dengan ujung aluminium alloy untuk pembersihan fleksibel di berbagai wadah air (600–3000 mL).",
     description: [
       "Infitek USC-9600 adalah inovasi pembersih ultrasonik portabel model kepala celup yang dapat dimasukkan ke dalam wadah air apa pun (kapasitas 600 mL hingga 3000 mL).",
       "Bekerja pada frekuensi tinggi 50 kHz berdaya 70W dengan kepala transduser paduan aluminium (93×32 mm), pengontrol waktu otomatis 5 menit, sirkuit proteksi terisolasi yang aman, serta bobot unit kepala yang sangat ringan (hanya 360 gram) untuk kemudahan dibawa bepergian."
@@ -18075,8 +17471,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Pembersih ultrasonik kompak 750 mL (42 kHz, 50W) dengan kontrol sentuh digital 5 periode waktu (90–480 detik), penutup peredam bising rapat, dan dudukan khusus keping CD/DVD.",
     description: [
       "Infitek USC-5200A adalah pembersih ultrasonik meja kompak berkapasitas 750 mL yang dirancang untuk membersihkan celah sempit kacamata, perhiasan, gigi tiruan, printhead printer, serta keping CD/DVD.",
       "Menggunakan frekuensi ultrasonik 42 kHz berdaya 50W, layar digital dengan 5 pilihan waktu pembersihan (90s, 180s, 280s, 380s, 480s), penutup atas rapat kedap suara untuk mereduksi kebisingan, serta tangki stainless steel 150×130×50 mm."
@@ -18129,8 +17523,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Pembersih ultrasonik mini 400 mL (40 kHz, 30W) berbobot ringan 380 g dengan tombol sakelar satu sentuhan, pematian otomatis 5 menit, dan penutup kedap suara.",
     description: [
       "Infitek USC-1500E adalah pembersih ultrasonik saku berkapasitas 400 mL berpenampilan elegan dan modern untuk membersihkan sudut buta kacamata, perhiasan, dan barang-barang mikro.",
       "Dilengkapi tombol sakelar satu sentuhan (one-button switch) dengan pematian daya otomatis setelah 5 menit kerja, frekuensi ultrasonik 40 kHz berdaya 30W, penutup atas peredam suara bising, tangki stainless steel 168×75×40 mm, serta bobot unit ringan hanya 380 gram."
@@ -18181,8 +17573,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotary evaporator elektrik dengan kontrol pengangkat dual-mode (stroke 150 mm), penangas air/minyak teflon 8L hingga 210°C, kondensor vertikal 3-lapis (0.21 m²), dan rotasi interval bolak-balik.",
     description: [
       "Infitek REV-3000AC adalah rotary evaporator modern berkapasitas labu evaporasi 250–3000 mL dengan kontrol pengangkat elektrik sentuh dan gagang yang memiliki jarak aman 60 mm di batas bawah untuk mencegah benturan labu.",
       "Dilengkapi penangas ganda air (hingga 99°C) dan minyak (hingga 210°C) berlapis teflon anti-korosi (volume 8 L), motor DC 70W berkecepatan 0–310 rpm, kondensor vertikal serpentine 3-lapis dengan titik tetes anti-aliran balik, rotasi interval bolak-balik terprogram untuk pengeringan serbuk, serta segel PTFE cetak khusus."
@@ -18243,8 +17633,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Rotary evaporator skala lab dengan penangas 5L (suhu hingga 180°C), pengangkat manual 110 mm + tambahan 100 mm, motor brushless DC 20–200 rpm, dan segel pegas ganda PTFE.",
     description: [
       "Infitek REV100-S adalah rotary evaporator laboratorium yang ekonomis dan tangguh dengan penangas independen 5L yang mendukung mode pemanasan air/minyak hingga 180°C.",
       "Dilengkapi motor Brushless DC berkecepatan 20–200 rpm, pengangkat manual 110 mm dengan bantuan pengangkat sekunder 100 mm, kondensor heliks ganda paten (area 1200/1700 cm²), proteksi panas berlebih 220°C, proteksi anti-kering (boil-dry), serta cincin penyegel pegas ganda berbahan PTFE."
@@ -18307,8 +17695,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotary evaporator cerdas layar sentuh kapasitas 1L dengan sistem pengontrol vakum bawaan (hingga 2 mbar), program distilasi gradien 10-tahap, dan pengangkat otomatis.",
     description: [
       "Infitek REV-1000AX mengintegrasikan sistem kontrol vakum digital langsung di dalam unit untuk memfasilitasi distilasi bertahap pada rentang labu 25–1000 mL.",
       "Dilengkapi layar sentuh berwarna besar dengan penyimpanan 40 metode eksperimen, program distilasi gradien 10-tahap, pelepasan tekanan otomatis satu tombol, penangas teflon geser 3.5L (hingga 210°C), pengangkat otomatis dengan proteksi benturan, poros kaca terintegrasi, dan kondensor vertikal 0.18 m²."
@@ -18368,8 +17754,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotary evaporator kapasitas 2L, 3L, dan 5L dengan layar LCD warna besar, pengangkat seimbang otomatis (stroke 150 mm), penangas teflon hingga 210°C, dan kondensor 3-lapis hingga 0.31 m².",
     description: [
       "Infitek REV-AX Series (REV-2000AX 2L, REV-3000AX 3L, REV-5000AX 5L) adalah seri rotary evaporator kelas menengah hingga skala pilot dengan kapasitas evaporasi air mencapai 43 mL/menit.",
       "Dilengkapi pengangkat keseimbangan otomatis dengan stroke 150 mm (jarak aman 60 mm anti-bentur), penangas komposit teflon berkapasitas 5.4L hingga 11L (suhu air hingga 99°C dan minyak hingga 210°C), motor rotasi DC 70W, kondensor koil 3-lapis (0.18–0.31 m²), serta sistem segel impor PTFE berdaya tahan abrasi tinggi."
@@ -18423,8 +17807,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Rotary evaporator 1L (opsi 2L) dengan pengaturan kecepatan putar stepless 0–200 rpm, pengangkat otomatis bertenaga motor 120 mm, penangas teflon tertutup, dan kaca borosilikat GG-17.",
     description: [
       "Infitek REV-2000 Series (REV-2000B tampilan digital ganda / REV-2000C layar LCD) dibangun dengan bodi paduan aluminium kokoh dan komponen kaca borosilikat GG-17.",
       "Dilengkapi pengaturan kecepatan putar stepless 0–200 rpm yang halus, pengangkat otomatis bertenaga motor (stroke 120 mm), penangas teflon tertutup penuh (suhu ruang s.d. 99°C ±1°C), labu evaporasi 1L mulut standar 24#, serta labu penampung 1L sambungan bola 35#."
@@ -18478,8 +17860,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Rotary evaporator 3L dengan labu penampung 2L, kecepatan stepless 0–200 rpm, pengangkat otomatis 120 mm, penangas teflon φ255×155 mm, dan kaca GG-17.",
     description: [
       "Infitek REV-3000 Series (REV-3000B tampilan digital ganda / REV-3000C layar LCD) menyediakan kapasitas labu evaporasi 3 Liter dan labu penampung 2 Liter untuk distilasi skala menengah.",
       "Menggunakan motor rotasi 40W dengan pengaturan kecepatan stepless 0–200 rpm, sistem pengangkat otomatis bertenaga motor (stroke 120 mm), penangas teflon tertutup penuh berdiameter φ255 mm (suhu ruang s.d. 99°C ±1°C), dan bodi paduan aluminium tahan korosi."
@@ -18534,8 +17914,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotary evaporator otomatis kecepatan tinggi 20–280 rpm dengan pengangkat otomatis 150 mm (auto-lift ke posisi aman saat mati listrik), kondensor 1700 cm², dan penangas 5L hingga 180°C.",
     description: [
       "Infitek REV100-P adalah rotary evaporator performa tinggi yang dilengkapi fitur keselamatan mutakhir: pengangkat otomatis bertenaga motor yang otomatis mengangkat labu evaporasi keluar dari penangas saat terjadi pemadaman listrik mendadak.",
       "Menggunakan motor Brushless DC berkecepatan 20–280 rpm dengan rotasi interval dua arah, penangas 5L air/minyak hingga 180°C (1300W), kondensor paten seluas 1700 cm², segel pegas ganda PTFE, serta port USB untuk kendali jarak jauh melalui komputer PC."
@@ -18592,8 +17970,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotary evaporator skala industri kapasitas labu 20L dan labu penampung 10L dengan kapasitas evaporasi air hingga 4.0 L/jam, pengangkat otomatis 180 mm, kondensor 2-seksi 1.2 m², dan katup switching vakum.",
     description: [
       "Infitek REV200-P adalah rotary evaporator skala industri tugas berat yang dirancang untuk fasilitas produksi farmasi, biofarmasi, dan ekstraksi botani massal dengan labu sampel bundar 20 Liter dan labu penampung 10 Liter.",
       "Mampu menguapkan uap air hingga 4.0 Liter per jam (vakum < 2.6 hPa), dilengkapi penangas air/minyak besar Φ450×240 mm (hingga 180°C, daya 4.6 kW), pengangkat otomatis bermotor (stroke 180 mm), kondensor vertikal 2-seksi tripel serpentine seluas 1.2 m², serta katup peralihan (switching valve) untuk pengosongan cairan secara kontinu tanpa merusak tingkat vakum sistem."
@@ -18651,8 +18027,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotary evaporator skala pilot 50L (labu penampung 20L) dengan kondensor ganda seluas 1.44 m², penangas stainless steel 304 (76L, daya 6.5 kW) hingga 180°C, dan katup pengumpanan piston PTFE.",
     description: [
       "Infitek REV-1050II adalah rotary evaporator skala pilot ekstra besar dengan labu putar 50 Liter (port flensa Φ125 mm) dan labu penampung 20 Liter untuk proses distilasi massal di pabrik kimia dan farmasi.",
       "Seluruh bagian kontak material terbuat dari kaca borosilikat tinggi 3.3 dan PTFE murni, dilengkapi sistem kondensor ganda (kondensor utama + kondensor pembantu seluas 1.44 m²), motor rotasi booster brushless 100W bebas percikan api, penangas berpenutup silikon anti-panas (volume 76L, pemanas 6.5 kW), katup pengumpanan piston berpipa PTFE untuk penambahan bahan kontinu di bawah kondisi vakum, serta katup switching vakum."
@@ -18707,8 +18081,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
-    shortDescription:
-      "Rotary evaporator skala pilot 5L (labu penampung 3L) dengan motor brushless bebas percikan, kondensor koil ganda 0.5 m², penangas stainless steel 12L (pemanas 2 kW), dan pengangkat elektrik 140 mm.",
     description: [
       "Infitek REV-1005II menggabungkan kapasitas labu putar 5 Liter (port flensa Φ80 mm) dan labu penampung 3 Liter dengan konstruksi kaca borosilikat 3.3 dan penyegel komposit PTFE + fluororubber.",
       "Dilengkapi motor putar booster brushless 60W senyap bebas percikan api, penangas stainless steel 304 berinsulasi silikon (volume 12L, pemanas 2 kW, stroke 140 mm), kondensor koil tegak 2-lapis seluas 0.5 m², serta katup pengumpanan piston kontinu."
@@ -18765,8 +18137,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pengontrol vakum digital presisi (1–1000 mbar) dengan layar sentuh TFT 5 inci, penyimpanan 5 program multi-tahap (5 langkah per program), material anti-korosif PTFE/keramik, dan kontrol daya pompa otomatis.",
     description: [
       "Infitek VACC100 adalah kontroler vakum digital presisi tinggi untuk mengatur derajat vakum pada sistem rotary evaporator, konsentrator, dan distilasi vakum pada rentang 1 hingga 1000 mbar.",
       "Mengusung layar sentuh TFT 5 inci, dua mode kontrol (Single-Point dan Programmed Control hingga 5 program × 5 langkah), katup ventilasi internal untuk injeksi gas inert, seluruh bagian kontak uap berbahan anti-korosi (PTFE, PP, silikon, keramik), serta kemampuan pemutusan daya otomatis pompa vakum saat kestabilan vakum tercapai demi penghematan energi."
@@ -18823,8 +18193,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Konsentrator sentrifugal vakum kompak (lebar bodi hanya 28 cm) kecepatan 1800 rpm (380×g), kapasitas rotor standar 66 × 1.5 mL, ruang teflon anti-korosi, dan pemanas hingga +70°C.",
     description: [
       "Infitek VCC-A1 adalah konsentrator sentrifugal vakum (SpeedVac) berdesain hemat tempat dengan lebar bodi hanya 28 cm yang dirancang untuk pemekatan cepat sampel DNA/RNA, metabolomik, dan fraksi HPLC.",
       "Menggabungkan gaya sentrifugal 380×g (1800 rpm) untuk mencegah bumping dengan ruang bejana berlapis teflon anti-korosi pelarut organik, pengaturan suhu cepat (Suhu Ruang, 30°C, 45°C, 60°C hingga +70°C), tombol mulai/berhenti satu sentuhan, serta rotor standar 66 tabung 1.5 mL."
@@ -18885,8 +18253,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Konsentrator sentrifugal vakum kapasitas masif 180 tabung (1.5/2.0 mL) dengan penggerak elektromagnetik bebas getaran, kontrol vakum otomatis 0.1–100 mbar asal Jerman, dan suhu hingga +100°C.",
     description: [
       "Infitek VCC-AR1 menghadirkan efisiensi pemekatan tingkat tinggi untuk laboratorium genomik dan proteomik dengan sistem rotor tumpang tindih ganda (dual rotor overlapping) berkapasitas 180 tabung 1.5/2.0 mL.",
       "Dilengkapi sistem penggerak elektromagnetik torsi tinggi bergetaran rendah, sistem kontrol vakum otomatis asal Jerman (rentang 0.1–100 mbar, vakum akhir ≤0.2 mbar), desain kontrol suhu dua tahap (hingga +100°C ±1°C), 4 tombol pintas program, serta 30 memori metode pengguna."
@@ -18943,8 +18309,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Konsentrator sentrifugal vakum berpendingin (refrigerated: -5°C hingga +100°C) dengan fungsi pra-pendinginan (pre-cooling), kapasitas 180 tabung (1.5/2.0 mL), dan kontrol vakum 0.1–100 mbar presisi ±0.1 mbar.",
     description: [
       "Infitek VCC-AR1P dilengkapi sistem pendingin terintegrasi untuk pemekatan sampel sensitif panas (termo-labil) seperti enzim, peptida, dan metabolit pada rentang suhu dingin -5°C hingga +100°C.",
       "Mengusung fungsi pra-pendinginan ruang sampel (pre-cooling), pelepasan tekanan vakum otomatis dengan katup impor, kontrol vakum presisi ±0.1 mbar (vakum akhir ≤0.2 mbar), kapasitas tampung 180 tabung 1.5/2.0 mL, penggerak elektromagnetik bebas getaran, serta kompatibilitas dengan lebih dari 20 pilihan rotor."
@@ -18999,8 +18363,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Kontroler vakum digital layar sentuh 4.3 inci rentang 0–1013 mbar (resolusi 0.1 kPa / akurasi ±1 mbar) dengan fungsi pemompaan kontinu, kontrol program, dan pelepasan tekanan satu sentuhan.",
     description: [
       "Infitek VACC-Y1 adalah pengontrol vakum digital mandiri berdimensi ringkas (bobot 0.6 kg) dengan layar sentuh berwarna 4.3 inci untuk mengatur tekanan saturasi pada reaksi dekompresi secara presisi.",
       "Mendukung kontrol program terencana, pemompaan berkelanjutan (continuous pumping), pelepasan tekanan satu klik (one-click pressure release), pilihan satuan tekanan (hPa, mbar, mmHg), sambungan pagoda 8 mm, serta kompatibilitas dengan pompa diafragma, pompa rotary vane, maupun pompa sirkulasi air."
@@ -19056,8 +18418,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotary evaporator skala pilot 10L (labu penampung 5L) dengan kondensor ganda (0.51 m²), motor brushless 60W bebas percikan, penangas stainless steel 21L (pemanas 3 kW), dan pengangkat elektrik 190 mm.",
     description: [
       "Infitek REV-1010II dirancang untuk distilasi skala pilot berkapasitas labu putar 10 Liter (port flensa Φ95 mm) dan labu penampung 5 Liter dengan efisiensi kondensasi tinggi melalui sistem kondensor ganda seluas 0.51 m².",
       "Menggunakan motor putar booster brushless 60W bebas percikan api, penangas stainless steel 304 berinsulasi silikon (volume 21L, pemanas 3.0 kW, stroke pengangkat elektrik 190 mm), katup pengumpanan piston berpipa PTFE untuk penambahan larutan kontinu di bawah vakum, serta katup switching vakum."
@@ -19112,8 +18472,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Evaporator tiup nitrogen otomatis kapasitas masif 80 posisi (vial 80 mL) dengan teknologi pelacakan permukaan cairan (needle-following), katup aliran proporsional elektronik, dan tangki penangas air kaca transparan 3 sisi.",
     description: [
       "Infitek NEC90-R80W adalah sistem pemekat sampel tiup nitrogen otomatis berkapasitas tinggi hingga 80 sampel secara simultan untuk analisis residu lingkungan, pangan, dan biofarmasi.",
       "Dilengkapi teknologi pelacakan otomatis permukaan cairan (needle-following) dengan penurunan jarum berkecepatan konstan terprogram (jarak vertikal ≥160 mm), pengatur aliran gas elektronik proporsional (0–3.0 L/min per kanal), tangki penangas air kaca 3 sisi dengan sensor ketinggian air otomatis, kipas pembuangan uap aktif, serta sensor anti-jepit (anti-pinch)."
@@ -19175,8 +18533,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Evaporator tiup nitrogen blok kering (dry block aluminium kemurnian tinggi) suhu hingga 160°C dengan kontrol fuzzy PID mikroprosesor, waktu pemanasan ≤15 menit, dan kapasitas 1 modul blok.",
     description: [
       "Infitek NEC160-1A menggunakan media penghantar panas blok aluminium kemurnian tinggi (high-purity aluminum dry block) sebagai pengganti penangas air konvensional untuk pemanasan bebas kontaminasi uap air.",
       "Dilengkapi kontrol suhu fuzzy PID mikroprosesor (Suhu Ruang +5°C s.d. 160°C), peniupan nitrogen independen per tabung sampel, jarum gas dengan pergerakan vertikal maksimum 200 mm, timer hingga 99 jam 59 menit, serta kompatibilitas dengan blok tabung diameter 10–20 mm (kapasitas 12 tabung per blok)."
@@ -19232,8 +18588,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Evaporator tiup nitrogen blok kering kapasitas 2 blok aluminium (daya 500W, suhu hingga 160°C) dengan panjang jarum 150 mm dan kontrol suhu fuzzy PID.",
     description: [
       "Infitek NEC160-2A adalah versi kapasitas ganda yang menampung 2 modul blok pemanas aluminium sekaligus untuk meningkatkan jumlah sampel yang dapat dievaporasi dalam satu waktu.",
       "Didukung kontrol suhu presisi fuzzy PID (hingga 160°C), jarum peniup stainless steel panjang 150 mm, peniupan gas independen per lubang, daya pemanas 500W, serta pilihan blok modular untuk berbagai diameter tabung reaksi."
@@ -19290,8 +18644,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Evaporator tiup nitrogen otomatis 24 posisi khusus vial kromatografi GC/HPLC dan tabung QuEChERS 1–2 mL dengan layar sentuh 7 inci, pelacakan jarum 50 mm (0–100 mm/min), dan pemanas rak berongga transparan hingga 100°C.",
     description: [
       "Infitek NEC100-R24M dirancang khusus untuk pemekatan cepat sampel bervolume kecil ber-throughput tinggi seperti vial kromatografi 1.5/2/5 mL dan tabung sentrifus QuEChERS 1–2 mL.",
       "Dilengkapi layar sentuh berwarna 7.0 inci terintegrasi, kontrol laju aliran gas otomatis per jarum (0–3.0 L/min) dengan 4 kanal independen berkatup penutup hemat gas, jarum peniup yang turun otomatis melacak permukaan cairan (kecepatan 0–100 mm/min presisi 0.1 mm/min, stroke 50 mm), rak pemanas berongga tembus pandang (RT–100°C), serta pemutus aliran gas darurat otomatis."
@@ -19354,8 +18706,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Evaporator tiup nitrogen aliran pusaran (vortex airflow) 12 posisi dengan sensor deteksi titik akhir otomatis 1.0 mL (endpoint sensor), layar sentuh 10 inci, penangas air kaca transparan, dan nozel bersudut dapat diatur.",
     description: [
       "Infitek NEC60-R12E mengadopsi teknologi aliran udara pusaran (vortex airflow technology) dan sensor optik deteksi titik akhir (endpoint detection) yang secara otomatis menghentikan peniupan gas saat volume cairan mencapai batas presisi 1.0 mL.",
       "Mendukung 12 tabung berkapasitas 60 mL atau 250 mL secara paralel, sudut nozel kiri-kanan dan posisi horizontal yang dapat disesuaikan (≥30 mm), layar sentuh 10.0 inci, pasokan dan pengurasan air penangas otomatis terkontrol sensor, jendela kaca transparan 3 sisi berlampu penerang, serta aliran gas bergradien."
@@ -19417,8 +18767,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Evaporator tiup nitrogen blok kering klasik kapasitas 1 blok aluminium (suhu hingga 160°C, daya 300W) dengan peniupan independen per sampel dan jarum 150 mm.",
     description: [
       "Infitek NEC160-1 adalah konsentrator sampel tiup nitrogen klasik yang menggunakan blok pemanas aluminium kemurnian tinggi berdaya hantar panas prima.",
       "Dilengkapi pengontrol suhu mikroprosesor dengan teknik fuzzy PID (Suhu Ruang +5°C s.d. 160°C), peniupan jarum gas independen berpanjang 150 mm, waktu pemanasan ≤15 menit, serta kompatibilitas luas dengan blok tabung reaksi MD03–MD16 (hingga diameter 40 mm atau tabung sentrifus 1.5/2.0 mL)."
@@ -19473,8 +18821,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Evaporator tiup nitrogen blok kering klasik kapasitas 2 blok aluminium (daya 500W, suhu hingga 160°C) dengan peniupan gas independen per sampel dan jarum 150 mm.",
     description: [
       "Infitek NEC160-2 menawarkan kapasitas penampungan ganda dengan memuat 2 modul blok pemanas aluminium untuk pemekatan sampel dalam jumlah besar secara paralel.",
       "Dilengkapi pengatur suhu cerdas fuzzy PID (Suhu Ruang +5°C s.d. 160°C), jarum gas independen 150 mm, pemanas 500W dengan kenaikan suhu cepat ≤15 menit, serta kompatibilitas dengan blok modular MD03–MD16."
@@ -19529,8 +18875,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Evaporator tiup nitrogen penangas air (water bath) 12 posisi bernomor dengan penahan sampel pegas (spring-loaded holder untuk tabung Φ10–29 mm, volume 1–50 mL), sensor level air, dan katup jarum pengatur ketinggian independen.",
     description: [
       "Infitek NEC100-1 memanfaatkan media penangas air (water bath) untuk pemanasan sampel yang lembut dan seragam pada rentang Suhu Ruang +5°C hingga 99°C.",
       "Dilengkapi rak penahan sampel berpegas (spring-loaded sample holder) untuk 12 posisi bernomor (kompatibel dengan tabung diameter 10–29 mm, volume 1–50 mL), katup jarum pengangkat independen di setiap posisi dengan travel vertikal 200 mm, sensor level air dengan alarm anti-kering, flowmeter gas terpadu, serta konstruksi seluruh komponen anti-korosi."
@@ -19592,8 +18936,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Evaporator tiup nitrogen blok kering khusus pelat mikro 96-well (PCR plate 0.2 mL & ELISA plate) dengan kontrol suhu fuzzy PID hingga 160°C, daya 500W, dan pergerakan vertikal 150 mm.",
     description: [
       "Infitek NEC160-1B dirancang khusus untuk pemekatan simultan sampel ber-throughput tinggi pada format pelat 96-well (pelat PCR 0.2 mL dan pelat mikrotiter ELISA).",
       "Dilengkapi blok pemanas aluminium presisi (MD17 untuk PCR 96-well / MD18 untuk ELISA 96-well berdimensi 153×95.5×60 mm), kontrol suhu mikroprosesor fuzzy PID (Suhu Ruang +5°C s.d. 160°C), manifold peniup gas berjarum mikro paralel, daya pemanas 500W, serta pergerakan vertikal 150 mm."
@@ -19648,8 +18990,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Evaporator tiup nitrogen blok kering dengan desain celah visual (slotted-design block) untuk pengamatan langsung posisi permukaan cairan sampel selama pemekatan, suhu hingga 160°C.",
     description: [
       "Infitek NEC160-1C adalah penganalisis pemekat sampel tiup nitrogen blok kering yang dilengkapi blok aluminium beralur khusus (special slotting-design block) sehingga operator dapat memantau penurunan volume cairan sampel secara visual tanpa mengangkat tabung.",
       "Mengadopsi kontrol suhu mikroprosesor fuzzy PID (Suhu Ruang +5°C s.d. 160°C), peniupan gas kontinu independen per tabung, pergerakan vertikal hingga 200 mm, daya 500W, serta pilihan blok beralur RC02 (12 lubang, diameter 10.5–20.5 mm, kedalaman 50 mm)."
@@ -19703,8 +19043,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pengaduk magnetik (magnetic stirrer) tanpa pemanas dengan motor brushless DC (kapasitas aduk hingga 20L pada MGS-1C, 10L pada MGS-7S, dan 5L pada MGS-6P) serta pelat kerja tahan kimia.",
     description: [
       "Infitek MGS Series (MGS-1C, MGS-7S, MGS-6P) adalah pengaduk magnetik tanpa pemanas yang andal untuk pencampuran larutan dengan kapasitas aduk air hingga 20 Liter.",
       "Dilengkapi motor brushless DC bebas perawatan (pada MGS-1C & MGS-6P), kecepatan putar hingga 1500 rpm, pelat kerja berlapis keramik tahan bahan kimia korosif, bodi ringkas, serta perlindungan IP21."
@@ -19758,8 +19096,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pengaduk overhead (overhead stirrer) kapasitas 40L dengan torsi maksimum 60 N·cm, viskositas hingga 50.000 mPa·s, kecepatan 30–2200 rpm, dan penyesuaian torsi otomatis.",
     description: [
       "Infitek OHS-100 adalah pengaduk overhead bertenaga tinggi untuk pencampuran sampel padat-cair dan cair-cair berviskositas menengah hingga tinggi (hingga 50.000 mPa·s) dengan volume makro hingga 40 Liter.",
       "Menggunakan motor DC brushless aman untuk operasi kontinu jangka panjang, penyesuaian torsi otomatis sesuai perubahan viskositas sampel, collet pengunci mandiri dengan lubang tembus poros (penetration hole), serta proteksi beban berlebih (overload) otomatis."
@@ -19814,8 +19150,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pengaduk overhead kapasitas 20L dengan torsi 40 N·cm, viskositas hingga 10.000 mPa·s, kecepatan 30–2200 rpm, layar LCD, dan motor DC brushless.",
     description: [
       "Infitek OHS-50 adalah pengaduk overhead handal untuk pencampuran volume sedang hingga 20 Liter dengan viskositas maksimal 10.000 mPa·s.",
       "Dilengkapi motor DC brushless berdaya input 60W, layar LCD dengan pengaturan kecepatan kasar dan halus, penyesuaian torsi otomatis, lubang tembus poros (penetration hole), serta proteksi pengaman beban berlebih."
@@ -19869,8 +19203,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Hotplate magnetic stirrer dengan suhu pemanasan maksimal 380°C, kapasitas aduk 5L, pelat aluminium berlapis keramik untuk transfer panas instan, motor DC brushless, dan dukungan sensor PT1000.",
     description: [
       "Infitek HPS-380-1 memadukan pemanasan pelat hingga 380°C dan pengadukan magnetik kapasitas 5 Liter untuk kebutuhan laboratorium harian.",
       "Menggunakan pelat kerja aluminium berbalut lapisan keramik untuk perpindahan panas yang sangat cepat, motor DC brushless bebas perawatan (kecepatan 200–1500 rpm), layar LCD ganda untuk suhu dan kecepatan, serta kompatibilitas dengan sensor suhu eksternal PT1000 (akurasi ±0.2°C)."
@@ -19925,8 +19257,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pengaduk overhead tugas berat kapasitas 60L dengan torsi 60 N·cm, viskositas hingga 80.000 mPa·s, daya input 160W, dan pelindung chuck pengaman.",
     description: [
       "Infitek OHS-150 adalah model tertinggi dalam lini pengaduk overhead untuk menangani sampel bervolume besar hingga 60 Liter dan viskositas sangat kental mencapai 80.000 mPa·s.",
       "Menggunakan motor DC brushless bertenaga input 160W (output 150W), kecepatan 30–2200 rpm, layar LCD digital, penyesuaian torsi otomatis, penutup chuck pengaman (chuck protection cover), serta perlindungan overload total."
@@ -19980,8 +19310,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mixer vortex multi-tabung kapasitas tinggi (hingga 66 sampel simultan) dengan layar sentuh warna 7 inci, kecepatan 500–3000 rpm, amplitudo 3.6 mm, dan mode pemrograman multi-langkah.",
     description: [
       "Infitek VMX-R3000 adalah alat pencampur vortex multi-tabung bertenaga tinggi untuk pemrosesan batch besar hingga 66 sampel sekaligus (misalnya tabung EP 2 mL, centrifuge tube 50 mL/15 mL, dll.).",
       "Dilengkapi panel layar sentuh warna 7.0 inci, motor brushless DC, rotasi eksentrik amplitudo 3.6 mm, 3 mode kerja (Pulse, Programmed, Positive/Reverse), penyimpanan hingga 50 metode, alarm suara, serta indikator status lampu LED."
@@ -20037,8 +19365,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Homogenizer dan emulsiflier geser tinggi (high-shear) berkecepatan hingga 30.000 rpm (HMG-25) atau 26.000 rpm digital (HMG-25D) dengan beragam pilihan kepala kerja interchangable untuk kapasitas 0.2–10.000 mL.",
     description: [
       "Infitek HMG-25 Series (HMG-25 Basic & HMG-25D Digital) adalah sistem homogenisasi presisi tinggi yang kompatibel dengan puluhan kepala kerja (working head) stator-rotor untuk dispersi, emulsifikasi, dan disrupsi jaringan.",
       "Dilengkapi motor DC brushless bertenaga tinggi (kecepatan hingga 30.000 rpm pada HMG-25 dan 26.000 rpm digital pada HMG-25D), sistem penyangga dua sumbu vertikal, pengaturan kecepatan stepless, timer digital (pada HMG-25D), serta opsi probe suhu termokopel pengaman."
@@ -20098,8 +19424,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Hotplate magnetic stirrer suhu tinggi 550°C dengan pelat kerja kaca keramik (glass ceramic), pilihan kapasitas aduk 10L (HPS-550) atau 20L motor brushless (HPS-550P), serta sensor PT1000.",
     description: [
       "Infitek HPS-550 Series (HPS-550 standar & HPS-550P Pro dengan motor brushless dan port data RS232) dirancang untuk pemanasan agresif hingga 550°C.",
       "Menggunakan pelat kerja kaca keramik tahan kimia dengan transfer panas paling efisien, kontrol suhu digital PID, lampu peringatan 'HOT' saat suhu pelat di atas 50°C, serta kompatibilitas dengan sensor suhu eksternal PT1000 (akurasi ±0.2°C)."
@@ -20155,8 +19479,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Hotplate magnetic stirrer kompak kapasitas 3L dengan suhu maksimum 280°C, pelat stainless steel berlapis keramik, motor brushless DC, dan layar LED.",
     description: [
       "Infitek HPS-280 adalah pengaduk magnetik dengan pemanas berukuran ringkas (work plate Φ135 mm / 5 inch) yang ideal untuk pencampuran volume hingga 3 Liter dan suhu hingga 280°C.",
       "Dilengkapi pelat stainless steel berlapis keramik anti-korosi, motor DC brushless, layar LED digital untuk suhu dan kecepatan, dukungan sensor PT1000 (akurasi ±0.5°C), serta lampu peringatan 'HOT' anti-luka bakar."
@@ -20211,8 +19533,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Seri hotplate magnetic stirrer keramik kapasitas 5L (suhu hingga 380°C) dengan opsi sensor ganda (PT100 cairan & Sensor K pelat), layar LCD besar, dan fungsi timer 9999 menit.",
     description: [
       "Infitek Ceramic Hotplate Series menawarkan keandalan pemanasan keramik berdaya 0.6 kW dengan kapasitas aduk 5 Liter dan rentang suhu hingga 380°C.",
       "Dilengkapi sensor ganda pada model tertentu (sensor PT100 eksternal untuk cairan dan sensor model K internal untuk pelat), layar LCD lebar, tombol kecepatan stepless 200–2000 rpm, serta fungsi timer pemrogaman waktu (0–9999 min) pada model HPS-350-4S."
@@ -20267,8 +19587,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pengaduk overhead digital dengan 3 mode pengadukan (maju, mundur, dan bolak-balik bergantian) kapasitas 20L dan 40L, kecepatan 100–2500 rpm, dan penahan kepala stainless steel.",
     description: [
       "Infitek OHS Series (OHS-20B analog, OHS-20E digital 20L, OHS-40E digital 40L) dirancang dengan kepala penahan stainless steel yang tahan lama dan bodi plastik tahan bahan kimia.",
       "Dilengkapi tiga mode pengadukan inovatif (Positive, Reverse, dan Positive-Reverse Alternating), kecepatan 100–2500 rpm, layar LCD digital (pada model E), serta kapasitas beban penopang hingga 50 kg."
@@ -20323,8 +19641,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Vortex mixer serbaguna kecepatan variabel 1000–2800 rpm (amplitudo 3 mm) dengan motor DC brushless, mode sentuh atau kontinu, serta dukungan modul busa hingga tabung 50 mL.",
     description: [
       "Infitek VMX3-28 menggunakan rotasi eksentrik untuk menciptakan pusaran (vortex) cepat dan menyeluruh pada cairan di dalam tabung reaksi, beker, labu, maupun corong pemisah.",
       "Dilengkapi motor DC brushless bebas sikat berkecepatan 1000–2800 rpm, timer 1 detik hingga 99 menit 59 detik (atau kontinu), kepala vortex tunggal standar, baki spons, serta 4 jenis modul busa untuk berbagai ukuran tabung hingga 50 mL."
@@ -20378,8 +19694,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Vortex mixer kecepatan tetap 3000 rpm dengan konstruksi cor aluminium yang kokoh, kaki pengisap vakum anti-geser, dan mode sentuh/kontinu.",
     description: [
       "Infitek VMX-F adalah mixer vortex kecepatan tetap (fixed speed 3000 rpm) berkonstruksi bodi paduan aluminium cor yang sangat kokoh untuk mencegah getaran berlebih saat beroperasi pada kecepatan tinggi.",
       "Dilengkapi kaki pengisap vakum khusus (vacuum suction feet) untuk mencengkeram meja lab dengan kuat, gerakan orbital diameter 4 mm, motor shaded pole 58W, serta dua mode operasional (Touch Operation dan Continuous)."
@@ -20434,8 +19748,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mixer rotari dengan sudut kemiringan dapat diatur 0° hingga 90°, kecepatan 10–70 rpm (RMX-AR digital dengan timer) atau 0–80 rpm (RMX-AR-E ekonomis), untuk pencampuran sampel biologis yang lembut.",
     description: [
       "Infitek RMX-AR Series (RMX-AR digital berlayar LCD & RMX-AR-E ekonomis) dirancang untuk memberikan putaran gulir (rolling) yang lembut namun efektif pada tabung sampel biologis.",
       "Memiliki sudut kemiringan (tilt angle) yang dapat disesuaikan penuh dari 0° (posisi horizontal) hingga 90° (posisi vertikal), motor brushless DC (pada model RMX-AR), pengatur waktu digital hingga 1199 menit, serta kompatibilitas dengan beragam aksesori rak tabung."
@@ -20489,8 +19801,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Multi-tube vortexer kapasitas 50 sampel simultan dengan motor brushless DC, kontrol tombol putar satu sentuhan (one-touch knob), kecepatan 500–2500 rpm, dan beragam rak busa spons.",
     description: [
       "Infitek VMX-MT adalah alat pencampur vortex multi-tabung berkapasitas 50 posisi yang dikendalikan oleh mikroprosesor dan digerakkan oleh motor DC brushless yang akurat.",
       "Dilengkapi pengoperasian mudah dengan knop satu sentuhan, orbit osilasi 4 mm, beban maksimum 4.5 kg, fungsi soft-start untuk mencegah cipratan sampel, timer 1 menit hingga 99 jam 59 menit dengan alarm otomatis, serta berbagai pilihan rak busa spons (untuk tabung 10 mL, 12 mL, 15 mL centrifuge, 50 mL centrifuge)."
@@ -20546,8 +19856,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotator mixer vertikal untuk tabung 1.5 mL hingga 50 mL dengan kecepatan 10–70 rpm (RMX-RR digital berlayar LCD & timer 1199 menit) atau 0–80 rpm (RMX-RR-E ekonomis).",
     description: [
       "Infitek RMX-RR Series (RMX-RR digital & RMX-RR-E ekonomis) dirancang khusus untuk memberikan pencampuran vertikal yang lembut namun efektif untuk suspensi sel, darah, dan sampel biokimia dalam tabung 1.5 mL hingga 50 mL.",
       "Dilengkapi motor brushless DC (pada RMX-RR), layar LCD digital dengan pengatur waktu 1 hingga 1199 menit, rentang kecepatan 10–70 rpm, serta konstruksi bodi IP21 yang aman untuk inkubator dingin."
@@ -20599,8 +19907,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Vortex mixer kecepatan variabel (0–3000 rpm) dengan mekanisme orbital amplitudo 4 mm, konstruksi aluminium cor kokoh, kaki pengisap vakum, dan dukungan beragam adaptor tabung.",
     description: [
       "Infitek VMX-S adalah pengocok vortex serbaguna dengan kontrol kecepatan variabel hingga 3000 rpm untuk pencampuran komponen cair dalam tabung dan resuspensi sel.",
       "Dilengkapi motor terisolasi, gerak orbital amplitudo 4 mm, bodi aluminium cor tahan banting, kaki pengisap vakum khusus (vacuum suction feet) untuk kestabilan tinggi, serta dukungan aksesori adaptor melimpah mulai dari tabung mikrosentrifus, pelat PCR, hingga labu Erlenmeyer 250 mL."
@@ -20653,8 +19959,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Vortex mixer mini ekonomis berkecepatan tetap 3000 rpm dengan motor DC brushless, bodi sangat ringkas (133×133×80 mm), dan bobot ringan 1 kg.",
     description: [
       "Infitek VMX-E adalah mixer vortex mini berkecepatan tetap (3000 rpm) yang sangat ringkas dan efisien untuk pencampuran sampel bervolume kecil di meja lab yang terbatas.",
       "Menggunakan motor DC brushless berperforma stabil, gerak orbital diameter 4.8 mm, mode operasional inchi sentuh (touch/inching), serta perlindungan bodi IP21."
@@ -20707,8 +20011,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mixer vortex khusus pelat mikrotiter (single/double microplate) dengan motor brushless DC, orbit 4.5 mm, dan kecepatan 0–1500 rpm.",
     description: [
       "Infitek VMX-M dirancang khusus untuk pengocokan dan pencampuran sampel pada pelat mikrotiter (microplate) dengan kapasitas beban maksimal 0.5 kg.",
       "Dilengkapi motor DC brushless bebas perawatan, orbit pengocokan 4.5 mm, rentang kecepatan 0–1500 rpm untuk satu pelat atau 0–1000 rpm untuk dua pelat, serta bodi yang kokoh."
@@ -20762,8 +20064,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Seri kombinasi hotplate dan magnetic stirrer berlapis keramik (suhu hingga 380°C) dengan pilihan volume 2L dan 5L, pengatur kecepatan stepless, serta struktur cor aluminium.",
     description: [
       "Infitek HPT/MGS/HPS Series mencakup model pemanas mandiri (HPT), pengaduk mandiri (MGS), dan kombinasi pemanas-pengaduk (HPS) dengan kapasitas 2L dan 5L.",
       "Menggunakan pelat pemanas berlapis keramik (ceramic coated plate) tahan bahan kimia, suhu maksimum 380°C, kecepatan aduk 100–2000 rpm, bodi cor aluminium anti-korosi, serta pengaturan skala analog yang presisi."
@@ -20819,8 +20119,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotator mixer sudut dapat diatur (0°–90°) dengan pelat putar bertumpuk (stackable plates) yang melipatgandakan kapasitas, layar LED digital, dan timer hingga 99 jam 59 menit.",
     description: [
       "Infitek RMX-AR-S dirancang dengan pelat putar bertumpuk (stackable) yang menggandakan luas permukaan penggunaan untuk tabung 1.5 mL hingga 50 mL.",
       "Dilengkapi pengaturan sudut kemiringan 0° hingga 90°, kecepatan 10–80 rpm, layar LED digital, pengatur waktu hingga 99 jam 59 menit dengan alarm akustik, motor berkualitas tinggi untuk pencampuran lembut, serta aman dioperasikan di dalam inkubator atau lemari pendingin."
@@ -20874,8 +20172,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Rotator tabung reaksi terprogram dengan fungsi hovering, shaking, kecepatan 1–99 rpm, 10 program bawaan, dan 2 pengaturan kustom (6 segmen dapat diedit), untuk tabung 1.5–50 mL.",
     description: [
       "Infitek RMX-RR-S adalah rotator tabung uji canggih yang dilengkapi fungsi hovering (penggantungan) dan shaking (pengocokan) untuk menjaga sampel biologis tetap tersuspensi secara efisien dan lembut.",
       "Dilengkapi rentang kecepatan 1–99 rpm, gerakan melingkar (circular motion), 10 program bawaan yang mencakup kombinasi rotasi dan getaran, 2 program kustom yang dapat diedit (masing-masing 6 segmen), klem tabung kombinasi bebas untuk ukuran 1.5 mL–50 mL, serta tegangan DC 12V yang aman untuk cold storage."
@@ -20930,8 +20226,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Pengaduk magnetik kompak berkapasitas 1.5L dengan pemegang elektroda (electrode holder) terintegrasi, motor DC brushless, kompatibel daya DC 12V untuk lab seluler, dan permukaan PET tahan kimia.",
     description: [
       "Infitek MGS-EcoS adalah pengaduk magnetik persegi ekonomis yang dilengkapi lengan penjepit pemegang elektroda (electrode holder with clamp) khusus untuk pengukuran elektrokimia dan sensor pH.",
       "Memiliki tapak bodi yang sangat kecil dan ringan (0.3 kg), kompatibel dengan tegangan DC 12V untuk penggunaan di laboratorium seluler/lapangan, kapasitas aduk 1.5 Liter, kecepatan 300–2000 rpm, permukaan atas PET tahan kimia, serta stiker warna-warni DIY penjelas estetika."
@@ -20987,8 +20281,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pengaduk overhead digital berlayar LED (20L dan 40L) dengan motor DC brushless anti-ledakan (explosion-proof) bebas perawatan, kecepatan 50–2200 rpm, dan sirkuit pengaman overload.",
     description: [
       "Infitek OHS-20 (20L) dan OHS-40 (40L) adalah pengaduk overhead digital berlayar LED yang digerakkan oleh motor DC brushless anti-ledakan (explosion-proof) berdaya tahan tinggi.",
       "Menyediakan rentang kecepatan luas 50–2200 rpm, torsi maksimum 40 N·cm (OHS-20) dan 60 N·cm (OHS-40), chuck rentang 0.5–10 mm, serta sirkuit pengaman elektronik yang secara otomatis menghentikan motor saat terjadi hambatan macet atau kelebihan beban."
@@ -21044,8 +20336,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pengaduk overhead pemrogram torsi tinggi (torsi hingga 300 N·cm pada OHS-70P, kapasitas 70L, viskositas 100.000 mPa·s) dengan layar LCD, kontrol PC RS232, dan chuck pengunci mandiri tanpa kunci.",
     description: [
       "Infitek OHS-P Series (OHS-20P 20L, OHS-40P 40L, OHS-70P monster torsi 300 N·cm 70L) adalah pengaduk overhead kelas riset tingkat lanjut dengan akurasi kontrol kecepatan tinggi dan torsi raksasa untuk fluida sangat pekat.",
       "Dilengkapi motor DC brushless berdaya input hingga 180W, layar LCD menampilkan set/aktual kecepatan, torsi, dan waktu, kontrol jarak jauh via port RS232, chuck bor pengunci mandiri (self-locking drill chuck) tanpa alat, bilah pengaduk desain top-cross, serta penutup silikon pelindung uap korosif."
@@ -21100,8 +20390,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Hotplate magnetic stirrer 4-kanal independen (suhu hingga 340°C, kapasitas aduk 4 × 10L) dengan kontrol PID terpisah, motor DC brushless, dan sensor PT1000.",
     description: [
       "Infitek HPS-M340-S4 adalah hotplate magnetic stirrer empat posisi independen yang memungkinkan operator melakukan pemanasan dan pengadukan pada 4 beker secara simultan dengan pengaturan parameter terpisah.",
       "Dilengkapi pengontrol PID independen untuk setiap kanal (suhu hingga 340°C, akurasi sensor ±0.2°C), motor DC brushless bertenaga untuk kecepatan 200–1500 rpm, pelat stainless steel berlapis keramik anti-korosi (diameter Φ135 mm / 5 inch per posisi), proteksi suhu berlebih 420°C, serta bodi ringkas panjang 698 mm."
@@ -21156,8 +20444,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Pengaduk magnetik ekonomis berkapasitas 1.5L dengan motor DC brushless tanpa sikat, magnet tanah jarang (rare earth magnets), permukaan PET tahan kimia, dan poros penyangga sensor.",
     description: [
       "Infitek MGS-EcoR adalah pengaduk magnetik ekonomis yang andal dan senyap untuk pencampuran cairan rutin di laboratorium.",
       "Menggunakan motor DC brushless bebas perawatan, magnet tanah jarang (rare earth magnets) yang menghasilkan kopling magnet kuat, kecepatan stepless 300–2000 rpm, permukaan atas PET tahan zat kimia, serta poros bodi yang dapat dipasangi sensor pH atau sensor lainnya."
@@ -21211,8 +20497,6 @@ const productSeeds: ProductSeed[] = [
     ],
     price: DEFAULT_PRICE,
     availability: "Tersedia",
-    shortDescription:
-      "Pengaduk magnetik ultra-datar (ketebalan hanya 15 mm) tanpa motor konvensional (motorless), kapasitas 0.8L, kecepatan 15–1500 rpm, dan fungsi putar balik otomatis (auto-reverse).",
     description: [
       "Infitek MGS-F adalah pengaduk magnetik ultra-flat berketebalan hanya 15 mm yang mengadopsi teknologi tanpa motor konvensional (motorless magnetic drive) untuk pengoperasian super senyap dan bebas getaran.",
       "Dilengkapi rentang kecepatan 15–1500 rpm, fungsi putar otomatis bolak-balik (automatic reverse rotation) untuk efisiensi pencampuran optimal, pelat atas PET tahan zat kimia, serta bobot sangat ringan 0.3 kg."
@@ -21268,8 +20552,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Homogenizer aseptik (stomacher / pencakar steril) kapasitas 3–400 mL dengan layar sentuh 4.3 inci, pemrograman 8 segmen, fungsi sterilisasi UV (253.7 nm), dan pemanasan sampel (pada LC-H11L).",
     description: [
       "Infitek LC Series (LC-H11L berpemanas & disinfeksi, LC-9 steril UV, LC-8 standar) adalah homogenizer tipe penumbuk/pencakar (stomacher) steril untuk preparasi sampel uji mikrobiologi tanpa kontak langsung antara sampel dan instrumen.",
       "Sampel dimasukkan ke dalam kantong steril steril sekali pakai (17×30 cm) yang ditekan oleh bilah penumbuk (clapper) berbahan stainless steel dengan pelindung khusus. Dilengkapi pemrograman kombinasi 8 segmen, kecepatan pukul 3–12 kali/detik, fungsi sterilisasi lampu UV 253.7 nm, pemanasan suhu ruang hingga 80°C (LC-H11L), serta fungsi anti-jepit otomatis."
@@ -21326,8 +20608,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Homogenizer laboratorium berkecepatan tinggi hingga 31.000 rpm (kapasitas 0.2–7000 mL) dengan material kontak stainless steel 316L, penyesuaian kecepatan stepless, dan opsi layar LCD digital.",
     description: [
       "Infitek HMG-500 Series (HMG-500C tampilan lulusan / HMG-500D layar LCD digital) dirancang untuk dispersi, emulsifikasi, dan homogenisasi sampel cair-padat dengan kapasitas hingga 7 Liter.",
       "Dilengkapi motor bertenaga input 500W, kecepatan stepless 10.000 hingga 31.000 rpm, kompatibilitas dengan lebih dari 20 kepala kerja (working head) material stainless steel 316L, selongsong poros PTFE, serta kopling rilis cepat."
@@ -21382,8 +20662,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Homogenizer genggam ergonomis ringan (0.54 kg) berkecepatan 8.000 hingga 32.000 rpm (kapasitas 0.1–250 mL) dengan poros dispersi SS316L yang dapat dilepas pasang.",
     description: [
       "Infitek HMG-160 adalah homogenizer genggam (hand-held) yang dirancang secara ergonomis untuk pencampuran, emulsifikasi, dan fragmentasi jaringan biologis secara cepat (10–30 detik per sampel).",
       "Dilengkapi motor sikat karbon universal 160W, 10 tahap kecepatan putar (8.000 hingga 32.000 rpm), kecepatan lingkar 6.3–14 m/s, poros dispersi stainless steel 316L yang sepenuhnya dapat diautoklaf (pilihan shaft DS-160/5 untuk 0.1–50 mL atau DS-160/10 untuk 1–250 mL), serta tingkat kebisingan rendah 72 dB(A)."
@@ -21439,8 +20717,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Homogenizer genggam mikro-batch berkecepatan 10.000 hingga 35.000 rpm (kapasitas 0.2–300 mL) dengan pengatur kecepatan 6 tingkat, pelindung ganda, dan pilihan tool bit 6G/8G/10G.",
     description: [
       "Infitek HMG-6 adalah homogenizer genggam mikro-batch bertenaga tinggi (160W) untuk pencampuran, emulsifikasi, dan penghancuran sel pada volume kecil 0.2 mL hingga 300 mL.",
       "Dilengkapi pengatur kecepatan 6 tingkat (10.000–35.000 rpm), perlindungan isolasi ganda untuk keselamatan operator, bagian kontak sampel stainless steel SUS304 dengan selongsong PTFE, serta kompatibilitas dengan tool bit (working head) ukuran 6G, 8G, dan 10G."
@@ -21493,8 +20769,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Oven pengering pemanas radiasi termal jauh inframerah (far-infrared) dengan rentang 50–250°C, kontrol PID digital, memori parameter pasca-pemadaman listrik, dan pilihan kapasitas 72L hingga 270L.",
     description: [
       "Infitek DON-IF-H Series (72L, 138L, 270L) menggunakan teknologi pemanasan radiasi termal jauh inframerah (far-infrared heating) berdaya rendah untuk pengeringan material sampel secara cepat dan merata.",
       "Dilengkapi bodi luar baja gulung dingin lapis serbuk, ruang dalam stainless steel SUS dengan sudut melengkung tanpa sudut mati, kontrol suhu PID berbasis LED digital, timer 0–9999 menit, lubang ventilasi atas yang dapat disesuaikan, serta fungsi pemulihan parameter otomatis setelah listrik menyala kembali."
@@ -21549,8 +20823,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Oven pengering konveksi ganda hingga 300°C dengan sakelar pemilih daya pemanas bawah dan kipas sirkulasi yang dapat dimatikan (berubah menjadi konveksi alami), kapasitas 42L hingga 224L.",
     description: [
       "Infitek DOF-HZ Series (42L, 70L, 135L, 224L) adalah oven serbaguna untuk pengeringan, pemanggangan, pencairan lilin, dan sterilisasi dengan sistem pemanas kawat resistansi bawah.",
       "Dilengkapi sakelar pemilih daya pemanas dan sakelar kipas sirkulasi (fan can be turned off) yang memungkinkan unit bertransisi fleksibel antara konveksi paksa dan konveksi alami, kontrol PID digital (hingga 300°C), timer 0–9999 menit, serta pintu dalam kaca pengaman."
@@ -21604,8 +20876,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Muffle furnace kotak suhu tinggi 1400°C (kontinu 1300°C) dengan elemen pemanas batang Silikon Karbida (SiC), insulasi serat alumina murni, pengontrol SCR 30 segmen, dan kipas pendingin bodi.",
     description: [
       "Infitek FNC-BX1400 Series (kapasitas 1L, 4.5L, 12L, dan 36L) adalah tungku muffle box suhu tinggi yang dirancang khusus untuk operasional hingga 1400°C pada aplikasi material sains dan keramik.",
       "Menggunakan elemen pemanas batang Silikon Karbida (SiC rods), termokopel tipe S, insulasi serat alumina kemurnian tinggi berlapis ganda dengan kipas pendingin udara luar (pendinginan bodi aman disentuh), pengontrol otomatis PID berbasis Silicon Controlled Rectifier (SCR) yang dapat diprogram hingga 30 segmen, serta interlock pengaman pintu."
@@ -21661,8 +20931,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Furnace tabung horizontal suhu tinggi 1700°C (kontinu 1550°C) dengan tabung alumina korundum kemurnian tinggi, elemen pemanas batang MoSi2, dan pengontrol SCR 30 segmen.",
     description: [
       "Infitek FNC-TB1700 Series adalah tungku tabung horizontal (tube furnace) presisi tinggi untuk perlakuan panas di bawah suhu ekstrem mencapai 1700°C menggunakan tabung reaktor korundum murni.",
       "Dilengkapi elemen pemanas molybdenum disilicide (MoSi₂ heating rods), panjang tabung 800–1200 mm dengan diameter 40 hingga 100 mm, kontrol PID otomatis SCR 30 segmen, struktur baja ganda berpendingin kipas, serta opsi kontrol layar sentuh atau software PC."
@@ -21717,8 +20985,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Muffle furnace program-terkontrol 1200°C dengan pengontrol warna LCD Fuji Jepang (64 segmen program), pemanasan 3 sisi (kiri, kanan, atas), rongga serat keramik vakum, dan perangkat pembuangan gas.",
     description: [
       "Infitek FNC-BX-PS Series (2L, 7L, 12L, 16L) adalah muffle furnace pemrogram tingkat lanjut yang dilengkapi pengontrol suhu multi-tahap Fuji warna LCD asal Jepang dan sistem pemanasan kawat paduan di tiga sisi (kiri, kanan, atas).",
       "Menggunakan pelapis serat mullite polikristal bentuk vakum untuk insulasi efisiensi tinggi, mulut rongga stainless steel cermin anti-karat, perangkat knalpot/pembuangan gas yang sangat baik untuk proses pengabuan (ashing), serta sistem alarm cahaya-suara over-temperature."
@@ -21773,8 +21039,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Muffle furnace kotak 1200°C (kerja kontinu 1100°C) dengan insulasi serat alumina kemurnian tinggi, elemen pemanas kawat tahanan ber-Mo, pengontrol SCR 30 segmen, dan kapasitas 1L hingga 36L.",
     description: [
       "Infitek FNC-BX1200 Series (1L, 4.5L, 7.2L, 12L, 36L) adalah tungku muffle serbaguna standar laboratorium untuk aplikasi pemanasan dan pembakaran hingga 1200°C.",
       "Menggunakan elemen pemanas kawat tahanan khusus yang didoping Molybdenum (Mo), termokopel tipe K, insulasi serat alumina polikristal kemurnian tinggi, struktur baja ganda berpendingin kipas, serta pengontrol SCR PID otomatis 30 segmen."
@@ -21829,8 +21093,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Muffle furnace atmosfer 1200°C (kerja kontinu 1100°C) lengkap dengan sistem kontrol gas (katup bola, flow meter, manometer vakum, pompa vakum) untuk gas inert, nitrogen, argon, dan hidrogen campuran.",
     description: [
       "Infitek FNC-AS1200 Series (1L, 4.5L, 12L, 36L) dirancang khusus untuk proses pemanasan material di dalam atmosfer gas yang dikendalikan (gas inert, nitrogen, oksigen, karbon monoksida, argon, dll.) maupun di bawah kondisi vakum.",
       "Dilengkapi pompa vakum, jalur masuk/keluar gas dengan katup bola (ball valves), flow meter, pengukur vakum, pintu bersegel silikon rata berpaking rapat, elemen pemanas paduan Fe-Cr-Al ter doping Mo, serta kontroler PID 30 segmen."
@@ -21885,8 +21147,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Muffle furnace atmosfer suhu tinggi 1400°C (kerja kontinu 1300°C) dengan elemen pemanas batang karbon silikon (SiC), kontrol gas vakum lengkap, dan pemrograman 30 segmen.",
     description: [
       "Infitek FNC-AS1400 Series (2L, 4.5L, 12L, 36L) menggabungkan temperatur tinggi 1400°C dengan sistem atmosfir gas terkendali dan kondisi vakum untuk pemrosesan material canggih.",
       "Dilengkapi batang pemanas silikon karbon (Silicon Carbon Rod), termokopel tipe S, panel kontrol gas (flow meter, katup bola, pengukur vakum, pompa vakum), insulasi serat alumina murni, serta kontroler PID 30 segmen."
@@ -21940,8 +21200,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Oven pengering konveksi udara paksa (Suhu Ruang +10°C hingga 250°C) dengan ruang dalam stainless steel sikat, kontrol PID digital, insulasi tebal, dan perlindungan kebocoran listrik.",
     description: [
       "Infitek DOF-BA Series (30L, 51L, 138L, 188L, 640L) adalah oven pengering sirkulasi udara paksa standar industri yang handal untuk pengeringan, pemanggangan, dan sterilisasi.",
       "Menggunakan kipas sirkulasi impeler besar dengan aliran udara vertikal dari bawah, ruang dalam stainless steel tahan korosi, segel silikon sintetis mencegah kehilangan panas, kontrol PID digital (akurasi ±0.5°C), timer hingga 9999 menit, serta proteksi pelindung kebocoran."
@@ -21996,8 +21254,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Oven pengering konveksi alami horizontal (Suhu Ruang +10°C hingga 250°C) dengan efisiensi ruang tinggi, gagang anti-panas, lubang uji Φ35 mm, dan pilihan ruang stainless steel (tanpa E) atau lembaran galvanis (E model).",
     description: [
       "Infitek DON-H / DON-HE Series (43L, 71L, 136L, 225L) mengadopsi prinsip konveksi alami secara horizontal untuk pengeringan sampel yang tidak memerlukan tiupan udara paksa.",
       "Dilengkapi pengontrol suhu PID digital LED, timer 0–9999 menit dengan fungsi timing wait, lubang ventilasi/uji Φ35 mm di bagian atas, gagang pintu anti-panas, serta pilihan material ruang dalam stainless steel (tanpa label E) atau lembaran galvanis kekuatan tinggi (model E)."
@@ -22052,8 +21308,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat pemanas multifungsi dual-purpose oven & inkubator (Inkubator: RT+5 hingga 80°C, Oven: 80 hingga 300°C) dengan konveksi paksa, ruang mirror stainless steel, dan kapasitas 30L hingga 230L.",
     description: [
       "Infitek DOI-E Series (30L, 45L, 65L, 85L, 125L, 230L) adalah instrumen 2-in-1 yang menggabungkan fungsi inkubator (suhu rendah RT+5 hingga 80°C) dan oven pengering (suhu tinggi 80 hingga 300°C) dalam satu unit.",
       "Menggunakan sirkulasi konveksi paksa berkinerja tinggi, segel silikon sintetis baru pencegah kehilangan panas, ruang dalam mirror stainless steel tahan korosi, jendela pengamatan kaca terpasang, serta pengatur PID digital LED."
@@ -22109,8 +21363,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Oven pengering konveksi paksa kapasitas raksasa skala industri (640 Liter hingga 3070 Liter) dengan sirkulasi sedot belakang (back suction), daya hingga 15 kW (380V), dan pilihan ruang stainless steel.",
     description: [
       "Infitek DOF 640–3070 Series adalah lini oven pengering berkapasitas ekstra besar (640L, 1000L, 1300L, 1870L, hingga 3070L) untuk pemrosesan termal massal di industri manufaktur kabel, plastik, otomotif, dan kedirgantaraan.",
       "Menggunakan sistem sirkulasi konveksi paksa isap belakang (back suction forced convection), pemanas bertenaga tinggi hingga 15 kW (380V), pengontrol PID digital LED, pilihan material ruang dalam stainless steel (tanpa label E) atau pelat besi (model E), insulasi rock wool tebal, serta opsi kontrol pemrograman multi-tahap."
@@ -22165,8 +21417,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Oven pengering vakum presisi tinggi (52L & 91L) dengan pemanasan langsung pada rak (shelf direct heating), layar sentuh warna 7 inci, tingkat vakum <133 Pa, serta varian lengkap pompa vakum (PV).",
     description: [
       "Infitek DOV-P Series (DOV-55P 52L dan DOV-90P 91L; serta varian DOV-55PV & DOV-90PV yang sudah termasuk pompa vakum dan filter udara) dirancang khusus untuk pengeringan zat yang sensitif panas, mudah terurai, dan mudah teroksidasi di bawah tekanan vakum tinggi.",
       "Menggunakan sistem pemanasan langsung pada tiap rak (shelf direct heating dengan kontrol suhu independen), layar sentuh warna 7.0 inci, tingkat vakum <133 Pa, ruang dalam dan luar stainless steel SUS304 berkualitas tinggi, serta alarm keselamatan kesalahan sensor dan vakum berlebih."
@@ -22222,8 +21472,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Oven pengering konveksi paksa vertikal dengan aliran udara dari bawah (bottom vertical air supply), pilihan suhu 250°C (Model A) atau 300°C (Model B), layar LCD, dan kapasitas 30L hingga 240L.",
     description: [
       "Infitek DOF-V-A/B Series (30L, 70L, 135L, 220L) adalah oven pengering konveksi paksa beraliran vertikal dari bawah ke atas untuk efisiensi ventilasi dan keseragaman suhu yang sangat tinggi.",
       "Dilengkapi pengontrol PID mikroprosesor dengan layar LCD, rentang suhu Model A (RT+10 s.d. 250°C) dan Model B (RT+10 s.d. 300°C), ruang dalam stainless steel sikat, rak berlubang laser, serta proteksi kebocoran dan alarm batas suhu."
@@ -22278,8 +21526,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Muffle furnace kotak ekonomis 1200°C dengan pengontrol suhu satu-tahap Yudian China, pemanasan 3 sisi (kiri, kanan, atas), insulasi serat alumina murni, dan interlock pengaman pintu.",
     description: [
       "Infitek FNC-BX1200E Series (2L, 7L, 12L, 16L) adalah varian ekonomis dari muffle furnace 1200°C yang menggunakan pengontrol suhu satu-tahap Yudian (Xiamen Yudian) buatan domestik yang handal dan ekonomis.",
       "Dilengkapi elemen pemanas kawat paduan di tiga sisi (kiri, kanan, atas), termokopel tipe K, insulasi serat alumina murni untuk penghematan energi, struktur baja ganda berpendingin kipas, serta pemutusan daya otomatis saat pintu dibuka."
@@ -22334,8 +21580,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Oven pengering konveksi paksa vertikal skala industri besar (420L, 600L, 900L) dengan suplai udara bawah vertikal, pilihan suhu 250°C (Model A) atau 300°C (Model B), dan daya hingga 6.5 kW (380V).",
     description: [
       "Infitek DOF-V420 hingga V900 AB Series adalah oven pengering vertikal berkapasitas besar (420L, 600L, 900L) untuk pengeringan volume massal komponen industri dengan sirkulasi konveksi paksa vertikal dari bawah ke atas.",
       "Dilengkapi pengontrol PID mikroprosesor dengan layar LCD, rentang suhu Model A (RT+10 s.d. 250°C) dan Model B (RT+10 s.d. 300°C), ruang dalam stainless steel dengan 3 hingga 4 rak kokoh, sistem pengaman pelindung kebocoran, serta alarm batas suhu berlebih."
@@ -22388,8 +21632,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Furnace tabung horizontal suhu tinggi 1200°C (kontinu 1100°C) dengan tabung reaktor kuarsa atau alumina kemurnian tinggi, pengontrol SCR 30 segmen, dan kipas pendingin bodi.",
     description: [
       "Infitek FNC-TB1200 Series adalah tungku tabung horizontal (tube furnace) presisi untuk perlakuan panas suhu tinggi hingga 1200°C menggunakan tabung reaktor kuarsa atau alumina pilihan.",
       "Dilengkapi pengontrol otomatis PID berbasis Silicon Controlled Rectifier (SCR) dengan pemrograman kurva 30 segmen, struktur baja ganda berpendingin udara untuk keamanan sentuhan luar, pilihan diameter tabung 40–100 mm, serta opsi layar sentuh atau software koneksi PC."
@@ -22444,8 +21686,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Oven pengering konveksi alami horizontal kapasitas 18L (suhu hingga 300°C) dengan kontrol PID mikroprosesor, timer 0–9999 menit, dan pilihan ruang dalam mirror stainless steel (DON-18) atau galvanis (DON-18E).",
     description: [
       "Infitek DON-18 / DON-18E adalah oven pengering berkapasitas 18 Liter yang dirancang untuk pengeringan sampel kecil secara konveksi alami tanpa aliran udara paksa yang dapat menerbangkan serbuk halus.",
       "Dilengkapi pengontrol PID mikroprosesor cerdas, rentang suhu RT+10 hingga 300°C, timer 0–9999 menit dengan fungsi timing wait, lubang buang/uji Φ28 mm di bagian atas, elemen pemanas nikel-kromium, serta pilihan ruang dalam mirror stainless steel (DON-18) atau lembaran galvanis kekuatan tinggi (DON-18E)."
@@ -22501,8 +21741,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Oven vakum presisi tinggi (24L, 52L, 91L) dengan metode pemanasan konduksi langsung pada 4 sisi rak (shelf direct heating), vakum <133 Pa, jendela kaca anti-ledakan dengan pelindung akrilik, dan manometer digital multi-satuan.",
     description: [
       "Infitek DOV-S Series (DOV-25S 24L, DOV-55S 52L, DOV-90S 91L) adalah oven pengering vakum canggih yang menggunakan metode pemanasan langsung pada rak (4-sides shelf heating conduction) untuk transfer panas yang sangat efisien ke sampel.",
       "Dilengkapi port inflasi gas, seal silikon termostabilitas cetak satu kali, jendela kaca pengamatan ganda (kaca anti-ledakan di dalam dan pelindung resin/akrilik di luar), pengontrol PID dengan sensor PT100, pengukur tekanan vakum digital (akurasi kelas 0.5 dengan 5 pilihan satuan unit tekanan: MPa, Kpa, bar, Psi, KGF/cm²), serta alarm suara-visual."
@@ -22558,8 +21796,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Alat pemanas ganda DOI-50Z berfungsi sebagai inkubator (RT+5 hingga 80°C) dan oven pengering (80 hingga 200°C) berkapasitas 50 Liter dengan sirkulasi konveksi paksa dan kontrol PID.",
     description: [
       "Infitek DOI-50Z adalah instrumen dual-purpose (oven & inkubator) berkapasitas 50 Liter yang fleksibel digunakan untuk kultur mikroorganisme (pada suhu rendah) maupun sterilisasi dan pengeringan (pada suhu tinggi).",
       "Dilengkapi mode ganda (Inkubator: RT+5 hingga 80°C / Oven: 80 hingga 200°C), sirkulasi udara konveksi paksa dengan kipas impeler besar, ruang dalam stainless steel tahan korosi, segel silikon sintetis anti-bocor, layar LCD digital, serta proteksi kebocoran dan alarm suhu."
@@ -22614,8 +21850,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Hot plate pemanas suhu tinggi 550°C dengan pelat kerja kaca keramik 184×184 mm (7 inch), layar LED digital, sirkuit pengaman terpisah 580°C, dan dukungan sensor PT1000.",
     description: [
       "Infitek HPT-550 adalah hot plate pemanas mandiri tanpa pengaduk magnetik yang dirancang untuk pemanasan permukaan pelat hingga suhu 550°C secara efisien.",
       "Dilengkapi pelat kaca keramik tahan zat kimia dengan transfer panas superior, layar LED digital, sirkuit pengaman termal terpisah dengan batas tetap 580°C, port sensor suhu eksternal PT1000 (akurasi ±0.5°C), serta lampu peringatan 'HOT' berkedip saat suhu pelat di atas 50°C."
@@ -22670,8 +21904,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Hot plate digital layar LCD suhu 380°C dengan pelat aluminium berlapis keramik 140×140 mm, proteksi panas berlebih 420°C, dan port sensor PT1000.",
     description: [
       "Infitek HPT-380P adalah hot plate pemanas mandiri berlayar LCD digital dengan pelat kerja aluminium berbalut lapisan keramik untuk transfer panas instan dan merata.",
       "Dilengkapi rentang suhu hingga 380°C, daya pemanas 500W, tampilan LCD suhu aktual, proteksi suhu berlebih 420°C, dukungan sensor suhu eksternal PT1000 (akurasi ±0.5°C), serta perlindungan IP21."
@@ -22725,8 +21957,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Seri hot plate area pemanasan luas (pilihan pelat aluminium tarik atau pelat grafit tahan asam hingga 400°C) dengan kapasitas beban hingga 40 kg dan opsi pengatur waktu digital.",
     description: [
       "Infitek HPT Series mencakup beragam model hot plate berukuran permukaan besar (300×300 mm, 350×450 mm, hingga 400×600 mm) yang menggunakan material pelat aluminium tarik (aluminum-tensile) atau pelat grafit (graphite plate) untuk keseragaman suhu permukaan yang superior.",
       "Dilengkapi daya pemanas 800W hingga 4500W, kapasitas beban pelat hingga 40 kg, pilihan pengontrol suhu skala analog atau digital dengan timer 0–9999 menit (pada seri B), serta sensor suhu termokopel model K."
@@ -22780,8 +22010,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mantel pemanas penutup labu (heating mantle) dengan pengaduk magnetik terintegrasi beberapa baris (konfigurasi 2, 4, atau 6 baris untuk labu 250 mL, 500 mL, dan 1000 mL), pengatur suhu elektronik, dan suhu permukaan hingga 450°C.",
     description: [
       "Infitek HMSD Series adalah mantel pemanas multi-posisi berbaris yang menggabungkan pemanasan konduksi permukaan mantel serat nikel-kromium dan pengadukan magnetik simultan untuk beberapa labu alas bulat.",
       "Dilengkapi pengatur suhu elektronik (suhu maksimum permukaan hingga 450°C, rentang kerja cairan RT+20 hingga 250°C), pengatur kecepatan stepless untuk pengaduk 0–1600 rpm, bodi baja canai dingin lapis semprot, serta kapasitas labu 250 mL, 500 mL, atau 1000 mL (2 hingga 6 posisi)."
@@ -22836,8 +22064,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mantel pemanas digital dengan pengaduk magnetik terintegrasi (kapasitas 50 mL hingga 20 Liter) berlayar PID tunggal, sensor PT100 dengan rak penyangga, dan suhu permukaan hingga 450°C.",
     description: [
       "Infitek HMSD Digital Series (pilihan kapasitas dari 50 mL, 100 mL, 250 mL, 500 mL, 1L, 2L, 3L, 5L, 10L, hingga 20 Liter) adalah mantel pemanas labu alas bulat presisi tinggi berlayar pengontrol PID digital.",
       "Dilengkapi pengontrol suhu layar tunggal PID, sensor suhu PT100 lengkap dengan rak penговор/tiang penyangga stainless steel yang dapat disesuaikan, pemanasan dan pengadukan simultan (0–1600 rpm), suhu maksimum permukaan 450°C (rentang kerja cairan RT+20 hingga 250°C), serta insulasi kapas silikat aluminium berkualitas tinggi."
@@ -22891,8 +22117,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mantel pemanas multi-baris tanpa pengaduk magnetik (konfigurasi 2, 4, atau 6 baris untuk labu 100 mL hingga 1000 mL) dengan regulasi suhu elektronik stepless dan suhu maksimum 450°C.",
     description: [
       "Infitek HMD Series adalah mantel pemanas multi-posisi berbaris khusus untuk pemanasan sampel labu alas bulat (tanpa fitur pengadukan magnetik) yang menggunakan regulasi suhu elektronik.",
       "Dilengkapi elemen pemanas kawat nikel-kromium, bodi baja canai dingin lapis semprot anti-korosi, pengatur suhu elektronik dengan regulasi stepless, serta konfigurasi baris mulai dari 2 posisi, 4 posisi, hingga 6 posisi untuk labu ukuran 100 mL, 250 mL, 500 mL, dan 1000 mL."
@@ -22944,8 +22168,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mantel pemanas dengan pengaduk magnetik terintegrasi (kapasitas 50 mL hingga 20 Liter) dengan pemanasan dan pengadukan simultan, kecepatan 0–1600 rpm, dan suhu permukaan 450°C.",
     description: [
       "Infitek HMSA Series (pilihan kapasitas 50 mL hingga 20 Liter) adalah mantel pemanas labu alas bulat yang menggabungkan fungsi pemanasan konduksi permukaan (hingga 450°C) dan pengadukan magnetik simultan (0–1600 rpm).",
       "Dilengkapi elemen pemanas nichrome, insulasi kapas silikat aluminium berkualitas tinggi, pengatur kecepatan aduk stepless, bodi isolasi termal yang aman, serta kompatibilitas dengan batang aduk PTFE (stir bar)."
@@ -22998,8 +22220,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mantel pemanas labu alas bulat tanpa pengaduk magnetik (kapasitas 50 mL hingga 20 Liter) dengan pengatur suhu elektronik teregulasi stepless dan suhu permukaan maksimum 450°C.",
     description: [
       "Infitek HMA Series (pilihan kapasitas 50 mL hingga 20 Liter) adalah mantel pemanas konduksi permukaan murni tanpa fitur pengaduk magnetik yang dirancang untuk refluks, distilasi, dan pemanasan labu standar.",
       "Dilengkapi pengatur suhu elektronik dengan regulasi stepless, elemen pemanas nichrome, lapisan insulasi kapas silikat aluminium, bodi baja canai dingin lapis semprot, serta rentang kapasitas lengkap."
@@ -23052,8 +22272,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mantel pemanas digital beberapa baris (several rows) berlayar PID tunggal dengan sensor suhu PT100 dan tiang penyangga, pemanasan cepat, keseragaman tinggi, dan suhu hingga 450°C.",
     description: [
       "Infitek HMD Digital Series menyediakan solusi pemanasan paralel beberapa baris (several rows) yang dibuat sesuai pesanan kebutuhan pelanggan (custom layout) dengan pengontrol suhu layar tunggal PID presisi tinggi.",
       "Dilengkapi sensor suhu PT100 dengan rak penyangga dan batang stainless steel yang dapat disesuaikan, pemanasan cepat dengan keseragaman termal superior, suhu permukaan maksimum 450°C (rentang kontrol cairan RT+20 hingga 250°C), serta kapasitas labu dari 50 mL hingga 20 Liter."
@@ -23106,8 +22324,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Hot plate aluminium area luas (suhu hingga 350°C, beban pelat hingga 40 kg) dengan pilihan ukuran 300×300 mm, 350×450 mm, atau 400×600 mm, serta kontrol skala analog atau digital.",
     description: [
       "Infitek HPT-350 Series adalah hot plate pemanas berpelat aluminium tarik (aluminum-tensile) berkualitas tinggi yang menghasilkan distribusi suhu permukaan yang sangat seragam dan pemanasan cepat.",
       "Dilengkapi suhu maksimum 350°C, daya pemanas 1200W hingga 3500W, kapasitas beban pelat 20 hingga 40 kg, pilihan metode pengatur suhu skala (A/C) atau tampilan digital (dengan timer opsional), serta termokopel model K."
@@ -23161,8 +22377,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Oven industri suhu tinggi (rentang 50–400°C) dengan konveksi paksa, kapasitas 50L, 100L, dan 200L, layar LCD definisi tinggi, ruang dalam stainless steel sikat, serta proteksi over-temperature.",
     description: [
       "Infitek DOF-A Series (50L, 100L, 200L) adalah oven industri suhu tinggi khusus yang dirancang untuk pengeringan dan pengujian konstan pada suhu ekstrem mencapai 400°C.",
       "Dilengkapi sirkulasi konveksi paksa, pengontrol PID digital dengan layar LCD definisi tinggi, ruang dalam stainless steel berkualitas tinggi yang tahan korosi, insulasi kapas silikat aluminium tebal, alarm batas suhu berlebih, serta beragam opsi komunikasi (USB, RS485/232, printer internal, atau pembatas suhu digital mandiri)."
@@ -23217,8 +22431,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Oven pengering konveksi paksa kapasitas 85L (suhu hingga 300°C) dengan ruang dalam mirror stainless steel, kipas 3 tingkat kecepatan (pada DOF-85), dan pengontrol PID digital.",
     description: [
       "Infitek DOF-85 dan DOF-85E adalah oven pengering sirkulasi udara paksa berkapasitas 85 Liter yang handal untuk pengeringan dan pemanasan umum di laboratorium.",
       "Menggunakan ruang dalam mirror stainless steel, rentang suhu RT+10 hingga 300°C, pengontrol PID mikroprosesor, pengatur kecepatan kipas 3 tingkat (pada DOF-85), timer 0–9999 menit, serta opsi tambahan printer dan penyimpanan USB (pada model DOF-85)."
@@ -23273,8 +22485,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Alat pemanas multifungsi dual-purpose oven & inkubator seri DOI-Z (kapasitas 30L hingga 220L, Inkubator: RT+5 hingga 80°C, Oven: 80 hingga 200°C) dengan sirkulasi konveksi paksa dan kontrol PID LCD.",
     description: [
       "Infitek DOI-Z Series (30L, 50L, 70L, 135L/140L, 220L) adalah instrumen 2-in-1 berkinerja tinggi yang menggabungkan fungsi inkubator mikrobiologi dan oven pengering dalam satu wadah.",
       "Dilengkapi mode ganda suhu (Inkubator: RT+5 hingga 80°C / Oven: 80 hingga 200°C), sirkulasi konveksi paksa back-suction dengan kipas impeler besar, ruang dalam stainless steel sikat, layar LCD besar, serta proteksi kebocoran dan alarm suhu lebih."
@@ -23328,8 +22538,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Furnace tabung horizontal suhu tinggi 1400°C (kontinu 1300°C) dengan tabung korundum murni, elemen pemanas batang SiC, termokopel tipe S, dan pengontrol SCR 30 segmen.",
     description: [
       "Infitek FNC-TB1400 Series adalah tungku tabung horizontal (tube furnace) suhu tinggi untuk pemanasan reaktor hingga 1400°C menggunakan tabung korundum (corundum tube) pilihan.",
       "Dilengkapi elemen pemanas batang Silikon Karbida (SiC heating rods), termokopel tipe S, pengontrol PID otomatis SCR dengan kurva waktu-suhu 30 segmen, struktur baja ganda berpendingin kipas, serta opsi layar sentuh atau software PC."
@@ -23384,8 +22592,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Muffle/atmosphere furnace suhu tinggi ekstrem 1700°C (kerja kontinu 1550°C) dengan elemen pemanas batang Molibdenum Disilisida (MoSi₂), kontrol gas vakum lengkap, dan pemrograman hingga 50 segmen.",
     description: [
       "Infitek FNC-AS1700 Series (1L, 4.5L, 12L, 36L) adalah tungku atmosfer suhu tinggi puncaknya untuk pemrosesan material di bawah suhu 1700°C dengan atmosfer gas pelindung reaktif maupun inert.",
       "Dilengkapi batang pemanas Molybdenum Disilicide (MoSi₂ rods), termokopel tipe B, papan serat keramik alumina, sistem kontrol gas lengkap (pompa vakum, flow meter, katup bola, pengukur vakum), serta pengontrol PID SCR dengan pemrograman 30 hingga 50 segmen."
@@ -23438,8 +22644,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Muffle furnace kotak suhu tinggi 1700°C (kerja kontinu 1550°C) dengan elemen pemanas batang MoSi₂, termokopel tipe B, insulasi serat alumina murni, dan pengontrol SCR 30 segmen.",
     description: [
       "Infitek FNC-BX1700 Series (1L, 4.5L, 12L, 36L) adalah tungku muffle box suhu ekstrem 1700°C yang dirancang untuk riset material tingkat lanjut dan pengujian keramik mutakhir.",
       "Dilengkapi elemen pemanas batang Molybdenum Disilicide (MoSi₂ heating rods), termokopel tipe B, insulasi serat alumina kemurnian tinggi untuk efisiensi energi, struktur baja ganda berpendingin kipas, serta pengontrol PID otomatis SCR 30 segmen."
@@ -23493,8 +22697,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Muffle furnace kotak ekonomis 1200°C tipe ES dengan pengontrol suhu satu-tahap Yudian China, cangkang luar stainless steel cetak timbul (embossed), pemanasan 3 sisi, dan interlock pintu.",
     description: [
       "Infitek FNC-BX1200-ES Series (2L, 7L, 12L, 16L) adalah varian muffle furnace ekonomis berdaya tahan tinggi yang dilengkapi cangkang luar stainless steel cetak timbul (embossed) dan pengontrol suhu satu-tahap Yudian.",
       "Dilengkapi elemen pemanas kawat paduan di tiga sisi (kiri, kanan, atas), termokopel tipe K, insulasi serat alumina murni, struktur baja ganda berpendingin kipas, serta interlock pengaman otomatis saat pintu dibuka."
@@ -23547,8 +22749,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Water bath goyang (shaking water bath) tipe resiprokal kapasitas 31L (suhu RT hingga 100°C) dengan layar LCD latar belakang besar, kontrol PID, kecepatan osilasi 20–180 r/min, dan fitur slow-start anti-ciprat.",
     description: [
       "Infitek WB-S30 adalah penangas air goyang resiprokal (reciprocating shaking water bath) yang dirancang untuk menjaga kultur sel dan hibridisasi pada suhu konstan sambil mengocok sampel secara stabil.",
       "Dilengkapi tangki dan penutup atas mirror stainless steel, isolasi polyurethane, kontrol PID mikroprosesor dengan layar LCD besar (menampilkan nilai ukur, set, dan waktu tersisa), kecepatan osilasi 20–180 r/min, amplitudo 16/24 mm, fungsi slow-start untuk mencegah cipratan cairan labu, serta perlindungan lengkap tingkat air dan suhu lebih."
@@ -23608,8 +22808,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Penangas air goyang putar (rotary shaking water bath) kapasitas 32L (suhu RT hingga 100°C) dengan klem universal pegas stainless steel, kecepatan 60–280 rpm, dan amplitudo ≥20 mm.",
     description: [
       "Infitek WB-S300A adalah penangas air goyang tipe putar (rotary oscillation) yang banyak digunakan untuk kultur mikroba, biologi, dan kedokteran.",
       "Menggunakan pelat baja tahan karat impor, klem universal pegas stainless steel yang mudah diatur, kecepatan putar 60–280 rpm, amplitudo ≥20 mm, volume bersih kamar kerja 32 Liter, beban kerja maksimal 12 kg, serta pemanas berdaya 1500W."
@@ -23662,8 +22860,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Water bath 2 baris 4 lubang berkapasitas 14.6L (suhu RT+5 hingga 100°C) dengan sakelar pembuangan elektrik (electric drain switch), pengontrol PID digital LED, dan proteksi air kosong.",
     description: [
       "Infitek WB-Saturasi WB-2R4H-15 adalah penangas air laboratorium 2 baris 4 lubang (kapasitas 14.6 Liter) yang dirancang untuk inkubasi dan pemanasan reagen kimia.",
       "Dilengkapi tangki bagian dalam dan penutup atas dari stainless steel cetak mulus (stretching inner container), sakelar pembuangan air elektrik satu tombol (electric drain switch), pengontrol PID digital LED dengan timer 0–9999 menit, sensor NTC, serta proteksi otomatis mati saat kekurangan air (water shortage)."
@@ -23718,8 +22914,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Water bath 1 baris 2 lubang berkapasitas 6.1L (suhu RT+5 hingga 100°C) dengan pembuangan elektrik, pengontrol PID digital LED, dan proteksi anti-kering.",
     description: [
       "Infitek WB-1R2H-7 adalah penangas air laboratorium 1 baris 2 lubang berkapasitas 6.1 Liter untuk pemanasan dan inkubasi sampel reagen bervolume sedang.",
       "Dilengkapi tangki stainless steel cetak mulus, sakelar pembuangan elektrik, pengontrol PID digital LED dengan timer 0–9999 menit, sensor NTC, serta pengaman otomatis mati saat kekurangan air."
@@ -23773,8 +22967,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Water bath 2 baris 6 lubang berkapasitas 22.5L (suhu RT+5 hingga 100°C) dengan sakelar pembuangan elektrik, pengontrol PID digital LED, dan alarm suhu lebih.",
     description: [
       "Infitek WB-2R6H-25 adalah penangas air laboratorium 2 baris 6 lubang berkapasitas besar 22.5 Liter untuk pemanasan sampel dalam jumlah banyak secara simultan.",
       "Dilengkapi tangki stainless steel cetak mulus, sakelar pembuangan air elektrik satu tombol, pengontrol PID digital LED dengan timer 0–9999 menit, sensor NTC, serta proteksi kekurangan air dan alarm suhu berlebih."
@@ -23827,8 +23019,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Termostat water bath kapasitas 5L (suhu 0–100°C, akurasi ±0.3°C) dengan penutup atap pelana (gabled lid) pengalir kondensasi, drainase samping, deteksi air kosong, dan layar LED terpisah.",
     description: [
       "Infitek WB-1R1H-5R adalah penangas air termostatik berkapasitas 5 Liter yang dilengkapi desain penutup atap pelana unik (gabled lid) untuk mengalirkan kondensasi air kembali ke dalam tangki tanpa menetes ke sampel.",
       "Menggunakan mikroprosesor presisi tinggi dengan akurasi ±0.3°C, rentang atur suhu 0–100°C (kontrol RT+5 hingga 100°C), timer digital berlayar LED independen (1 min hingga 99h59min / ∞), katup drainase samping terpisah, serta deteksi level air anti-kering."
@@ -23884,8 +23074,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Seri penangas air tangki mulus tanpa sambungan las (seamless integrally formed tank 304 stainless steel) dengan pilihan 1 hingga 12 lubang cincin konsentrik, suhu RT hingga 99.9°C, dan kontrol PID.",
     description: [
       "Infitek WB-S Series mencakup berbagai konfigurasi penangas air (1 lubang, 2 lubang, 4 lubang, 6 lubang, 8 lubang, hingga model kotak seri D seperti 4D, 6D, 8D, 12D) yang menggunakan tangki stainless steel 304 cetak mulus tanpa sambungan las (seamless integrally formed tank).",
       "Dilengkapi penutup cincin konsentrik 4-lubang (diameter luar 120 mm dengan apertur bertingkat 97/77/58/40 mm), kontroler PID program dengan layar LED/LCD, rentang suhu RT hingga 99.9°C (fluktuasi ±0.5°C), timer digital, serta bodi luar baja berkualitas tinggi."
@@ -23938,8 +23126,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Water bath 2 baris 6 lubang (kapasitas 18L, suhu RT hingga 100°C) dengan 6 posisi pengaduk magnetik terpisah (0–2000 rpm), timer 999 menit, dan pelat tahan korosi.",
     description: [
       "Infitek WB-M6A adalah kombinasi penangas air 6 lubang (2 row & 6 holes) berkapasitas 18 Liter yang terintegrasi dengan 6 titik pengaduk magnetik berseri kendali terpisah (separate control).",
       "Dilengkapi rentang kecepatan aduk 0–2000 rpm per posisi, pengontrol suhu rentang RT hingga 100°C dengan akurasi tinggi, timer digital hingga 999 menit, serta material pelat tahan korosi impor berkualitas tinggi."
@@ -23993,8 +23179,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Penangas air sirkulasi dengan pompa (flow rate ≥6 L/min) kapasitas 20L (suhu RT+5 hingga 100°C) berfluktuasi rendah ≤±0.1°C, kontrol digital, dan timer hingga 999 menit.",
     description: [
       "Infitek WB-M600 adalah water bath sirkulasi presisi tinggi yang dilengkapi pompa sirkulasi cairan (flow rate ≥6 L/min) untuk aplikasi pemanasan konstan langsung maupun suplai cairan ke sistem eksternal.",
       "Dilengkapi kontrol digital presisi dengan fluktuasi suhu sangat rendah (≤±0.1°C), rentang suhu RT+5 hingga 100°C, timer 0–999 menit, volume tangki 20 Liter, serta material tahan korosi."
@@ -24047,8 +23231,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penangas air suhu konstan kapasitas besar (20L hingga 250L) dengan rentang suhu RT hingga 100°C, fluktuasi ±0.5–1°C, timer 0–999 menit, dan material tahan korosi.",
     description: [
       "Infitek WB-M Series (mencakup model WB-M20, M30, M40, M45, M50, M80, M100, M150, hingga M250 berkapasitas 250 Liter) dirancang untuk aplikasi pemanasan konstan bervolume masif di laboratorium riset dan industri.",
       "Menggunakan pelat tahan korosi impor berkualitas tinggi, rentang suhu RT hingga 100°C, timer digital 0–999 menit, daya pemanas 1000W hingga 12000W (tersedia tegangan 220V dan 380V), serta konstruksi tangki yang luas dan kokoh."
@@ -24101,8 +23283,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Termostat water bath 1 tangki kapasitas 2L (suhu 0–100°C, akurasi ±0.3°C) dengan penutup atap pelana (gabled lid) pengalir kondensasi, deteksi air kosong, dan layar LED.",
     description: [
       "Infitek WB-1R2H-2R adalah penangas air termostatik mikro berkapasitas 1 tangki 2 Liter yang dilengkapi penutup atap pelana unik untuk mengalirkan uap kondensasi kembali ke tangki tanpa menetes ke sampel.",
       "Dilengkapi mikroprosesor dengan akurasi ±0.3°C, rentang atur suhu 0–100°C (kontrol RT+5 hingga 100°C), timer digital berlayar LED independen, saluran drainase samping terpisah, serta deteksi level air anti-kering."
@@ -24156,8 +23336,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Termostat water bath dengan 2 tangki terpisah (total kapasitas 4L / 2 × 2L) dengan akurasi ±0.3°C, penutup atap pelana, drainase independen, dan proteksi anti-kering.",
     description: [
       "Infitek WB-1R2H-4R adalah penangas air termostatik dual-tank yang memiliki 2 tangki terpisah berkapasitas masing-masing 2 Liter (total 4 Liter) untuk pengujian dua kondisi termal secara bersamaan.",
       "Dilengkapi akurasi ±0.3°C, rentang suhu RT+5 hingga 100°C, tutup atap pelana (gabled lid) pada tiap tangki, saluran drainase independen, timer digital LED 1 min hingga 99h59min, serta proteksi anti-kering."
@@ -24210,8 +23388,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Termostat water bath dengan 3 tangki terpisah (total kapasitas 6L / 3 × 2L) dengan akurasi ±0.3°C, penutup atap pelana, drainase independen, dan proteksi anti-kering.",
     description: [
       "Infitek WB-1R3H-6R adalah penangas air termostatik tiga tangki terpisah (3 tanks) berkapasitas total 6 Liter (3 × 2L) untuk penanganan tiga kelompok sampel secara paralel pada satu unit alat.",
       "Dilengkapi akurasi ±0.3°C, rentang suhu RT+5 hingga 100°C, tutup atap pelana (gabled lid), saluran drainase independen, timer digital LED 1 min hingga 99h59min, serta sistem pengaman anti-kering."
@@ -24266,8 +23442,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Water bath sirkulasi suhu konstan berkapasitas silinder Φ300×300 mm dengan pompa sirkulasi (flow rate 6 L/min) untuk menciptakan medan suhu konstan eksternal, stabilitas ±0.1°C, dan layar sentuh LED ganda.",
     description: [
       "Infitek CTB-30 adalah penangas air sirkulasi presisi tinggi yang dilengkapi pompa sirkulasi (flow rate 6 L/min) guna mengalirkan cairan bersuhu terkontrol ke luar tangki untuk menciptakan medan suhu konstan kedua.",
       "Sangat ideal untuk riset kimia, fisika, bio-engineering, dan instrumen elektronik, dilengkapi stabilitas suhu ±0.1°C, rentang suhu Ambien+5 hingga 90°C, layar LED ganda (merah-hijau), layar sentuh lembut, koreksi deviasi suhu mikrokomputer, alarm suhu ultra-tinggi, serta katup pembuangan (drain)."
@@ -24320,8 +23494,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Water bath 1 lubang berkapasitas 3.4L (suhu RT+5 hingga 100°C) dengan pengontrol PID digital LED, timer 0–9999 menit, sensor NTC, dan proteksi air kosong.",
     description: [
       "Infitek WB-1R1H-3 adalah penangas air laboratorium 1 lubang berkapasitas 3.4 Liter yang dirancang untuk pemanasan sampel reagen bervolume mikro secara presisi.",
       "Dilengkapi tangki stainless steel cetak mulus (stretching inner container), pengontrol PID digital LED dengan timer 0–9999 menit, sensor NTC, serta proteksi otomatis mati saat kekurangan air (water shortage)."
@@ -24374,8 +23546,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sirkulator suhu rendah (chiller) -20°C hingga RT dengan kapasitas tangki 2.5L, pendinginan kompresor 480W (pendinginan 700W pada 20°C), laju aliran sirkulasi 18 L/min, dan layar sentuh 5 inci.",
     description: [
       "Infitek RECL20-2X adalah sirkulator suhu rendah tertutup yang dirancang untuk mendinginkan dan menjaga suhu konstan pada rotary evaporator dan reaktor kaca.",
       "Menggabungkan sistem refrigerasi tertutup dengan kontrol PID, kapasitas tangki 2.5 Liter (kompatibel dengan cairan etanol, etilen glikol, dan antifreeze), laju aliran pompa 18 L/min (head 7 meter, tekanan 0.6 bar), layar sentuh digital 5 inci, refrigeran ramah lingkungan R404A, serta fitur alarm level air rendah."
@@ -24431,8 +23601,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Refrigerated circulator -20°C kapasitas 4.5L dengan pompa tekanan/hisap bebas perawatan (flow max 22 L/min), kontrol PID ±0.3°C, dan dimensi bodi sangat ringkas (23 cm).",
     description: [
       "Infitek RECL20-4.5 adalah sirkulator berpendingin (refrigerated circulator) kompak berkapasitas 4.5 Liter yang dirancang untuk instalasi di desktop, bawah meja lab, atau dalam fume hood.",
       "Dilengkapi pompa tekanan/hisap (pressure/suction pump) bebas perawatan yang aliran dan tekanannya dapat menyesuaikan beban otomatis, kapasitas pendinginan 700W, kontrol PID dengan stabilitas ±0.3°C, jendela level cairan intuitif, port overflow & drain, serta refrigeran ramah lingkungan."
@@ -24488,8 +23656,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Chiller sirkulasi berpendingin kompresor tertutup kapasitas besar (rentang -10°C hingga -40°C, kapasitas pendinginan 1.55 kW hingga 23.2 kW) dengan pompa sirkulasi bertenaga dan proteksi fase komprehensif.",
     description: [
       "Infitek RECL Series (RECL10-5 -10°C 1P, RECL30-50 -30°C 3P, RECL40-100 -40°C 10P) adalah pendingin sirkulasi berkapasitas tinggi untuk menghubungkan reaktor kaca lapis ganda dan rotary evaporator skala pilot.",
       "Dilengkapi sistem refrigerasi kompresor tertutup dengan kumparan tembaga lapis nikel, kontroler PID berlayar LCD (akurasi ±0.1°C), sensor PT100, proteksi kelengkapan lengkap (delay, arus lebih, suhu lebih, urutan fase, dan kehilangan fase), laju aliran sirkulasi hingga 50 L/min, serta volume tangki dari 6.8L hingga 98L."
@@ -24543,8 +23709,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Recirculating chiller dengan program pengontrol suhu generasi baru (suhu -10°C hingga -40°C), timer shutdown hingga 999 jam, pompa sirkulasi eksternal, dan kontrol PID cerdas.",
     description: [
       "Infitek RCHL-L Series mencakup beragam model chiller sirkulasi berpendingin kompresor tertutup (rentang suhu -10°C, -15°C, -20°C, -30°C, hingga -40°C) yang dilengkapi program kontrol suhu generasi baru.",
       "Mengusung sistem pendingin kompresor tertutup dengan proteksi suhu lebih dan arus lebih, pompa sirkulasi eksternal untuk pembentukan medan suhu konstan kedua, fungsi timer shut-down otomatis yang dapat diatur dari 0 hingga 999 jam, serta kontrol PID cerdas."
@@ -24596,8 +23760,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sirkulator suhu rendah -30°C kapasitas 6.8L dengan kompresor tertutup, laju aliran pompa 20–40 L/min, akurasi ±0.1°C, dan kumparan tembaga lapis nikel.",
     description: [
       "Infitek RECL30-5 adalah sirkulator penangas dingin berkapasitas 6.8 Liter (diameter tangki Φ220×180 mm) yang dirancang untuk mendampingi rotary evaporator dan reaktor kaca pada suhu hingga -30°C.",
       "Menggunakan sistem pendingin kompresor tertutup dengan refrigeran R22, kumparan tembaga lapis nikel, kontroler digital berlayar LCD, pompa sirkulasi bertenaga 100W (flow 20–40 L/min, head 4–6m), serta proteksi penundaan, arus lebih, dan suhu lebih."
@@ -24652,8 +23814,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Freeze dryer (liofilisator) meja berkapasitas kondenser -60°C (kapasitas es 3 kg/24h, volume kondenser 6.5L) dengan layar sentuh warna 7 inci, ruang pengering transparan, dan opsi manifold 8-port.",
     description: [
       "Infitek LYO60B Series (pilihan model 1S standar, 1P dengan manifold 8-port, 1T chamber penutup/stoppering, dan 1PT penutup dengan manifold) adalah mesin pengering beku (freeze dryer) tipe meja (benchtop) untuk sampel biomedis.",
       "Dilengkapi kompresor kaskade performa tinggi, kondenser stainless steel bervolume besar 6.5 Liter tanpa kumparan di dalam tangki es (memungkinkan pembekuan awal mandiri), layar sentuh berwarna 7.0 inci dengan kurva real-time, port USB untuk ekspor data, serta derajat vakum tanpa beban <5 Pa."
@@ -24712,8 +23872,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Freeze dryer (liofilisator) tipe lantai berkapasitas kondenser 9.5L dengan pilihan suhu -60°C atau -80°C (kapasitas es 4 kg/24h), layar sentuh 7 inci, dan port USB ekspor data.",
     description: [
       "Infitek LYO60V-1 dan LYO80V-1 Series adalah mesin pengering beku tipe lantai (floor-standing) yang menawarkan suhu kondenser sangat rendah (-60°C atau -80°C) untuk sampel biologis yang membutuhkan kondisi liofilisasi ketat.",
       "Dilengkapi volume kondenser 9.5 Liter tanpa kumparan internal, layar sentuh warna 7.0 inci, kompresor kaskade performa tinggi, ruang pengering transparan, serta pilihan varian S (standar), T (stoppering), P (manifold 8-port), dan PT (stoppering + manifold)."
@@ -24766,8 +23924,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Freeze dryer in-situ (pembekuan dan pengeringan dalam satu ruang tanpa transfer sampel) kapasitas 2 hingga 8 kg per batch dengan suhu kondenser -40°C, layar sentuh warna, dan rak berpemanas terkontrol.",
     description: [
       "Infitek LYO40-ISF Series (pilihan model IS1F 0.12 m², IS4F 0.34 m², IS6F 0.55 m²) adalah mesin pengering beku in-situ yang dikembangkan dari penggunaan industri untuk keperluan komersial kecil dan rumah tangga (buah, sayur, makanan).",
       "Desain in-situ mencegah kontaminasi saat transfer bahan karena proses pembekuan dan pengeringan terjadi di dalam satu ruang transparan akrilik yang sama, dilengkapi pengatur suhu rak, defrost satu tombol, kompresor impor, serta layar sentuh berwarna."
@@ -24821,8 +23977,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mesin pembuat es batu otomatis bentuk peluru (bullet ice) kapasitas 25 Kg/24 jam dengan penyimpanan es 7 Kg, bodi stainless steel, sistem pendingin udara ber-refrigeran R290 ramah lingkungan.",
     description: [
       "Infitek IM-BT25 adalah mesin pembuat es batu berbentuk peluru silindris jernih berkeras tinggi untuk kebutuhan laboratorium biokimia, sekolah, dan rumah sakit.",
       "Dilengkapi bodi all-stainless steel higienis anti-minyak, kontrol mikroprosesor cerdas penuh (deteksi otomatis isi air, buat es, dan stop otomatis saat tempat es penuh), indikator LED operasi/kekurangan air/penuh es, desain hemat energi R290, serta ruang penyimpanan es berstandar food-grade PP."
@@ -24876,8 +24030,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mesin pembuat es batu otomatis bentuk peluru kapasitas 50 Kg/24h (penyimpanan 14 Kg) dan 80 Kg/24h (penyimpanan 25 Kg) dengan bodi stainless steel dan refrigeran R290.",
     description: [
       "Infitek IM-BT50 (50 Kg/24h) dan IM-BT80 (80 Kg/24h) adalah mesin pembuat es peluru berkapasitas lebih besar untuk mendukung operasional harian laboratorium dan fasilitas medis yang membutuhkan pasokan es melimpah.",
       "Dilengkapi kontrol mikroprosesor cerdas, indikator LED status kerja, penghematan energi tinggi (hemat sepertiga listrik dibanding produk sejenis), bodi stainless steel tahan karat, serta bin penyimpanan es berinsulasi foam food-grade."
@@ -24929,8 +24081,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mesin pembuat es batu bentuk peluru berkapasitas industri 120 Kg/24 jam dengan bin penyimpanan es 50 Kg, bodi stainless steel, dan daya 760W.",
     description: [
       "Infitek IM-BT120 adalah mesin pembuat es peluru skala tinggi berkapasitas produksi 120 Kg per 24 jam dengan bin penampung es terintegrasi seluas 50 Kg.",
       "Mengusung desain all-stainless steel yang elegan dan mudah dibersihkan, kontrol mikroprosesor penuh, sistem pendingin udara paksa dengan refrigeran R290 ramah lingkungan, serta efisiensi daya 760W."
@@ -24982,8 +24132,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mesin pembuat es salju/serpih (snowflake / flake ice) otomatis kapasitas 20 dan 30 Kg/24 jam (penyimpanan 10 Kg) dengan teknologi ekstrusi sekrup dan pemisahan air-es otomatis.",
     description: [
       "Infitek IM-FK20 (20 Kg/24h) dan IM-FK30 (30 Kg/24h) menghasilkan es serpih halus tak beraturan (irregular fine-grained flake ice) yang sangat cepat mendinginkan sampel dan menyusup ke celah sempit wadah.",
       "Dilengkapi teknologi ekstrusi sekrup (screw extrusion hob-style), pemisahan otomatis air dan es tanpa sisa air terbuang (float-type water tank tanpa sisa air), bodi stainless steel anti-korosi, chip komputer kontrol penuh, serta refrigeran R290."
@@ -25036,8 +24184,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mesin pembuat es salju/serpih kapasitas 40 dan 50 Kg/24 jam (penyimpanan 15 Kg) dengan teknologi ekstrusi sekrup, kontrol komputer mikro, dan bodi stainless steel anti-korosi.",
     description: [
       "Infitek IM-FK40 (40 Kg/24h) dan IM-FK50 (50 Kg/24h) menghasilkan es serpih halus berkapasitas lebih besar untuk fasilitas penelitian yang membutuhkan pasokan es salju intensif.",
       "Dilengkapi ekstrusi sekrup otomatis, penyimpanan es 15 Kg, ruang evaporasi dan bilik es terpisah yang dipatenkan untuk efisiensi pendinginan tinggi, sensor pelampung tanpa sisa air, serta refrigeran R290 ramah lingkungan."
@@ -25089,8 +24235,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mesin pembuat es salju/serpih kapasitas 60, 70, dan 85 Kg/24 jam (penyimpanan 25 Kg) dengan teknologi ekstrusi sekrup, kontrol mikrokomputer, dan pendingin udara R290.",
     description: [
       "Infitek IM-FK60 (60 Kg), IM-FK70 (70 Kg), dan IM-FK85 (85 Kg) adalah lini mesin pembuat es serpih kapasitas menengah-tinggi dengan tempat penyimpanan es berkapasitas 25 Kg.",
       "Menggunakan sistem ekstrusi sekrup otomatis penuh, sensor pelampung air tanpa sisa air, perlindungan otomatis saat es penuh atau air habis, motor reduksi berpendingin kipas khusus, serta bodi stainless steel anti-korosi."
@@ -25141,8 +24285,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mesin pembuat es salju/serpih kapasitas industri besar 100, 120, dan 150 Kg/24 jam (penyimpanan 40 Kg) dengan kontrol chip komputer, ekstrusi sekrup, dan refrigeran R290.",
     description: [
       "Infitek IM-FK100 (100 Kg), IM-FK120 (120 Kg), dan IM-FK150 (150 Kg) adalah mesin pembuat es serpih berkapasitas industri tinggi dengan tempat penyimpanan es 40 Kg.",
       "Dilengkapi kontrol chip komputer impor yang andal, ekstrusi sekrup otomatis dengan pemisahan es dari air, sensor pelampung anti-pemborosan air, perlindungan otomatis penuh (es penuh / air habis), serta daya 520W hingga 680W."
@@ -25193,8 +24335,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin pembuat es salju/serpih kapasitas industri maksimum 200 dan 250 Kg/24 jam (penyimpanan es raksasa 60 Kg) dengan daya 1040W–1100W dan refrigeran R290.",
     description: [
       "Infitek IM-FK200 (200 Kg/24h) dan IM-FK250 (250 Kg/24h) adalah lini mesin pembuat es serpih terbesar yang dirancang untuk fasilitas industri dan pabrik dengan permintaan es masif harian.",
       "Dilengkapi tempat penyimpanan es berkapasitas 60 Kg, ekstrusi sekrup otomatis dengan pemisahan air-es, kontrol mikrokomputer cerdas, bodi baja tahan karat anti-korosi, serta konsumsi daya 1040W hingga 1100W."
@@ -25246,8 +24386,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Freeze dryer (liofilisator) lantai berkapasitas kondenser ekstra besar 28 Liter dengan pilihan suhu -60°C atau -80°C (kapasitas es 6 kg/24h), area pengeringan 0.18–0.27 m², layar sentuh 7 inci, dan pompa vakum 4 L/s.",
     description: [
       "Infitek LYO60V-2 dan LYO80V-2 Series adalah lini freeze dryer lantai berkapasitas tinggi dengan volume kondenser 28 Liter (dimensi Φ300×420 mm) untuk pengeringan beku sampel biomedis dalam jumlah lebih banyak.",
       "Dilengkapi pilihan suhu kondenser -60°C atau -80°C, area pengeringan 0.18–0.27 m² (baki diameter Φ240 mm, hingga 6 lapis), layar sentuh warna 7.0 inci, kompresor kaskade performa tinggi, pompa vakum 4 L/s (14.4 m³/h), serta varian lengkap S, T, P, dan PT."
@@ -25300,8 +24438,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mesin pengayak (sieve shaker) untuk diameter saringan ≤φ200 mm dengan kapasitas hingga 8 lapis saringan, motor getar 0.125 kW, amplitudo 0–3 mm, dan pewaktu otomatis.",
     description: [
       "Infitek TS-200 menggunakan motor getar sebagai sumber getaran untuk menggerakkan basis pengayak uji standar secara vertikal dan lateral, memisahkan partikel padat ke dalam 2 hingga 7 segmen ukuran secara presisi.",
       "Dilengkapi kapasitas pemasangan hingga 8 lapis saringan (termasuk pan bawah), rentang ukuran saringan 0.025–50 mm, pewaktu otomatis dengan pemadaman terjadwal, tingkat kebisingan rendah (<50 dB), bodi ringkas, serta operasi penempatan platform (platform operation) tanpa perlu pemasangan baut pengikat lantai."
@@ -25354,8 +24490,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mesin pengayak (sieve shaker) untuk diameter saringan ≤φ300 mm dengan daya motor 0.18 kW, kapasitas 8 lapis saringan, dan pewaktu pemadaman otomatis.",
     description: [
       "Infitek TS-300 adalah varian pengayak berkapasitas lebih besar dari seri TS-200, mendukung penggunaan saringan uji berdiameter hingga 300 mm untuk sampel padat maupun bubuk dalam jumlah lebih banyak.",
       "Dilengkapi motor getar bertenaga 0.18 kW, frekuensi 1440 getaran/menit, amplitudo 0–3 mm, timer pemadaman otomatis, tingkat kebisingan rendah (<50 dB), serta desain bodi tahan lama."
@@ -25413,8 +24547,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin penggiling kriogenik (cryo grinder) dengan sistem pengisian nitrogen cair otomatis, dampak getaran elektromagnetik, layar sentuh industri, kapasitas batch 0.1–100g, dan 4 grup jar.",
     description: [
       "Infitek GM-L200 dirancang khusus untuk menghancurkan dan menggiling sampel yang memiliki keuletan tinggi (toughness) serta sensitivitas termal yang tidak dapat dihancurkan pada suhu kamar seperti karet, plastik, polimer, rambut, tulang, dan jaringan otot.",
       "Dilengkapi sistem pengisian nitrogen cair otomatis (liquid nitrogen filling system) yang terus memantau level cairan untuk menjaga sampel tetap beku, penggerak dampak getaran elektromagnetik (frekuensi 5–15 Hz), layar sentuh industri untuk mengatur waktu pre-cooling dan frekuensi tumbukan, serta sensor pengaman level nitrogen."
@@ -25470,8 +24602,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mortar grinder otomatis untuk sampel kering, basah, dan kriogenik (feed size <10mm, fineness <5µm) dengan panel kontrol LED 5 inci, sakelar magnetik pengaman, dan pilihan material mortar.",
     description: [
       "Infitek GM-M200 adalah mesin lesung dan alu (mortar and pestle) otomatis untuk menggiling, menghomogenkan, dan mencampur sampel keras, lunak, rapuh, hingga berbentuk pasta.",
       "Dilengkapi ukuran umpan maksimal <10 mm dengan kehalusan akhir <5 µm, kecepatan putar mortar 50–130 rpm, kapasitas batch 10–200 mL, panel kontrol layar LED 5 inci, sakelar magnetik pengaman penutup, jendela observasi dengan lampu LED, serta beragam pilihan material pengikis (scraper) dan mortar (stainless steel, agate, dll.)."
@@ -25527,8 +24657,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Jaw crusher laboratorium untuk sampel padat kasar (ukuran umpan <40 mm menjadi kehalusan akhir d90 <0.5 mm) dengan penyesuaian titik nol (zero point adjustment) dan beragam material pelat rahang.",
     description: [
       "Infitek JC-G6 adalah mesin pemecah rahang (jaw crusher) ringkas dan kedap debu yang dirancang khusus untuk pra-perawatan dan penghancuran awal sampel padat keras dalam jumlah kecil tanpa kehilangan material.",
       "Dilengkapi ukuran umpan maksimal <40 mm, kehalusan akhir d90 <0.5 mm, kecepatan 500–1000 rpm, kapasitas wadah penampung 3 Liter, lebar rahang 59.5 mm, pengaturan celah 0–11 mm, fungsi penyesuaian titik nol untuk mengkompensasi keausan (zero point adjustment), serta 5 pilihan material pelat rahang (Mangan, Stainless steel, Tungsten karbida, Zirkonia, dan Besi bebas logam berat)."
@@ -25583,8 +24711,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Planetary ball mill untuk penggilingan kering/basah hingga skala nano (<0.1 µm) dengan pilihan 1 hingga 4 stasiun kerja, pembalikan arah otomatis, sistem ventilasi ruang, dan beragam material jar 12–500 mL.",
     description: [
       "Infitek PBM-G Series (PBM-G40 dengan 2/4 stasiun, PBM-G6P dengan 1 stasiun, PBM-G20 dengan 2 stasiun) adalah gilingan bola planetarium berkinerja tinggi untuk pencampuran homogen dan penghancuran sampel hingga tingkat kehalusan nano.",
       "Dilengkapi fungsi pembalikan arah otomatis (automatic direction reversal) untuk mencegah aglomerasi, kecepatan sun wheel 30–650 rpm (rasio kecepatan dapat dikustomisasi dari 1:1 hingga 1:-3.5), sistem pendingin kipas otomatis, kunci pengaman cerdas, serta pilihan jar giling (agate, alumina, zirconium oxide, tungsten carbide) berkapasitas 12–500 mL."
@@ -25638,8 +24764,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Knife mill berdaya 1.1 kW untuk sampel lunak, berserat, berair tinggi, dan berminyak/berlemak dengan kapasitas wadah hingga 700 mL, kecepatan 2000–10000 rpm, dan 3 mode operasional.",
     description: [
       "Infitek GM-H100 adalah mesin pemotong (knife mill) khusus untuk memproses sampel yang sulit digiling seperti makanan berair tinggi, daging beku, buah, sayuran, biji-bijian berminyak, dan jaringan hewan.",
       "Dilengkapi motor bertenaga 1.1 kW, kecepatan putar 2000–10000 rpm, kapasitas batch 150–700 mL, 3 mode operasional (Interval, Reverse, Press-and-Play), pisau baja tahan karat atau paduan titanium, serta pilihan penutup gravitasi (gravity lid) standar dan berkanal pelimpah (overflow channels) untuk sayuran segar berair."
@@ -25694,8 +24818,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Micro ball mill (tissue lyser) ber-throughput tinggi untuk penyiapan hingga 192 sampel dalam beberapa detik, kecepatan 180–1800 rpm, motor brushless, tutup transparan, dan sistem klem mudah.",
     description: [
       "Infitek GM-G300 adalah mill bola mikro modern berkecepatan tinggi untuk pemrosesan sampel batch kecil hingga besar (tanaman, jaringan hewan, sampel forensik) dalam kondisi kering, basah, atau kriogenik.",
       "Dirancang untuk throughput tinggi (mampu memproses hingga 192 sampel secara serentak), kecepatan osilasi 180–1800 rpm, volume sampel 0.2–20 mL, motor DC brushless bebas sikat, sistem klem 'Easy Clamp', tutup transparan dengan kunci pengaman ganda, serta pengoperasian terprogram digital."
@@ -25750,8 +24872,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Jaw crusher laboratorium tugas berat dengan throughput 1–300 kg/jam, ukuran umpan <30 mm (fineness d90 <1 mm), sistem pembersih debu tiup udara, tombol darurat, dan pilihan pelat rahang zirkonia/mangan.",
     description: [
       "Infitek JC-MT adalah mesin pemecah rahang (jaw crusher) berkinerja tinggi untuk pengolahan sampel padat di sektor pertambangan, metalurgi, geologi, dan bahan bangunan dengan kapasitas throughput 1 hingga 300 kg/jam.",
       "Dilengkapi ukuran umpan <30 mm (saluran masuk 100×70 mm), kehalusan keluar d90 <1 mm, kecepatan 620 rpm, sistem penghilangan debu tiup udara (air-blowing dust removal), hopper dan wadah penampung stainless steel tahan asam-basa, tombol darurat (emergency stop), serta pilihan pelat rahang korundum, baja mangan, atau zirkonia."
@@ -25806,8 +24926,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Planetary ball mill senyap berpelumas oli (oil-sealed silent type) dengan putaran total hingga 1200 rpm, kehalusan <100 nm, tingkat kebisingan <60 dB, kapasitas 4 × 500 mL, dan 2 atau 4 stasiun.",
     description: [
       "Infitek PBM-YXMQ adalah ball mill planetarium tipe senyap berpelumas penutup oli (oil-sealed box bath) yang meredam kebisingan secara drastis (kebisingan <60 dB dalam radius 3 meter) dan memperpanjang umur pakai roda gigi hingga 5 kali lipat.",
       "Dilengkapi kecepatan total hingga 1200 rpm (sun disk 10–400 rpm, jar 20–800 rpm), kehalusan akhir <100 nm, kapasitas throughput 4 × 500 mL, transmisi roda gigi standar Eropa, sistem pendingin kipas, proteksi kelebihan beban, serta kompatibilitas jar dalam berbagai material."
@@ -25862,8 +24980,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Tissue mill / ball mill vertikal ber-throughput tinggi (hingga 48 sampel sekaligus) dengan layar sentuh 5 inci, frekuensi 15–30 Hz (900–1800 osilasi/min), dan motor brushless DC.",
     description: [
       "Infitek GM-G50 dirancang khusus untuk pra-perawatan dan pemecahan sampel biologis secara cepat (jaringan tanaman/hewan, bakteri, ragi, jamur, spora) dengan kapasitas hingga 48 sampel menggunakan tabung sentrifus atau vial kriogenik.",
       "Dilengkapi gerak osilasi vertikal naik-turun (amplitudo 32 mm), frekuensi 15–30 Hz (900–1800 rpm), layar sentuh LED 5.0 inci, motor brushless DC bebas sikat, adaptor 12, 24, 32, dan 48 posisi yang menjamin isolasi total antar sampel tanpa kontaminasi silang."
@@ -25917,8 +25033,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Cutting mill tugas berat untuk sampel berserat, plastik, karet, kayu, dan sirkuit elektronik (umpan <60×80 mm, kehalusan 0.1–20 mm) dengan motor 3.0 kW dan kecepatan 500–3000 rpm.",
     description: [
       "Infitek GM-C200 adalah mesin pemotong (cutting mill) berdaya 3.0 kW untuk pemrosesan batch maupun kontinu sampel padat berserat, elastis, dan bervolume besar seperti kabel, papan sirkuit (PCB), plastik, kayu, dan limbah elektronik tanpa perlu pra-penghancuran.",
       "Dilengkapi ukuran umpan maksimal <60×80 mm, kehalusan akhir saringan bawah 0.1–20 mm, kecepatan putar 500–3000 rpm, layar sentuh panel lebar, sistem pengaman sakelar motor dan pintu elektronik (motor brake otomatis saat pintu dibuka), serta beragam pilihan kapasitas penampung hingga 30 Liter."
@@ -25973,8 +25087,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Ultra centrifugal mill berkecepatan tinggi 6000–18000 rpm (kecepatan lingkar hingga 94.2 m/s) dengan sistem dua tahap rotor-ring sieve untuk kehalusan akhir <40 µm, pan penampung 900 mL, dan daya 760W.",
     description: [
       "Infitek GM-G200 adalah mill sentrifugal ultra-halus yang mengadopsi metode penggilingan dua tahap sistem pisau putar dan saringan cincin (rotor-ring sieve system) untuk memperkecil ukuran bahan lunak, keras, rapuh, dan berserat dalam waktu sangat singkat.",
       "Dilengkapi kecepatan putar dapat diatur 6000 hingga 18000 rpm (diameter rotor 98.5 mm, kecepatan lingkar mencapai 94.2 m/s), ukuran saringan cincin (ring sieves) dari 0.08 mm hingga 2.00 mm, pan penampung 900 mL (kapasitas sampel terkumpul 300 mL), panel kontrol sentuh, serta opsi material bebas logam berat."
@@ -26029,8 +25141,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin pengayak elektromagnetik gerakan 3 dimensi (3D motion) untuk pengayakan kering dan basah (rentang 20 µm–25 mm) dengan layar sentuh 5 inci, amplitudo 0.2–3.0 mm, dan koneksi software PC.",
     description: [
       "Infitek SIV-G2000 adalah mesin pengayak elektromekanis canggih yang menggunakan sistem penggerak elektromagnetik untuk menghasilkan gerakan lemparan tiga dimensi (3D motion) yang mendistribusikan sampel secara merata ke seluruh permukaan saringan.",
       "Dilengkapi rentang pengukuran 20 µm hingga 25 mm, pengaturan amplitudo digital 0.2–3.0 mm, mode intermiten anti-penyumbatan lubang ayak, layar sentuh LED 5 inci, penyimpanan 20 kombinasi parameter, kapasitas umpan hingga 3 kg, serta port komunikasi untuk kendali software komputer."
@@ -26084,8 +25194,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Workstation penanganan cairan otomatis berbasis modul inti 96 kanal (prinsip displacement udara) dengan 4 posisi pelat SBS, pengontrol eksternal tablet, dan kecepatan 12 kali lipat manual.",
     description: [
       "Infitek LHW-M96-2004S adalah stasiun kerja penanganan cairan (liquid handling workstation) otomatis penuh yang dilengkapi modul inti 96 kanal untuk aspirasi, dispensi, serial dilution, dan gradient dilution pada pelat 96-well atau 384-well.",
       "Menggunakan prinsip displacement udara dengan penyegelan kanal yang sangat presisi (tanpa alat bantu pasang boks tip), kecepatan operasional 12 kali lipat lebih cepat dari pipet 8-kanal manual, kontrol tablet eksternal dengan alur kerja sekali klik (one-click workflow), serta konversi daya aman 24V DC yang muat di dalam laminar flow hood atau biosafety cabinet standar."
@@ -26141,8 +25249,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Manifold penyaringan vakum multi-cabang (pilihan 1, 3, dan 6 cabang) dengan corong kaca (RGL) atau stainless steel SS316L (RSL) kapasitas 300 mL, katup individu, dan sterilisasi autoklaf 121°C.",
     description: [
       "Infitek MFA-RGL (Glass Funnel) dan MFA-RSL (Stainless Steel Funnel) Series dirancang untuk penyaringan analitik dan mikrobiologi multi-sampel secara simultan menggunakan hanya satu unit pompa vakum.",
       "Setiap pemegang filter dilengkapi katup kontrol individu (individual control valve), pilihan corong 300 mL (tersedia opsi 500 mL), layar pendukung membran kaca (pori 40 µm) atau SS316L (pori 100 µm), kompatibel dengan membran diameter 47/50 mm, serta dapat diautoklaf sepenuhnya pada 121°C."
@@ -26194,8 +25300,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Flocculation tester (jar tester) 4 dan 6 posisi pengadukan dengan motor DC magnet permanen torsi tinggi, kecepatan 10–450 rpm, pilihan penggerak asinkron (multi-motor) atau sinkron (motor tunggal).",
     description: [
       "Infitek FT-M Series (pilihan 4 atau 6 tempat pengadukan; tipe Asinkron ber-motor independen atau Sinkron ber-motor tunggal) adalah alat uji flokulasi standar untuk penentuan takaran koagulan dalam pengolahan air bersih dan limbah.",
       "Dilengkapi motor DC magnet permanen torsi tinggi, putaran stabil dan senyap, bilah pengaduk stainless steel anti-korosi, platform pengangkat (lifting platform) yang dapat disesuaikan, tampilan kecepatan digital, serta timer 0–999 menit."
@@ -26248,8 +25352,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Bottle top dispenser volume hingga 100 mL dengan fungsi pemulihan reagen (reagent recovery) anti-tetes, piston kaca/PTFE inert, dapat diautoklaf 121°C, dan 6 adaptor botol populer.",
     description: [
       "Infitek DISP-Pro adalah dispenser penutup botol (bottle top dispenser) kelas premium yang dirancang untuk pengeluaran reagen kimia secara aman, stabil, dan presisi langsung dari botol penyimpanan hingga volume 100 mL.",
       "Dilengkapi fungsi pemulihan reagen (reagent recovery valve) untuk mengurangi limbah dan mencegah tetesan saat tidak digunakan, mekanisme penguncian skala yang cepat dan presisi, piston kaca/PTFE lembam berketahanan kimia tinggi, dapat diautoklaf sepenuhnya pada 121°C, serta dilengkapi 6 buah adaptor universal (S40, GL25, GL28, GL32, GL38, GL45)."
@@ -26306,8 +25408,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Bottle top dispenser ekonomis (0.5 hingga 50 mL) dengan komponen kuat berbahan PTFE, FEP, BSG, dan PP, penutup pelindung reagen, dapat diautoklaf 121°C, dan adaptor botol universal.",
     description: [
       "Infitek DISP-E adalah varian dispenser penutup botol yang ekonomis namun tetap menawarkan presisi tinggi sesuai standar ISO 8655 untuk penanganan cairan kimia sehari-hari di laboratorium.",
       "Menggunakan komponen kekuatan tinggi berbahan PTFE, FEP, BSG (Borosilicate Glass), dan PP yang tahan bahan kimia, desain piston mulus tanpa macet, tutup pelindung penutup anti-papar reagen, mudah dibongkar-pasang untuk pembersihan, serta dilengkapi adaptor botol populer (S40, GL25, GL28, GL32, GL38, GL45)."
@@ -26358,8 +25458,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Bottle top dispenser digital elektronik dengan panel kontrol jarak jauh, rentang volume 0.1–99.9 mL (resolusi 100 µL), dan dua mode kerja (Traditional Dispensing & Stepper Function).",
     description: [
       "Infitek dDISP adalah dispenser penutup botol elektromekanis beroperasi digital yang menghilangkan kelelahan tangan operator melalui kontrol elektronik dan panel jarak jauh (remote control panel).",
       "Menyediakan rentang volume 0.1 hingga 99.9 mL (maksimal langkah piston 10 mL, resolusi 100 µL), dua mode operasional (Traditional Dispensing untuk pengeluaran kontinu & Stepper Function untuk pengeluaran seri), serta mematuhi standar kualitas DIN EN ISO 8655."
@@ -26410,8 +25508,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengendali pipet elektrik (pipette gun) ringan 200g untuk pipet serologis 0.1–100 mL dengan 6 mode kecepatan aspirasi/dispensi, pengisian cepat 25mL <5 detik, dan baterai litium >8 jam.",
     description: [
       "Infitek PIPE-LP adalah pengendali pipet serologis bermotor yang dirancang secara ergonomis dan ringan (hanya 200 gram) untuk pengoperasian satu tangan dengan tenaga minimal.",
       "Kompatibel dengan sebagian besar pipet plastik dan kaca dari 0.1 hingga 100 mL (serta pipet Pasteur), dilengkapi 6 mode kecepatan terpisah untuk aspirasi dan dispensi cairan, pompa bertenaga tinggi (mengisi pipet 25 mL dalam <5 detik), filter hidrofobik 0.45 µm yang dapat diganti, serta baterai litium isi ulang untuk penggunaan intermiten >8 jam."
@@ -26468,8 +25564,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pipet elektronik satu kanal bermotor stepper presisi tinggi dengan pegangan 2 tombol multifungsi, mode Pipetting/Mixing/Stepper/Dilution, kalibrasi mandiri, dan baterai Li-ion.",
     description: [
       "Infitek dPIPE dan dPIPE+ adalah pipet digital kontrol motorik bermotor stepper yang mengeliminasi kesalahan pipeting manual dan memastikan repetabilitas akurasi tingkat tinggi.",
       "Dilengkapi pengoperasian mudah 2 tombol untuk seluruh pengaturan, fungsi multi-fungsi (Pipetting, Mixing, Stepper, dan Dilution pada model dPIPE+ / Pipetting & Mixing pada model dPIPE), kecepatan aspirasi/dispensi dapat disesuaikan, baterai Li-ion dengan pengisian ganda, serta fitur self-calibration."
@@ -26522,8 +25616,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual volume variabel satu kanal (rentang 0.1 µL hingga 10 mL) dengan desain ergonomis, jendela tampilan volume besar, kepala dispenser berputar, dan material kerucut tip majemuk.",
     description: [
       "Infitek PIPE-T Single-Channel adalah pipet mekanis generasi andal yang mencakup rentang volume dari 0.1 µL hingga 10 mL dengan desain ergonomis untuk kenyamanan operasional harian.",
       "Dilengkapi jendela tampilan volume besar, kepala dispenser yang dapat berputar (rotating dispensing head), rakitan piston dan kerucut tip independen untuk kemudahan servis/perbaikan, material kerucut tip majemuk berdaya segel rapat, serta kompatibilitas dengan sebagian besar merek tip universal."
@@ -26579,8 +25671,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikropipet mekanis fully autoclavable generasi baru berdesain ultra-ringan ergonomis dengan tampilan volume 4 digit, sistem pengunci volume satu tombol, elemen filter pelindung pston, dan ketahanan UV.",
     description: [
       "Infitek PIPE-H adalah mikropipet mekanis premium fully autoclavable yang dirancang dengan bentuk anatomi tangan manusia untuk menghadirkan pengalaman pemipetan yang sangat halus dan tanpa kelelahan.",
       "Dilengkapi tampilan volume 4 digit baru yang mudah dibaca, sistem pengunci volume satu tombol (pull up untuk atur, push down untuk mengunci), elemen filter internal untuk mencegah masuknya cairan volatil ke bodi pipet, ketahanan tinggi terhadap korosi kimia dan radiasi UV, serta rentang volume dari 0.1 µL hingga 10 mL."
@@ -26636,8 +25726,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual 8 saluran (8-channel) volume variabel 0.5 µL hingga 300 µL dengan kepala dispenser berputar untuk pelat 96-well dan perakitan piston independen.",
     description: [
       "Infitek PIPE-T8 adalah mikropipet multi-saluran 8 kanal yang ideal untuk pengisian sampel serentak pada pelat 96-well dalam aplikasi ELISA dan pengujian biokimia.",
       "Dilengkapi rentang volume 0.5 hingga 300 µL, kepala dispenser yang dapat berputar bebas untuk kenyamanan pemipetan, rakitan piston dan kerucut tip independen untuk kemudahan servis, serta kompatibilitas dengan sebagian besar merek tip universal."
@@ -26689,8 +25777,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual satu kanal fully autoclavable (0.1 µL hingga 10 mL) dengan material inovatif, jendela baca mudah, kepala berputar, dan sertifikat kalibrasi individu ISO 8655.",
     description: [
       "Infitek PIPE-MP adalah mikropipet manual satu kanal yang diproduksi dari material inovatif pilihan dan dapat diserilisasi autoklaf seutuhnya (fully autoclavable).",
       "Setiap unit dilengkapi sertifikat kalibrasi individu sesuai standar ISO 8655, rentang volume 0.1 µL hingga 10 mL, jendela tampilan volume mudah dibaca, kepala dispensing berputar, serta rakitan piston dan kerucut tip independen."
@@ -26745,8 +25831,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual 12 saluran (12-channel) volume variabel 0.5 µL hingga 300 µL dengan kepala dispenser berputar untuk pelat 96-well dan rakitan piston independen.",
     description: [
       "Infitek PIPE-T12 adalah mikropipet multi-saluran 12 kanal yang dirancang untuk pengisian barisan penuh pelat 96-well secara serentak dalam uji ELISA dan skrining biokimia.",
       "Dilengkapi rentang volume 0.5 hingga 300 µL, kepala dispenser berputar 360°, rakitan piston dan kerucut tip independen per kanal untuk kemudahan servis, material kerucut tip majemuk, serta kompatibilitas universal dengan sebagian besar merek tip."
@@ -26796,8 +25880,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual volume tetap (fixed volume) satu kanal mencakup rentang 5 µL hingga 5000 µL dengan desain ergonomis, jendela baca besar, dan rakitan piston independen.",
     description: [
       "Infitek PIPE-TF adalah mikropipet manual satu kanal dengan volume tetap (fixed volume) yang dirancang khusus untuk pengujian rutin berulang tanpa risiko kesalahan perubahan volume.",
       "Tersedia dalam pilihan volume tetap dari 5 µL hingga 5000 µL, dilengkapi jendela tampilan volume yang jelas, rakitan piston dan kerucut tip independen, material kerucut tip majemuk bersegel rapat, serta kompatibilitas universal dengan tip lab umum."
@@ -26848,8 +25930,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikropipet manual 8 kanal fully autoclavable (rentang 0.5 µL hingga 1000 µL) dengan sertifikat kalibrasi individu ISO 8655, kepala berputar, dan rakitan piston independen.",
     description: [
       "Infitek PIPE-MP8 adalah mikropipet manual 8 saluran steril yang dapat diautoklaf seutuhnya (fully autoclavable) untuk aplikasi penanganan cairan multi-sumur berstandar tinggi.",
       "Setiap unit disertakan sertifikat kalibrasi individu ISO 8655, mencakup rentang volume dari 0.5 µL hingga 1000 µL (1 mL), kepala dispenser berputar 360°, rakitan piston dan kerucut tip independen per kanal, serta material segel kerucut tip majemuk."
@@ -26905,8 +25985,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikropipet manual 12 kanal fully autoclavable (rentang 0.5 µL hingga 300 µL) dengan sertifikat kalibrasi individu ISO 8655, kepala berputar, dan rakitan piston independen.",
     description: [
       "Infitek PIPE-MP12 adalah mikropipet manual 12 saluran steril yang dapat diautoklaf seutuhnya (fully autoclavable) untuk pengisian satu baris penuh pelat 96-well secara cepat dan presisi.",
       "Setiap unit disertakan sertifikat kalibrasi individu ISO 8655, mencakup rentang volume 0.5 µL hingga 300 µL, kepala dispenser berputar 360°, rakitan piston dan kerucut tip independen per kanal, serta material segel kerucut tip majemuk."
@@ -26960,8 +26038,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pipet elektronik 8 kanal bermotor stepper presisi tinggi dengan sistem kontrol tombol ganda, fungsi dispensing, mode pengisian ganda (USB/Stand), dan desain ergonomis anti-RSI.",
     description: [
       "Infitek dPIPE+8 adalah pipet elektronik multi-saluran (8 kanal) yang digerakkan oleh motor stepper berkualitas tinggi untuk memberikan akurasi dan repetabilitas penanganan cairan secara elektronik.",
       "Dilengkapi pengontrol tombol ganda yang sederhana dan serbaguna, fungsi dispensi untuk mempercepat alur kerja, desain ergonomis untuk mencegah RSI, serta mode pengisian ganda menggunakan kabel USB atau charging stand."
@@ -27011,8 +26087,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikropipet manual volume tetap (fixed volume) satu kanal fully autoclavable (5 µL hingga 5000 µL) dengan sertifikat kalibrasi individu ISO 8655 dan rakitan piston independen.",
     description: [
       "Infitek PIPE-MPF adalah mikropipet volume tetap satu kanal steril yang dapat diautoklaf seutuhnya (fully autoclavable) untuk pengujian rutin berulang tanpa risiko salah setel volume.",
       "Setiap unit disertakan sertifikat kalibrasi individu sesuai ISO 8655, mencakup rentang volume tetap dari 5 µL hingga 5000 µL, jendela tampilan volume jelas, kepala berputar, rakitan piston dan kerucut tip independen, serta kompatibilitas universal."
@@ -27066,8 +26140,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengendali pipet elektrik (pipette gun) stabil dan andal berbobot 200g untuk pipet serologis 0.1–100 mL dengan kontrol kecepatan mudah, pengisian 25mL <7 detik, dan baterai Li-ion.",
     description: [
       "Infitek PIPE-LM adalah pengendali pipet serologis bermotor berkinerja stabil dan berpenampilan elegan untuk pengoperasian satu tangan secara effortless.",
       "Kompatibel dengan sebagian besar pipet plastik dan kaca dari 0.1 hingga 100 mL (serta pipet Pasteur), dilengkapi kontrol kecepatan aspirasi/dispensi yang mudah disesuaikan, pengisian pipet 25 mL dalam <7 detik, filter hidrofobik 0.45 µm yang dapat diganti, serta baterai Li-ion berdaya tahan >8 jam."
@@ -27120,8 +26192,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sistem aspirasi vakum cairan limbah biologis kapasitas botol 4L dengan sensor ketinggian cairan anti-overflow, kecepatan aspirasi 1–15 mL/s, komponen basah sepenuhnya dapat diautoklaf, dan tingkat kebisingan ≤55 dB.",
     description: [
       "Infitek VAS-S adalah sistem aspirasi vakum cairan limbah laboratorium untuk pengumpulan supernatan kultur sel dan media cair biologis secara cepat dan aman.",
       "Dilengkapi botol limbah 4 Liter, sensor tingkat cairan sensitif untuk mendeteksi botol penuh dan mencegah luapan limbah ke pompa, kecepatan aspirasi dapat diatur 1–15 mL/s (vakum 0–600 mbar), filter hidrofobik pencegah kontaminasi udara, rangkaian adaptor operator tangan (dari kanal tunggal hingga 8-kanal), serta seluruh komponen kontak cairan dapat diautoklaf sepenuhnya."
@@ -27175,8 +26245,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aspirator vakum ekonomis bodi kompak dengan botol standar 2L, motor brushless tidak bising berumur panjang, kecepatan aliran cairan 17 mL/s, dan komponen jalur cairan dapat diautoklaf.",
     description: [
       "Infitek VAS-E adalah aspirator vakum ekonomis dan kompak untuk pengumpulan limbah cair biologis di atas meja, di dalam kabinet, maupun di lantai laboratorium.",
       "Dilengkapi botol standar 2 Liter (opsi 1 Liter), motor brushless bebas sikat untuk tingkat kebisingan rendah dan masa pakai panjang, sakelar fleksibel antara mode aspirasi manual dan kontinu, laju aliran cairan 17 mL/s (vakum 0–500 mbar), filter hidrofobik pencegah aerosol, serta bagian kontak cairan yang dapat diautoklaf."
@@ -27228,8 +26296,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sistem aspirasi vakum cerdas portabel bertenaga baterai lithium isi ulang 2500 mA (bekerja mandiri hingga 5 jam), fungsi ganda aspirasi dan filtrasi, botol koleksi 1L, dan motor brushless.",
     description: [
       "Infitek VAS-P adalah sistem aspirasi vakum portabel dan pintar yang dilengkapi baterai lithium terintegrasi (2500 mA) untuk operasional mandiri tanpa kabel selama kurang lebih 5 jam setelah pengisian penuh.",
       "Memiliki fungsi ganda aspirasi dan filtrasi, kecepatan aspirasi 1.6 L/min (vakum maksimal 600 mbar), botol koleksi standar 1 Liter (opsi 500 mL) bersama botol filter isap (suction filter bottle) yang dapat diautoklaf, motor brushless, adaptor tip detrusor 1 mL dan jarum 8-kanal opsional, serta tingkat kebisingan sangat rendah 53 dB."
@@ -27281,8 +26347,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Rangkaian lengkap manifold penyaringan vakum multi-cabang (1, 3, dan 6 cabang) dengan pilihan corong kaca atau SS316L, klem aluminium anodisasi, dan filter saringan didukung sterilisasi autoklaf 121°C.",
     description: [
       "Infitek MFA Series adalah lini manifold penyaringan vakum komprehensif yang dirancang untuk prosedur mikrobiologi dan analitik dalam pengumpulan partikel (bakteri, endapan) dari suspensi cair.",
       "Menyediakan berbagai varian material corong (Kaca 300 mL dengan saringan kaca/PTFE 20 µm atau Stainless Steel SS316L 300 mL dengan saringan SS 100 µm), katup stainless steel, tutup lid SS316L, klem aluminium anodisasi, koneksi ground joint atau sumbat karet, serta kompatibilitas membran diameter 47/50 mm (pori 0.22, 0.45, 0.8 µm)."
@@ -27334,8 +26398,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Buret digital elektronik presisi tinggi (volume 0.01–99.99 mL, akurasi R=0.2%, CV=0.07%) dengan pengaduk magnetik terintegrasi, panel kontrol jarak jauh, dan kecepatan 16 tahap.",
     description: [
       "Infitek dTITR adalah buret digital elektronik yang dirancang untuk titrasi volumetrik presisi tinggi secara otomatis dan bebas kelelahan manual.",
       "Dilengkapi motor berkualitas tinggi (langkah piston maks 10 mL, resolusi 10 µL), pengaduk magnetik (magnetic stirrer) terintegrasi untuk pencampuran reagen yang sempurna, panel kontrol jarak jauh (remote control panel) untuk menghindari gangguan manual saat titrasi, 16 tahap kecepatan, serta mematuhi standar kualitas DIN EN ISO 8655."
@@ -27392,8 +26454,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pipet stepper berulang (repeat dispenser) manual dengan kapasitas hingga 48 langkah dispensi, kompatibel dengan 7 ukuran jarum suntik disposable (0.5 hingga 50 mL), ideal untuk cairan kental.",
     description: [
       "Infitek PIPE-DSP adalah dispenser pengulang manual (stepper pipette) yang ringan dan ergonomis untuk pengeluaran cairan berseri (multi-step dispensing) secara cepat tanpa perlu mengisi ulang di antara setiap tetesan.",
       "Mendukung hingga 48 langkah dispensi dari satu kali pengisian, kompatibel dengan 7 ukuran jarum suntik polipropilena sekali pakai (0.5 mL, 1.25 mL, 2.5 mL, 5 mL, 12.5 mL, 25 mL, 50 mL), sangat ideal untuk cairan berviskositas tinggi atau bertekanan uap tinggi tanpa pelumas aditif."
@@ -27448,8 +26508,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pompa pipet manual (pipette filler) berbasis roda jempol (thumb wheel) dengan kode warna volume (2mL hijau, 10mL biru, 25mL merah), tahan asam dan basa.",
     description: [
       "Infitek Pipette Pump adalah alat pengisi pipet manual yang ekonomis dan mudah digunakan untuk pipet serologis kaca maupun plastik.",
       "Dilengkapi mekanisme roda jempol (thumb wheel) presisi untuk aspirasi dan dispensi satu tangan yang mulus, tombol pelepas cepat (quick release), pengkodean warna berdasarkan kapasitas volume (2mL hijau, 10mL biru, 25mL merah), serta material tahan asam dan alkali."
@@ -27499,8 +26557,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Manifold penyaringan vakum dengan corong kaca 300 mL, saringan kaca/PTFE 20 µm, koneksi ground joint, holder SS316L, dan katup stainless steel (pilihan 1, 3, dan 6 cabang).",
     description: [
       "Infitek Glass Funnel Manifolds (MFA-1G/PTFE, MFA-3G/PTFE, MFA-6G/PTFE) adalah sistem filtrasi vakum multi-cabang yang menggunakan corong kaca borosilikat 300 mL dan saringan kaca atau PTFE (pencari pori 20 µm).",
       "Dilengkapi koneksi ground joint kaca, holder SS316L, katup stainless steel individual, tutup lid SS316L, klem aluminium anodisasi, serta kompatibilitas sterilisasi autoklaf 121°C."
@@ -27552,8 +26608,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Manifold penyaringan vakum 1 cabang seluruhnya berbahan stainless steel SS316L (corong 300 mL, saringan 100 µm, holder integral) yang sangat kokoh dan tahan autoklaf.",
     description: [
       "Infitek MFA-1S dan MFA-1RS adalah unit penyaringan vakum tunggal (1-branch) dengan konstruksi 100% Stainless Steel SS316L berkualitas tinggi yang anti-pecah dan tahan korosi mekanis.",
       "Dilengkapi corong 300 mL SS316L, kepala filter dan holder terintegrasi menyatu (integral holder pada MFA-1S / sumbat karet pada MFA-1RS), saringan pendukung SS316L (100 µm), katup stainless steel, serta klem aluminium anodisasi."
@@ -27604,8 +26658,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Manifold penyaringan vakum 3 cabang dengan corong kaca borosilikat 300 mL, saringan kaca/PTFE 20 µm, koneksi ground joint, katup stainless steel, dan holder SS316L.",
     description: [
       "Infitek MFA-3G / MFA-3PTFE adalah sistem filtrasi vakum 3 cabang (3-branch) yang menggunakan corong kaca 300 mL dengan saringan kaca (10 µm) atau PTFE (20 µm).",
       "Dilengkapi holder stainless steel SS316L, 3 katup stainless steel individual, klem aluminium anodisasi, tutup lid SS316L, serta kompatibilitas autoklaf 121°C."
@@ -27656,8 +26708,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Manifold penyaringan vakum 3 cabang seluruhnya berbahan stainless steel SS316L (corong 300 mL, saringan 100 µm) yang kokoh, tahan benturan, dan dapat diautoklaf.",
     description: [
       "Infitek MFA-3S dan MFA-3RS adalah unit penyaringan vakum 3 cabang dengan konstruksi 100% Stainless Steel SS316L berkualitas tinggi.",
       "Dilengkapi 3 buah corong 300 mL SS316L, kepala filter dan holder terintegrasi (integral pada MFA-3S / sumbat karet pada MFA-3RS), saringan pendukung SS316L (100 µm), 3 katup stainless steel individual, serta klem aluminium anodisasi."
@@ -27708,8 +26758,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Manifold penyaringan vakum 6 cabang dengan corong kaca borosilikat 300 mL, saringan kaca/PTFE 20 µm, koneksi ground joint, holder SS316L, dan 6 katup stainless steel individual.",
     description: [
       "Infitek MFA-6G / MFA-6PTFE adalah sistem filtrasi vakum 6 cabang (6-branch) berkapasitas tinggi yang menggunakan corong kaca 300 mL dengan saringan kaca (10 µm) atau PTFE (20 µm).",
       "Dilengkapi holder stainless steel SS316L, 6 katup stainless steel individual, klem aluminium anodisasi, tutup lid SS316L, serta kompatibilitas autoklaf 121°C."
@@ -27760,8 +26808,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Manifold penyaringan vakum 6 cabang seluruhnya berbahan stainless steel SS316L (corong 300 mL, saringan 100 µm) berkapasitas tinggi, kokoh, dan tahan autoklaf.",
     description: [
       "Infitek MFA-6S dan MFA-6RS adalah unit penyaringan vakum 6 cabang berkapasitas tinggi dengan konstruksi 100% Stainless Steel SS316L.",
       "Dilengkapi 6 buah corong 300 mL SS316L, kepala filter dan holder terintegrasi (integral pada MFA-6S / sumbat karet pada MFA-6RS), saringan pendukung SS316L (100 µm), 6 katup stainless steel individual, serta klem aluminium anodisasi."
@@ -27812,8 +26858,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengendali pipet serologis manual (pipette controller) yang kokoh dan ringan untuk pipet 0.1–100 mL dengan filter hidrofobik 3 µm yang dapat diganti.",
     description: [
       "Infitek PIPE-L adalah pengendali pipet manual yang handal, kuat, dan ringan untuk pipet serologis plastik maupun kaca berkapasitas 0.1 hingga 100 mL.",
       "Dilengkapi kontrol pemipetan yang sangat presisi, filter hidrofobik 3 µm yang dapat diganti untuk mencegah kontaminasi cairan ke dalam bodi, konstruksi mudah dibersihkan, serta pengoperasian mekanis yang andal tanpa baterai."
@@ -27866,8 +26910,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sistem digesti microwave kapasitas besar 40 bejana dengan sistem inverter dual magnetron (2000W), kontrol suhu non-kontak inframerah di setiap bejana, teknologi pelepasan tekanan penuh, dan bodi stainless steel 316L berlapis PFA.",
     description: [
       "Infitek MDS-Tan40 adalah workstation digesti microwave canggih untuk pemrosesan sampel masif (hingga 40 bejana) dalam analisis logam berat dan sampel kompleks lingkungan, pangan, dan petrokimia.",
       "Menggunakan sistem kontrol inverter dual magnetron berfrekuensi tinggi PID (output gelombang mikro non-pulsa berkelanjutan untuk medan gelombang seragam), rongga resonant stainless steel 316L berlapis PFA tebal, bejana komposit serat aerospace luar berlapis PFA dengan inner TFM (volume 55–110 mL, tekanan hingga 15 MPa, suhu hingga 320°C), sensor suhu non-kontak inframerah bawah, serta sistem operasi Android ber-audit trail."
@@ -27928,8 +26970,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sistem digesti microwave 8 bejana (volume 100 mL per bejana) dengan pemfokusan microwave, sensor suhu mid-inframerah non-kontak menembus TFM, rotor rotasi 360°, dan tekanan kerja hingga 15 MPa.",
     description: [
       "Infitek MDS-100-R8 adalah perangkat prapengolahan sampel yang menggunakan energi microwave untuk mendekomposisi sampel padat maupun organik kompleks menjadi larutan jernih di dalam wadah tertutup.",
       "Dilengkapi 8 bejana TFM berpelindung PEEK luar (volume 100 mL, tahan hingga 300°C dan 15 MPa), sensor suhu inframerah tengah yang mampu memindai suhu asli larutan menembus material TFM, rotor berputar kontinu 360°, rongga stainless steel 316L berlapis PFA, serta sistem kontrol sentuh terintegrasi."
@@ -27984,8 +27024,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sistem digesti microwave kapasitas tinggi 40 bejana (volume 50 mL) dengan sensor suhu dan tekanan inframerah nirsentuh (contactless) di setiap bejana, layar sentuh 8 inci, dan daya 3000W.",
     description: [
       "Infitek MDS-800-T40 adalah workstation digesti microwave berkapasitas 40 bejana (volume 50 mL per bejana) untuk throughput pengujian sampel makanan, tekstil, batubara, dan kosmetik yang sangat masif.",
       "Dilengkapi sensor inframerah nirsentuh (contactless IR sensor) untuk mengukur suhu larutan nyata di setiap bejana secara individual, sensor tekanan nirsentuh tiap bejana, rotasi searah 360° kontinu, bejana TFM berpelindung PEEK+glass fiber, layar sentuh warna 8.0 inci, serta rongga baja tahan karat 316L berlapis anti-korosi."
@@ -28040,8 +27078,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sistem digesti microwave 18 bejana (volume 100 mL per bejana) dengan sensor suhu dan tekanan inframerah nirsentuh per bejana, layar sentuh 8 inci, dan daya microwave 3000W.",
     description: [
       "Infitek MDS-700-T18 adalah sistem digesti microwave berkapasitas 18 bejana (volume 100 mL) untuk penanganan sampel bervolume lebih besar dalam bidang pangan, geologi, metalurgi, dan pemantauan lingkungan.",
       "Dilengkapi sensor inframerah nirsentuh untuk mengukur suhu larutan nyata di setiap bejana, sensor tekanan nirsentuh tiap bejana, rotasi 360° kontinu, bejana TFM berlapis PEEK, layar sentuh warna 8 inci, serta sistem pengaman pintu ganda (double-locked security door)."
@@ -28095,8 +27131,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sistem digesti microwave serbaguna kompatibel dengan rotor 6, 10, atau 12 posisi (volume 100 mL) dengan sensor inframerah nirsentuh, layar sentuh 7 inci, dan tanpa komponen habis pakai (segel/cakram pecah).",
     description: [
       "Infitek MDS-610-T Series (pilihan rotor T6, T10, T12 dengan volume 100 mL) adalah perangkat digesti microwave yang sepenuhnya diperbarui dengan perlindungan keselamatan tinggi dan desain tanpa komponen habis pakai (seperti bursting disk atau sealing cup).",
       "Dilengkapi sensor inframerah dan tekanan nirsentuh untuk pemantauan suhu larutan asli di setiap bejana, layar sentuh pintar 7.0 inci dengan metode internasional pratingkat, rongga 316L tahan ledakan berlapis anti-korosi, serta sistem pendingin udara turbulen berdaya tinggi."
@@ -28150,8 +27184,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pompa vakum diafragma tahan bahan kimia bebas minyak (oil-free) dengan diafragma terikat PTFE (PTFE-bonded), laju pemompaan 30 hingga 60 L/min, dan tingkat kebisingan <50 dB.",
     description: [
       "Infitek VACP-LHP Series (LH51P, LH52P, LH102P) adalah pompa vakum diafragma portabel yang dirancang khusus untuk menangani media gas dan uap asam/basa agresif di laboratorium kimia.",
       "Dilengkapi ruang pompa dan diafragma berlapis ikatan PTFE (PTFE-bonded diaphragm) yang tahan terhadap bahan kimia ekstrem, operasi bebas minyak (oil-free), laju pemompaan 30 hingga 60 L/min, vakum ultimit hingga >0.095 MPa (50 mbar), serta operasi sangat senyap (<50 dB)."
@@ -28205,8 +27237,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Kompresor udara bebas minyak (oil-free) bersuara senyap dengan volume tangki 30L hingga 120L, aliran udara maksimal 152 hingga 608 L/min, tekanan 5–8 bar, dan lapisan tangki anti-karat.",
     description: [
       "Infitek AC-J Series (AC-J701 30L, AC-J702 60L, AC-J703 90L, AC-J704 120L) adalah kompresor udara bersih nirminyak (oil-free) yang dirancang untuk peralatan medis, laboratorium, dan penelitian ilmiah.",
       "Dilengkapi desain tanpa minyak dan senyap (≤55 hingga ≤68 dB), lapisan anti-korosi di bagian dalam tangki gas, perangkat proteksi kelistrikan otomatis, daya motor 0.75 kW hingga 3.0 kW, serta aliran udara maksimal 152–608 L/min."
@@ -28260,8 +27290,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pompa vakum diafragma bebas minyak untuk operasi kontinu 24 jam dengan laju pemanasan 30–60 L/min, material diafragma HNBR, dan varian fungsi ganda vakum-tekanan.",
     description: [
       "Infitek VACP-LH Series (LH51, LH52, LH102) adalah lini pompa vakum diafragma serbaguna yang dirancang untuk operasi berkelanjutan 24 jam penuh di laboratorium (filtrasi vakum, rotary evaporation, oven pengering).",
       "Dilengkapi operasi bebas minyak (oil-free) tanpa polusi, laju pemompaan 30 hingga 60 L/min, vakum ultimit hingga >0.095 MPa (50 mbar), katup penyesuaian tekanan stabil, diafragma material HNBR berdaya tahan tinggi, serta model LH102 yang menyediakan fungsi ganda sebagai pompa vakum sekaligus kompresor tekanan (40 psi)."
@@ -28315,8 +27343,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pompa vakum diafragma dua tingkat (double-stage) berkinerja tinggi dengan vakum ultimit 8 mbar, laju 20 L/min, diafragma komposit PTFE tahan asam/basa kuat, dan pelindung panas 130°C.",
     description: [
       "Infitek VACP-D20 adalah pompa vakum diafragma dua tingkat (double-stage) profesional yang dirancang khusus untuk menangani gas dan uap kimia yang sangat korosif (asam kuat dan basa kuat) dalam aplikasi rotary evaporation dan distilasi vakum.",
       "Menggunakan diafragma komposit PTFE dengan ketahanan lelah dan kimia superior, katup penutup (valve plate) material FFPM, laju pemompaan 20 L/min, vakum ultimit 8 mbar, motor berkecepatan 1450 rpm dengan proteksi pemadaman termal 130°C, tanpa pencemaran minyak, serta operasi senyap (<60 dB)."
@@ -28371,8 +27397,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pompa vakum mekanis rotary-vane tugas berat dengan kecepatan pemompaan nominal 8 m³/h (VACP-T8D) dan 24 m³/h (VACP-T24D), katup gas ballast anti-uap air, dan pelindung anti-oli kembali.",
     description: [
       "Infitek VACP-T Series (VACP-T8D 8 m³/h dan VACP-T24D 24 m³/h) adalah pompa vakum mekanis rotary-vane berkecepatan tinggi untuk aplikasi semikonduktor, metalurgi, coating, dan tungku vakum.",
       "Menggunakan rotor eksentrik dan bilah putar berpresisi tinggi, material internal tahan korosi khusus, lengan poros magnetik untuk keandalan maksimal, katup anti-aliran balik oli aktif (active anti-oil return valve), katup gas ballast yang dapat disesuaikan untuk pembuangan uap air, serta motor 0.37 kW hingga 0.75 kW."
@@ -28426,8 +27450,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pompa diafragma fungsi ganda tekanan positif dan negatif (vakuw & kompresi ≥30 Psi) dengan laju 30 hingga 60 L/min, proteksi pemadaman 130°C, dan pelindung kepala berlapis teflon.",
     description: [
       "Infitek VACP-D52 (30 L/min) dan VACP-D102 (60 L/min) adalah pompa diafragma serbaguna yang mampu menyediakan kondisi vakum maupun tekanan positif secara bergantian (positive-negative pressure dual purpose).",
       "Dilengkapi motor ODM berproteksi termal 130°C, membran dan katup karet impor tahan korosi (serta opsi pelapisan permukaan Teflon pada varian anti-korosi), laju aliran tinggi, bearing klasik impor beroperasi senyap (<60 dB), serta bodi ringkas."
@@ -28480,8 +27502,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pompa vakum diafragma anti-korosi berpenutup teflon kapasitas 20 L/min (vakum 200 mbar) dengan daya 160W, filter udara masuk, dan pelindung termal 130°C.",
     description: [
       "Infitek VACP-D31 adalah pompa vakum diafragma ringkas berkapasitas 20 L/min yang dirancang untuk filtrasi dan distilasi vakum rutin di laboratorium kimia.",
       "Dilengkapi ruang pertukaran udara dengan bahan filter pembersih kemurnian gas, perlakuan permukaan Teflon pada komponen gas, motor berpelindung termal 130°C, membran karet impor tahan korosi, serta operasi senyap di bawah 60 dB."
@@ -28533,8 +27553,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pompa vakum dan tekanan diafragma anti-korosi (30 L/min, vakum 200 mbar, tekanan positif ≥30 Psi) dengan pelapisan Teflon, motor 160W, dan operasi senyap <60 dB.",
     description: [
       "Infitek VACP-D51 adalah pompa diafragma fungsi ganda (vakum dan tekanan positif ≥30 Psi) berkapasitas 30 L/min yang dilengkapi perlakuan permukaan anti-korosi Teflon.",
       "Memiliki struktur bebas minyak, filter pemurni udara masuk, pelindung suhu motor 130°C, bearing klasik impor, serta dimensi 230×180×265 mm dengan bobot 7.5 kg."
@@ -28587,8 +27605,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pompa vakum diafragma anti-korosi ultra-ringan (bobot hanya 4 kg) berkapasitas 15 L/min (vakum 250 mbar, tekanan positif ≥30 Psi) dengan daya 75W.",
     description: [
       "Infitek VACP-D21 adalah pompa vakum diafragma fungsi ganda paling ringkas dan ringan dalam lini produk (bobot hanya 4.0 kg), ideal untuk pemindahan mudah dan penghematan ruang laboratorium.",
       "Dilengkapi kapasitas pemompaan 15 L/min, vakum ultimit 250 mbar, tekanan positif ≥30 Psi, kepala pompa material Nylon dengan pelapisan Teflon, motor 75W berproteksi termal 130°C, serta tingkat kebisingan <60 dB."
@@ -28641,8 +27657,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pompa vakum sirkulasi air (water aspirator) meja kapasitas tangki 15L dengan desain dua keran independen (double tap), aktuator kumparan tembaga 180W, katup anti-aliran balik, dan pengukur vakum tiap keran.",
     description: [
       "Infitek VACP-WC3Y adalah pompa sirkulasi air meja (water aspirator) yang menghemat penggunaan air ledeng secara drastis melalui sistem sirkulasi tertutup berkapasitas 15 Liter.",
       "Dilengkapi desain dua keran (double tap) independen yang dilengkapi manometer pengukur vakum di tiap keran (dapat dioperasikan untuk 2 wadah sekaligus), katup pelepas/cek (check valve) untuk mencegah air bersirkulasi tersedot balik ke alat, komponen pompa stainless steel anti-korosi asam/basa, serta aktuator kumparan tembaga 180W berpenutup pelindung aman."
@@ -28697,8 +27711,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pompa vakum diafragma khusus kimia (chemistry-design) dengan permukaan basah berlapis PTFE anti-korosi (laju 25 L/min, vakum maks 13 mbar), motor tanpa sabuk, dan proteksi termal.",
     description: [
       "Infitek VACP-D410 adalah pompa vakum diafragma tahan kimia tingkat lanjut yang dirancang khusus untuk menangani uap asam keras, basa, dan pelarut organik agresif berkat penggunaan material PTFE tahan korosi pada seluruh permukaan basah (wetted surfaces).",
       "Ditenagai motor langsung tanpa transmisi sabuk (direct-driven) berdaya 90–95W, menghasilkan laju alir 25 L/min dan vakum maksimal 13 mbar dengan tingkat kebisingan sangat rendah 50 dB, serta dilengkapi perangkat pelindung termal otomatis."
@@ -28753,8 +27765,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pompa peristaltik presisi tinggi (kecepatan 0.1–400 rpm, rentang alir 0.0063–1460 mL/min) dengan kontrol Dual-CPU, layar LCD 3.5 inci, 3 mode dispensing, sudut sedot balik 720°, dan port eksternal.",
     description: [
       "Infitek PP-Z400/PH-Z1460 adalah sistem pompa peristaltik presisi tinggi yang menggunakan kendali Double-CPU (pemisahan unit penggerak dan kontrol) untuk memastikan linearitas alir dan akurasi pengulangan (repeatability) hingga ±0.5%.",
       "Dilengkapi layar LCD 3.5 inci berantarmuka baru, 3 mode dispensing (timed dispense, copy dispense, volume dispense), sudut isap balik (suck-back angle) hingga 720°, motor stepper bertenaga torsi besar, kepala pompa 4 rol berbahan stainless steel dengan selubung PPS, serta dukungan kendali jarak jauh eksternal (0-5V/0-10V/4-20mA/RS232/RS485)."
@@ -28810,8 +27820,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Pompa vakum sirkulasi air (water aspirator) berkapasitas tangki besar 50 Liter dengan 5 keran isap independen (5 taps), laju alir 80 L/min, motor 370W, dan bodi stainless steel.",
     description: [
       "Infitek VACP-WC95A adalah pompa sirkulasi air berkapasitas tangki besar 50 Liter yang dirancang untuk menyediakan kondisi vakum dan pendinginan sirkulasi ke banyak perangkat sekaligus di laboratorium skala besar.",
       "Dilengkapi 5 keran isap (five taps) yang dapat bekerja secara independen atau bersamaan (kapasitas isap 10 L/min per keran), laju sirkulasi air 80 L/min (lift 12 meter), motor 370W, tangki dan komponen pompa berbahan stainless steel tahan asam-basa, serta bodi yang mudah diakses untuk pengisian air dan pemeliharaan."
@@ -28865,8 +27873,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pompa peristaltik aliran tinggi presisi (laju alir 0.169 hingga 1880 mL/min) dengan kontrol Dual-CPU, layar LCD 3.5 inci, kepala pompa material PPS berkualitas tinggi dengan 4 rol 304 stainless steel, dan port RS485.",
     description: [
       "Infitek PP-Z400/PH-Z1880 adalah pompa peristaltik berkapasitas aliran tinggi (hingga 1880 mL/min) untuk aplikasi penakaran dan pengisian cairan volume sedang-tinggi di industri farmasi dan rekayasa lingkungan.",
       "Menggunakan kepala pompa model PH-Z1880 dengan bodi bahan polyphenylene sulfide (PPS), rol 4 buah berbahan stainless steel 304, ketebalan dinding selang 2.4 mm (pilihan selang 15#, 24#, 35#, 36#), kontroler berbasis Double-CPU, layar LCD 3.5 inci, sudut isap balik 720°, serta antarmuka kendali eksternal lengkap (RS232/RS485/Analog)."
@@ -28919,8 +27925,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kabinet keamanan hayati Class II Tipe A2 (resirkulasi 70%, buang 30%) dengan filter ganda ULPA 99.9995% (0.12 μm), jendela bermotor sudut kemiringan 7°, layar sentuh berwarna, dan area kerja SS304.",
     description: [
       "Infitek BSC-IIA2 Series (lebar 1.1m, 1.3m, 1.5m, 1.8m) adalah kabinet keamanan biologis Class II Tipe A2 berstandar proteksi komprehensif untuk operator, sampel penelitian, dan lingkungan terhadap bahaya aerosol patogen.",
       "Mengadopsi pola aliran udara 70% sirkulasi internal dan 30% pembuangan melalui filter ganda ULPA berdaya saring 99.9995% (pada 0.12 μm), jendela kaca tempered laminasi 6 mm bermotor anti-UV dengan kemiringan ergonomis 7°, sistem interlock pengaman UV/lampu/jendela ganda, sandaran tangan (armrest) lebar terintegrasi, serta layar sentuh LCD berwarna."
@@ -28981,8 +27985,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Laminar flow cabinet aliran horizontal (ISO Class 5 / Class 100) lebar 1.3m & 1.8m dengan filter HEPA 99.995% (0.3 μm), pre-filter serat poliester, area kerja stainless steel 304, dan layar LCD pemantau kecepatan angin.",
     description: [
       "Infitek LCB-HY Series (LCB-H1300Y 1.3m dan LCB-H1800Y 1.8m) adalah lemari aliran laminar horizontal yang menghasilkan aliran udara murni satu arah melintasi meja kerja untuk melindungi sampel penelitian dari kontaminasi partikulat.",
       "Menggunakan filter HEPA efisiensi tinggi ≥99.995% (pada 0.3 μm) yang didahului pre-filter poliester penyaring debu kasar, ruang kerja stainless steel SUS304 tahan karat, jendela samping kaca tempered 5 mm, layar LCD untuk pemantauan kecepatan angin (0.30–0.5 m/s) dan jam kerja filter, sistem interlock pengaman UV, serta konversi satuan Pa dan m/s."
@@ -29038,8 +28040,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Laminar flow cabinet aliran vertikal (ISO Class 5 / Class 100) lebar 1.3m & 1.8m dengan filter HEPA 99.995%, pre-filter poliester, area kerja stainless steel 304, dan sistem interlock lampu UV.",
     description: [
       "Infitek LCB-VY Series (LCB-V1300Y 1.3m dan LCB-V1800Y 1.8m) menyajikan aliran udara steril vertikal dari atas ke bawah untuk perlindungan sampel dari pengendapan partikel debu laboratorium.",
       "Dilengkapi filter HEPA berefisiensi ≥99.995% (partikel 0.3 μm), pre-filter serat poliester yang dapat dicuci, permukaan kerja stainless steel SUS304 tahan bahan kimia, jendela kaca tempered 5 mm anti-UV, roda kastor berpenyetel, layar LCD informasi kecepatan angin dan jam operasional filter, serta alarm kecepatan udara rendah."
@@ -29095,8 +28095,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Lemari asam tanpa cerobong (ductless fume hood) dengan sensor VOC dan sistem alarm polusi, meja kerja resin epoksi tahan asam-basa kuat, kipas turbin senyap, layar sentuh LCD 5 inci, dan pilihan filter molekuler spesifik.",
     description: [
       "Infitek FMH Series (lebar 0.8m, 1.0m, 1.3m, 1.6m) adalah lemari asam tanpa saluran pembuangan luar (ductless) yang menyerap uap beracun menggunakan kombinasi filter molekuler karbon aktif dan HEPA sehingga udara bersih dapat disirkulasikan kembali ke dalam ruangan.",
       "Dilengkapi port sensor detektor VOC canggih untuk memantau polusi udara secara real-time dengan alarm akustik, meja kerja lempeng resin epoksi padat tahan asam pekat dan benturan, kipas turbin senyap tanpa percikan listrik (spark-free), kaca akrilik transparan >5 mm dengan bukaan trapesium terbalik, serta layar sentuh LCD 5 inci."
@@ -29156,8 +28154,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Lemari asam bersaluran buang (ducted fume hood) lebar 1.0m hingga 1.8m dengan filter karbon aktif, pipa saluran buang 10 meter, keran air & gas terpasang, wastafel, meja fisikokimia padat, dan kontroler mikroprosesor LCD.",
     description: [
       "Infitek FMH-DF Series (1.0m, 1.22m, 1.52m, 1.83m) adalah lemari asam ventilasi tekanan negatif bertenaga tinggi untuk melindungi personel laboratorium dari uap kimia beracun, bau, dan partikel berbahaya.",
       "Dilengkapi meja kerja papan fisikokimia padat tahan asam-basa kuat, filter karbon aktif terpasang, saluran buang (exhaust duct) fleksibel sepanjang 10 meter, keran air, keran gas, wastafel air (sink), jendela geser kaca tempered 5 mm bersistem penyeimbang counter-balance, pengontrol mikroprosesor LCD miring ergonomis, serta memori saat mati listrik."
@@ -29216,8 +28212,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Lemari asam berbahan 100% Polipropilena (PP) tebal 8 mm kelas A tahan asam kuat ekstrem (termasuk HF dan asam perklorat) dengan sistem pembuangan 3-tahap tanpa sudut mati, kipas aksial PP, dan tudung pengumpul gas.",
     description: [
       "Infitek FMH-PA Series (1.2m, 1.5m, 1.8m) dibangun sepenuhnya dari lempeng Polipropilena (PP) putih porselen tebal 8 mm berkualitas tinggi yang dilas homogen tanpa baut logam terbuka untuk ketahanan mutlak terhadap asam kuat dan basa pekat.",
       "Dilengkapi desain pembuangan udara tiga tahap di bagian dalam untuk menangkap gas berbahaya dari berbagai berat jenis tanpa sudut mati, tudung pengumpul gas PP atas dengan bak kondensat, kipas aksial PP Φ250 mm, jendela geser kaca tempered seimbang bebas gesekan, serta meja kerja PP tahan asam pekat 8 mm."
@@ -29278,8 +28272,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Laminar flow cabinet vertikal klasik (lebar 1.05m hingga 1.93m) dengan filter HEPA efisiensi >99.995%, pre-filter poliester cuci, permukaan kerja stainless steel 304, jendela kaca miring ergonomis, dan kontroler LCD.",
     description: [
       "Infitek LCB-VF Series (V3F 1.05m, V4F 1.32m, V5F 1.62m, V6F 1.93m) adalah lemari aliran laminar vertikal terpercaya untuk proteksi sampel dari partikel udara bebas.",
       "Menggunakan filter HEPA berdaya saring >99.995% pada partikel 0.3 μm, perforasi dinding belakang untuk menghilangkan turbulensi udara dan sudut mati, permukaan kerja stainless steel 304 disikat, jendela geser kaca tempered 5 mm anti-UV berpenyeimbang beban, serta kontroler mikroprosesor LCD dengan indikator masa pakai filter dan lampu UV."
@@ -29334,8 +28326,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Laminar flow cabinet horizontal klasik (lebar 1.05m hingga 1.93m) dengan hembusan udara mendatar dari filter HEPA belakang (>99.995% pada 0.3 μm), meja kerja stainless steel 304, dan kontroler LCD.",
     description: [
       "Infitek LCB-HF Series (H3F 1.05m, H4F 1.32m, H5F 1.62m, H6F 1.93m) menyediakan zona kerja steril melalui udara murni yang mengalir secara horizontal dari filter HEPA di dinding belakang ke arah depan kabinet.",
       "Menggunakan filter HEPA efisiensi >99.995% (pada 0.3 μm), permukaan kerja stainless steel 304 disikat yang mudah disterilkan, jendela samping kaca tempered 5 mm untuk pencahayaan alami optimal, kontroler LCD dengan tampilan grafik status fungsi, serta interlock pengaman jendela geser dan lampu UV."
@@ -29390,8 +28380,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kabinet kerja PCR dengan sistem filtrasi modular bersirkulasi dalam ruangan, sensor konsentrasi TVOC 0.1 PPM, sensor kecepatan angin muka 0.1 m/s, meja resin epoksi, dan jendela depan akrilik 8 mm.",
     description: [
       "Infitek LCB-VII Series (lebar 0.8m, 1.0m, 1.3m, 1.6m, 1.8m) adalah stasiun kerja PCR berstandar tinggi yang dirancang untuk mencegah kontaminasi silang aerosol asam nukleat sekaligus memfilter uap kimia berbahaya secara internal.",
       "Dilengkapi sistem filtrasi modular fleksibel (mendukung filter organik, inorganik, formaldehida, amonia, dan partikulat HEPA), sensor TVOC pada outlet filter berakurasi 0.1 PPM dengan alarm ambang batas mandiri, sensor kecepatan angin muka 0.1 m/s, meja kerja resin epoksi tahan kimia, jendela depan akrilik transparan 8 mm, serta lampu UV dekontaminasi."
@@ -29445,8 +28433,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Laminar flow cabinet vertikal tipe medis untuk satu operator (lebar kerja 800 mm) dengan kemiringan operasi 10°, kebersihan ISO Class 5 (Class 100), kipas sentrifugal awet, dan kebisingan rendah ≤65 dBA.",
     description: [
       "Infitek LCB-V800J adalah lemari aliran laminar vertikal tipe medis (medical type) yang dirancang secara ergonomis untuk operasional steril satu orang.",
       "Dilengkapi permukaan kerja miring 10° semi-tertutup dengan desain bertingkat di bagian depan, bodi baja canai dingin semprot anti-bakteri, kipas sentrifugal berkualitas tinggi yang memperpanjang masa pakai filter HEPA, tingkat kebersihan ISO Class 5, interlock pengaman lampu UV-penerangan, serta jendela kaca tembus pandang di kedua sisi."
@@ -29500,8 +28486,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Laminar flow cabinet vertikal tipe medis untuk dua operator (lebar kerja 1400 mm) dengan kemiringan operasi 10°, kebersihan ISO Class 5 (Class 100), daya 500W, dan operasi senyap ≤65 dBA.",
     description: [
       "Infitek LCB-V1400J menyediakan ruang kerja steril yang luas (lebar 1400 mm) untuk memfasilitasi kerja simultan dua operator medis secara nyaman dan higienis.",
       "Mengadopsi aliran udara vertikal ISO Class 5 (Class 100), kecepatan aliran 0.25–0.6 m/s, permukaan kerja miring 10° bertingkat ergonomis, kipas sentrifugal tahan lama, layar parameter LCD cerdas dengan tombol sentuh, jendela kaca observasi ganda di sisi samping, serta sistem interlock pengaman lampu UV."
@@ -29556,8 +28540,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kabinet keamanan hayati Class II Tipe A2 standar kebersihan ISO Level 4 dengan filter ganda ULPA U15 (efisiensi 99.9995% pada 0.12 μm), sirkulasi 70% buang 30%, sudut miring 10°, dan proteksi patogen level 1–3.",
     description: [
       "Infitek BSC-IIA2-4J adalah kabinet isolasi keselamatan biologis Class II Tipe A2 bersertifikasi kebersihan ISO Level 4 yang dirancang untuk menangani agen patogen dengan tingkat risiko 1, 2, dan 3.",
       "Mengadopsi aliran udara laminer vertikal bertekanan negatif (30% pembuangan, 70% resirkulasi internal), filter ganda ULPA U15 berdaya saring ≥99.9995% (pada 0.12 μm), desain kemiringan 10° ergonomis, sudut melengkung 10 mm pada area kerja stainless steel yang mudah dicuci, serta sistem alarm blokade filter, blower overload, dan batas jendela geser."
@@ -29612,8 +28594,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Kabinet keamanan hayati Class II Tipe A2 berukuran sangat ringkas (lebar luar 700 mm) dengan filter ganda ULPA 99.9995% (0.12 μm), layar sentuh 7 inci dengan diagram pola aliran udara, dan jendela depan elektrik.",
     description: [
       "Infitek BSC-IIA2-700 adalah kabinet biosafety Class II Tipe A2 berukuran kompak (lebar bodi 70 cm) yang dirancang khusus untuk laboratorium dengan keterbatasan ruang tanpa mengorbankan standar keselamatan biologis.",
       "Dilengkapi filter ganda ULPA efisiensi ≥99.9995% (pada 0.12 μm), layar sentuh warna 7.0 inci yang menampilkan diagram dinamis pola aliran udara dan alarm suara-cahaya, jendela kaca depan bermotor elektrik (anti-UV tebal >5 mm), fungsi kata sandi operasional, struktur anti-debu kertas pada saluran masuk udara, serta area kerja stainless steel 304 cetak utuh."
@@ -29667,8 +28647,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Laminar flow cabinet horizontal tipe medis untuk satu operator (lebar kerja 800 mm) dengan kemiringan operasi 10°, kebersihan ISO Class 5 (Class 100), filter HEPA bingkai aluminium 99.995%, dan bodi semprot antibakteri.",
     description: [
       "Infitek LCB-H800J adalah lemari aliran laminar horizontal tipe medis yang memberikan aliran udara bersih horizontal melintasi meja kerja terbuka untuk operasional satu orang.",
       "Mengadopsi filter HEPA efisiensi tinggi tanpa sekat bingkai aluminium (99.995% pada partikel ≥0.3 μm), permukaan kerja miring 10° ergonomis, bodi luar baja semprot halus penghambat pertumbuhan bakteri, layar tampilan parameter cerdas, operasi senyap ≤65 dBA, serta jendela observasi ganda di sisi samping."
@@ -29722,8 +28700,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Laminar flow cabinet horizontal tipe medis area luas (lebar kerja 1600 mm) dengan kemiringan operasi 10°, kebersihan ISO Class 5 (Class 100), filter HEPA 99.995%, dan operasi senyap ≤65 dBA.",
     description: [
       "Infitek LCB-H1600J menghadirkan meja kerja aliran laminar horizontal yang sangat luas (lebar 1600 mm) untuk memfasilitasi penempatan banyak peralatan uji steril dan operasional medis berkapasitas besar.",
       "Mengusung tingkat kebersihan ISO Class 5 (Class 100), kecepatan aliran udara 0.25–0.60 m/s, filter HEPA tanpa sekat bingkai aluminium (efisiensi 99.995%), permukaan meja miring 10° ergonomis, konstruksi bodi antibakteri, serta interlock pengaman lampu UV dan penerangan."
@@ -29778,8 +28754,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kabinet keamanan hayati Class II Tipe B2 (pembuangan total 100% tanpa resirkulasi) dengan filter ganda ULPA 99.9995% (0.12 μm), blower pembuangan eksternal terpisah, saluran cerobong 4 meter, dan jendela bermotor kemiringan 7°.",
     description: [
       "Infitek BSC-IIB2 Series (lebar 1.1m, 1.3m, 1.5m, 1.8m) adalah kabinet keamanan biologis Class II Tipe B2 dengan sistem pembuangan 100% total exhaust (tanpa ada udara yang disirkulasikan kembali ke dalam kabinet), menjadikannya standar wajib untuk eksperimen mikrobiologi yang melibatkan senyawa kimia volatil atau radioisotop.",
       "Dilengkapi unit blower kipas hisap eksternal terpisah bersama saluran cerobong 4 meter, filter ganda ULPA efisiensi 99.9995% (pada 0.12 μm), jendela bermotor 6 mm laminasi anti-UV dengan kemiringan 7°, layar sentuh berwarna cerdas, sistem interlock keselamatan ganda, serta area kerja stainless steel 304 terintegrasi."
@@ -29839,8 +28813,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Stasiun kombinasi emergency shower dan cuci mata/wajah berbahan stainless steel 304/PP dengan bak penampung air limbah (1000×1000×150 mm), kepala shower diameter 250 mm, dan debit shower ≥76 L/min.",
     description: [
       "Infitek EEWS-307 adalah stasiun keselamatan darurat terintegrasi yang menggabungkan shower bilas tubuh darurat dan pencuci mata/wajah (eye/face wash) yang dapat dioperasikan bersamaan atau terpisah.",
       "Dilengkapi bak penampung air limbah khusus (ukuran 1000 × 1000 × 150 mm) agar air dekontaminasi tidak meluber ke area lantai kerja, mangkuk pencuci mata diameter 300 mm berdesain dinding vertikal anti-percikan, kepala shower spinning diameter 250 mm, katup bola SS304, katup kontrol aliran mandiri di tiap nozzle, serta opsi katup anti-lepuh termostatik (anti-scalding valve)."
@@ -29895,8 +28867,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Unit shower dan cuci mata darurat portabel bertekanan kapasitas 35L berbahan polietilena (PE) dengan pompa bertekanan bertenaga baterai, roda universal, dan durasi semprot ≥15 menit.",
     description: [
       "Infitek EWP-105 adalah unit shower dan pencuci mata darurat portabel bertenaga baterai yang menggerakkan pompa bertekanan untuk menyemprotkan air teratomisasi bertekanan stabil (0.2–0.4 MPa).",
       "Terbuat dari material polietilena (PE) tahan benturan dan bahan kimia, volume tangki 35 Liter dengan durasi penyemprotan ≥15 menit sesuai standar keselamatan, dilengkapi roda universal untuk kemudahan mobilisasi ke lokasi darurat, serta operasional pada rentang suhu air 0–40°C."
@@ -29950,8 +28920,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Unit penghisap uap kimia portabel (fume extractor) berkapasitas 230 m³/h dengan lengan artikulasi fleksibel, kipas PSC ultra-senyap impor AS (<50 dBA), sensor VOC terintegrasi, dan filter HEPA H14 (99.995%).",
     description: [
       "Infitek FMH-M adalah penghisap uap kimia bergerak (mobile fume extractor) yang dirancang untuk mengatasi emisi uap pelarut, asam-basa, dan asap solder langsung dari sumber penguapan lokal (seperti benchtop HPLC, GC-MS, atau meja timbang).",
       "Dilengkapi lengan isap fleksibel berartikulasi (diameter 90 mm), kipas PSC impor Amerika Serikat berdaya 24V tanpa percikan api statis, sistem filtrasi efisiensi tinggi (pilihan filter organik OG, asam AG, dan partikulat HEPA H14 efisiensi 99.995%), layar sentuh LCD 5 inci dengan pemantau suhu, kelembapan, dan konsentrasi VOC real-time, serta 4 roda kastor (2 berrem)."
@@ -30006,8 +28974,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pencuci mata dan wajah vertikal (pedestal eye/face wash) berbahan full stainless steel SS304 poles halus dengan mangkuk 300 mm anti-percikan dan fitur pembuangan air otomatis anti-beku.",
     description: [
       "Infitek EEWS-322 adalah unit pencuci mata dan wajah darurat model berdiri (pedestal vertical type) yang dirancang untuk penempatan dekat area penanganan bahan kimia berbahaya.",
       "Seluruh bodi terbuat dari stainless steel SS304 poles halus anti-korosi (diameter pipa 38/48 mm), mangkuk pencuci mata diameter 300 mm dengan bibir lurus pengumpul air anti-percikan, katup bola 2-piece SS304, tutup debu terintegrasi, debit aliran eye/face wash ≥11.4 L/min, serta fitur pengosongan otomatis air pipa pasca-pemakaian untuk mencegah pembekuan air di pipa pada cuaca dingin."
@@ -30061,8 +29027,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pencuci mata dan wajah darurat tipe pasang dinding (wall-mounted) berbahan stainless steel 304 poles halus dengan debit aliran ≥11.4 L/min dan katup bola SS304.",
     description: [
       "Infitek EEW-300 adalah unit pencuci mata dan wajah darurat yang dipasang di dinding (wall-mounted) untuk menghemat ruang lantai kerja laboratorium atau pabrik kimia.",
       "Konstruksi tangguh berbahan stainless steel 304 poles halus dengan ketahanan tinggi terhadap korosi cairan kimia, katup bola buka-cepat SS304, laju alir air ≥11.4 L/min, ulir masuk G 1-1/4\" jantan, serta ulir pembuangan Rp 1-1/4\" betina."
@@ -30115,8 +29079,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pencuci mata meja (desktop mount) dengan 2 nozel semprot berpaten pengatur aliran, papan dorong (push board) aktivasi cepat berbahan SS304 sandblasted, dan tutup debu terintegrasi.",
     description: [
       "Infitek EWM-201 dirancang khusus untuk dipasang langsung di atas meja kerja atau di tepi bak cuci laboratorium sebagai stasiun pencuci mata darurat jarak dekat.",
       "Dilengkapi bodi stainless steel SS304 berlapis sandblasting, papan dorong (push board) tangan berlogo arah aktivasi yang sangat jelas dan mudah dioperasikan saat darurat, 2 nozel semprot paten dengan katup pengatur aliran air mandiri di tiap kepala, tutup debu terintegrasi (tanpa rantai), serta katup bola SS304."
@@ -30169,8 +29131,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Bilik shower dan cuci mata darurat terpadu (dimensi bilik 110×114×240 cm) berbahan full stainless steel SS304 untuk dekontaminasi menyeluruh dalam ruangan tertutup.",
     description: [
       "Infitek EEWS-211 adalah bilik bilas dan pencuci mata darurat (emergency shower room) modular berukuran 1.1 × 1.14 × 2.4 meter yang membatasi cipratan air kimia beracun selama proses dekontaminasi tubuh.",
       "Seluruh struktur bilik terbuat dari stainless steel SS304 tahan korosi ekstrem, mendukung pengoperasian shower tubuh dan pencuci mata/wajah secara terpisah maupun serentak, mangkuk cuci mata diameter 300 mm anti-percik, katup bola SS304, serta inlet dan outlet G 1-¼\" jantan (ukuran bilik dan saluran dapat dikustomisasi)."
@@ -30223,8 +29183,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Lemari penyimpanan bahan kimia anti-korosi berbahan 100% Polipropilena (PP) tebal 8 mm (pintu 15 mm) dengan struktur kunci ganda (double-lock), rak penampung tumpahan cairan, dan kapasitas 4 hingga 90 Galon.",
     description: [
       "Infitek SSC-W Series (pilihan kapasitas 4, 12, 28, 30, 45, 60, dan 90 Galon) dirancang khusus untuk penyimpanan aman cairan kimia korosif seperti asam kuat dan alkali pekat tanpa risiko karat.",
       "Dibangun dari pelat polipropilena (PP) tebal 8 mm dengan pengelasan mulus (seamless welding masa pakai >10 tahun), pintu PP 15 mm dengan pegangan jembatan anti-korosi dan label bahaya korosif, struktur kunci ganda (double-lock) untuk otorisasi keamanan ganda, rak penampung tumpahan PP yang dapat diekstraksi terpisah, serta engsel cetak injeksi PP tahan aus."
@@ -30278,8 +29236,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Lemari penyimpanan bahan kimia berfilter mandiri (kapasitas 48 hingga 320 botol 500 mL) dengan kipas turbin senyap 40 dBA, sensor VOC, pemantauan jarak jauh via ponsel, pintu akrilik transparan, dan filter molekuler 99.99%.",
     description: [
       "Infitek CSC-F Series (CSC-F820 48 botol meja/dinding, CSC-F800 160 botol, CSC-F1600 320 botol) adalah lemari penyimpanan bahan kimia mandiri berpenyaring udara yang terus-menerus menyerap uap kimia beracun dari dalam botol reagen.",
       "Menggunakan kipas turbin senyap tanpa percikan listrik statis (kebisingan hanya 40 dBA), sensor detektor VOC canggih dengan sistem alarm pencemaran suhu dan kelembapan, sistem monitoring jarak jauh melalui smartphone, pintu kaca akrilik transparan anti-korosi, rak PP berlubang rembesan yang dapat disesuaikan (daya tahan 30 kg/rak), serta layar kontrol sentuh LED."
@@ -30335,8 +29291,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Unit cuci mata/wajah darurat portabel tipe gravitasi kapasitas 38 Liter (10 Galon) berbahan polietilena (PE) tanpa perlu instalasi pipa air, durasi semprot ≥15 menit, dan debit ≥1.5 L/min.",
     description: [
       "Infitek EWP-100 adalah unit pencuci mata darurat mandiri tipe gravitasi (gravity-fed) yang dapat diletakkan di atas meja atau digantung di dinding tanpa memerlukan sambungan pipa ledeng.",
       "Terbuat dari material polietilena (PE) berdaya tahan tinggi (pilihan warna Kuning, Hijau Muda, atau Hijau), kapasitas 10 Galon (38 Liter), memberikan aliran pembilasan mata terus menerus selama minimal 15 menit dengan laju aliran ≥1.5 L/menit, serta cocok untuk penggunaan suhu air 0–40°C."
@@ -30390,8 +29344,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Stasiun kombinasi shower dan cuci mata darurat anti-beku berbahan stainless steel SS304 dengan katup bola 3-arah khusus penguras otomatis air pipa dan sambungan 'Union' lepas-pasang cepat.",
     description: [
       "Infitek EEWS-308 dirancang khusus untuk lingkungan bersuhu dingin (bahkan di bawah 0°C) dengan mekanisme pengosongan pipa manual/otomatis untuk mencegah air membeku dan merusak sistem perpipaan darurat.",
       "Menggunakan katup bola 3-arah khusus SS304 (membuka saluran masuk saat tuas digerakkan 90°, dan otomatis menguras akumulasi air di dalam pipa saat tuas dikembalikan), sambungan pipa model Union untuk kemudahan bongkar-pasang, kepala shower diameter 250 mm, mangkuk cuci mata 300 mm anti-percikan, serta opsi katup anti-lepuh termostatik."
@@ -30444,8 +29396,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Unit shower dan cuci mata darurat portabel bertekanan kapasitas 12L berbahan polietilena (PE) yang dilengkapi troli dorong beroda lepas-pasang (removable trolley) dan durasi penggunaan ≥15 menit.",
     description: [
       "Infitek EWP-106 adalah unit shower bilas dan pencuci mata darurat genggam bertekanan (0.2–0.4 MPa) yang dilengkapi troli dorong beroda (removable trolley) untuk mobilitas tinggi.",
       "Terbuat dari material polietilena (PE) tahan kimia, kapasitas tangki 12 Liter dengan durasi pembilasan ≥15 menit, nosel semprot genggam ergonomis, serta ideal untuk pemadam kebakaran, bengkel industri, dan laboratorium."
@@ -30497,8 +29447,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pencuci mata dan wajah darurat portabel kapasitas 30 Liter (8 Galon) berwarna hijau cerah berbahan polietilena (PE) dengan durasi semprot ≥15 menit dan opsi troli penampung limbah.",
     description: [
       "Infitek EWP-103 adalah stasiun cuci mata portabel tanpa sambungan pipa berkapasitas 8 Galon (30 Liter) yang sangat mencolok dengan warna hijau keselamatan (safety green).",
       "Memberikan aliran bilas mata/wajah lembut dengan debit ≥1.5 L/min selama durasi minimal 15 menit penuh, material polietilena tahan lama, serta opsi penambahan troli dorong beroda dan tangki penampung air limbah kotor."
@@ -30549,8 +29497,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pencuci mata genggam berselang fleksibel 1.4 meter berbahan kuningan padat (solid brass) dengan kepala semprot karet lembut berpelindung tutup PP otomatis dan tekanan kerja hingga 7 Bar.",
     description: [
       "Infitek EWM-105 adalah pencuci mata darurat tipe selang tarik genggam berbahan kuningan padat dengan lapisan krom tebal mengilap yang tahan terhadap bahan kimia, paparan sinar UV, dan suhu panas.",
       "Dilengkapi selang PVC beranyam kawat baja tahan karat sepanjang 1.4 meter, kepala semprot karet lunak pengaman mata, tutup debu PP yang lepas otomatis saat pemicu ditekan, sakelar pemicu berpengunci otomatis (hands-free trigger lock), katup non-return otomatis, serta tekanan kerja maksimal hingga 7 Bar."
@@ -30603,8 +29549,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator CO2 presisi tinggi dengan sensor inframerah (IR) pemulihan cepat (≤3 min), pilihan jaket udara (H-Series) atau jaket air (W-Series), sterilisasi UV, pemanas pintu anti-kondensasi, dan ruang stainless steel 304.",
     description: [
       "Infitek ICB-CO2 Series menghadirkan lingkungan pertumbuhan sel dan mikroorganisme yang ideal dengan stabilitas konsentrasi CO2 (0–20% kontrol IR) dan kelembapan alami ≥90%.",
       "Tersedia dalam varian pemanas jaket udara (Air-Jacketed H-Series: 50L, 80L, 150L, 190L, 240L) untuk pemulihan cepat atau jaket air (Water-Jacketed W-Series: 26L, 80L, 150L) untuk kestabilan termal prima. Dilengkapi sensor CO2 inframerah yang kebal terhadap fluktuasi kelembapan, filter mikroba inlet gas 99.99%, sterilisasi lampu UV internal, kontroler suhu pintu pemanas pencegah kondensasi, serta ruang stainless steel 304 bersudut lengkung."
@@ -30661,8 +29605,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Chamber uji suhu dan kelembapan konstan (rentang -5°C hingga 70°C, kelembapan 15%–95% RH) bebas bunga es (frost-free) kapasitas 103L hingga 1022L dengan kontrol fuzzy PID 30 segmen.",
     description: [
       "Infitek ICB-H-YH Series (103L, 152L, 253L, 412L, 722L, 1022L) adalah ruang pengujian iklim dan kelembapan konstan berstandar pengujian stabilitas farmasi ICH jangka panjang tanpa drift parameter.",
       "Mengadopsi teknologi pendinginan bebas bunga es (frost-free) dengan regulasi bypass gas panas kompresor, kipas sirkulasi difusi 3 tingkat kecepatan, sistem pengisian dan daur ulang air otomatis, kontrol mikroprosesor fuzzy PID 30 segmen 99 siklus, pintu dalam kaca tempered anti-ledakan, pengunci pintu 4-titik gaya Jerman, serta bodi baja kuat berinsulasi poliuretan tebal."
@@ -30718,8 +29660,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Chamber pencahayaan suhu konstan (rentang dengan lampu: 10–65°C, tanpa lampu: 0–65°C) kapasitas 173L hingga 516L dengan iluminasi LED 6000 Lux (5 tingkat), kompresor SECOP, dan program PID 24 segmen.",
     description: [
       "Infitek ICB-L-B Series (173L, 288L, 400L, 516L) adalah inkubator bersuhu konstan presisi tinggi yang dilengkapi sistem pencahayaan LED satu sisi berkekuatan 6000 Lux untuk penelitian pertumbuhan benih dan kultur jaringan.",
       "Menggunakan kompresor pendingin SECOP berefisiensi tinggi dengan refrigeran ramah lingkungan bebas CFC, pengatur intensitas cahaya 5 tingkat, pengontrol suhu PID 24 segmen (rentang 10–65°C saat lampu aktif / 0–65°C tanpa lampu), ruang dalam stainless steel SUS304 bersudut lengkung, serta penyimpanan data USB standar."
@@ -30775,8 +29715,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kamar iklim buatan (climate chamber) multi-parameter (suhu 0–65°C, kelembapan 40%–95% RH, cahaya LED 6000 Lux) kapasitas 173L hingga 516L dengan tangki pelembap listrik bawaan.",
     description: [
       "Infitek ICB-CC-Y Series (173L, 288L, 400L, 516L) menggabungkan kontrol suhu, kelembapan udara konstan, dan penyinaran cahaya LED multi-tingkat untuk mensimulasikan berbagai kondisi iklim alami.",
       "Dilengkapi tangki pelembap pemanas listrik terintegrasi dengan antarmuka suplai air otomatis dan pemutus daya saat air kosong, rentang kelembapan 40%–95% RH, pencahayaan LED 6000 Lux (5 tingkat), kompresor pendingin SECOP, kontroler PID 24 segmen, ruang dalam stainless steel SUS304, serta port data USB standar."
@@ -30831,8 +29769,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator pemanas (heating incubator) rentang suhu RT+5 hingga 120°C dengan sistem saluran ganda vertikal (horizontal air circulation), kipas dapat diatur 3 kecepatan, pembatas suhu digital mandiri, dan ruang mirror stainless steel.",
     description: [
       "Infitek ICB-F Series (30L, 45L, 65L, 85L, 125L, 230L) adalah inkubator pemanas bakteriologi berkonveksi paksa dengan sistem sirkulasi udara saluran ganda vertikal untuk keseragaman suhu tingkat tinggi (±1.0°C).",
       "Dilengkapi rentang suhu luas hingga 120°C, kipas sirkulasi dengan 3 pilihan kecepatan, pembatas suhu digital independen (independent temperature limiter), kontroler PID cerdas ganda dengan layar LCD terpisah, ruang dalam mirror stainless steel, serta rak dengan daya beban 15 kg."
@@ -30888,8 +29824,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator anaerobik sistematis (kadar O₂ ruang operasi ≤0.5%) berkapasitas inkubasi 57L dengan ruang operasi sarung tangan terdedikasi, transfer chamber cepat ≤15 menit, dan sterilisator ose inokulasi internal.",
     description: [
       "Infitek ICB-AN-HYQIII adalah sistem inkubator anaerobik lengkap yang terdiri dari inkubator suhu konstan (57 Liter), ruang operasi sarung tangan (glove box), ruang transfer sampling cepat (sampling chamber), sistem kontrol sirkuit gas, serta unit desinfeksi.",
       "Mampu menciptakan kondisi anaerobik ketat (kadar O₂ ≤0.5%) melalui perpindahan gas vakum (nitrogen/gas campuran H₂-CO₂-N₂), pembentukan kondisi anaerobik ruang sampling ≤15 menit dengan eksekusi satu tombol, ruang operasi luas 94.4×67×74.4 cm, jendela kaca transparan tahan benturan, serta ruang operasi yang dilengkapi sterilisator jarum inokulasi, peleleh lilin, dan katalis deoksigenasi."
@@ -30950,8 +29884,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator anaerobik canggih dengan layar sentuh TFT 7 inci, tingkat anaerobik ekstrem (kadar O₂ ≤0.01% dengan katalis paladium), kontrol perpindahan gas otomatis satu sentuhan, dan pompa vakum bebas minyak.",
     description: [
       "Infitek ICB-AN-T Series adalah stasiun kerja anaerobik generasi mutakhir dengan layar sentuh TFT berwarna 7.0 inci yang menampilkan parameter suhu, konsentrasi oksigen, dan tekanan gas secara digital dan grafis.",
       "Mencapai tingkat anaerobik ekstrem (kadar O₂ ≤0.01% dengan katalis paladium / ≤0.1% tanpa katalis), menggunakan konsentrasi oksigen sebagai parameter kendali otomatis (sangat menghemat pemakaian tabung gas), kipas aliran silang impedansi tinggi berpenyalur horizontal, pompa vakum bebas minyak bawaan, serta dilengkapi 2 set filter HEPA 0.22 µm untuk gas masuk dan gas buang."
@@ -31006,8 +29938,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator anaerobik berpendingin (rentang suhu 15°C hingga 60°C) dengan kompresor pendingin Cubigel ramah lingkungan, volume internal gabungan 339 Liter, dan kadar O₂ ruang operasi ≤0.5%.",
     description: [
       "Infitek ICB-AN-HYQIII-Z mengombinasikan lingkungan anaerobik ketat (kadar O₂ ≤0.5%) dengan sistem pendingin aktif berbasis kompresor Cubigel untuk memungkinkan inkubasi pada suhu sejuk mulai dari 15°C hingga 60°C.",
       "Menggunakan desain ruang gabungan inkubasi dan operasi berkapasitas besar 339 Liter (dimensi ruang operasi 85.2×56.9×70 cm), kompresor hemat energi bebas fluorin, pembentukan anaerobik sampling chamber ≤15 menit, sterilisator loop inokulasi bawaan, serta konstruksi stainless steel SUS304."
@@ -31062,8 +29992,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator biokimia berpendingin (cooling biochemical incubator) rentang suhu ultra-luas -10°C hingga 65°C dengan kompresor Cubigel efisiensi tinggi, kapasitas 81L hingga 397L, kontrol PID digital, dan port RS485.",
     description: [
       "Infitek ICB-B-L Series (81L, 160L, 202L, 251L, 304L, 397L) adalah inkubator suhu konstan berpendingin khusus untuk penentuan BOD air, pengawetan mikroba, dan budidaya jamur pada rentang suhu dingin hingga panas (-10°C s.d. 65°C).",
       "Menggunakan kompresor pendingin Cubigel berefisiensi tinggi dengan refrigeran ramah lingkungan, sirkulasi mikro-udara paksa dengan kipas internal untuk keseragaman suhu ±2°C, ruang dalam stainless steel SUS304 bersudut lengkung, lampu penerang internal, port komunikasi RS485 standar, serta roda kastor."
@@ -31119,8 +30047,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator biokimia berpendingin (0°C hingga 65°C) kapasitas 81L hingga 397L yang dilengkapi stopkontak listrik internal untuk menyalakan tester BOD atau shaker di dalam kabinet, kompresor Cubigel, dan kontrol PID.",
     description: [
       "Infitek ICB-B-HII Series (81L hingga 397L) dirancang khusus untuk pengujian BOD dan eksperimen kultur yang memerlukan pengoperasian instrumen kecil (seperti tester BOD, mini-shaker, atau stirrer) langsung di dalam ruang inkubasi.",
       "Dilengkapi stopkontak daya listrik internal (internal power socket), rentang suhu stabil 0°C hingga 65°C, kompresor Cubigel berefisiensi tinggi, sirkulasi konveksi paksa merata, ruang stainless steel SUS304 dengan sudut membulat, serta lampu penerang internal."
@@ -31176,8 +30102,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator pengocok (shaking incubator) meja kapasitas 50L & 70L dengan kecepatan 20–300 rpm (amplitudo 20 mm), sterilisasi UV, lantai bejana kedap air anti-tumpah, dan pilihan suhu hingga 4°C (S70LY).",
     description: [
       "Infitek ICB-SY Series (ICB-S50Y 50L, ICB-S70Y 70L, ICB-S70LY 70L berpendingin 4–65°C) adalah inkubator pengocok meja untuk kultur mikroorganisme dan reaksi enzim yang memerlukan getaran dan suhu presisi.",
       "Dilengkapi kecepatan goyang 20–300 rpm (akurasi ±1 rpm, amplitudo Φ20 mm) dengan fitur soft-start anti-tumpah, lampu sterilisasi UV, bagian dasar ruang berdesain tahan air (tumpahan cairan tidak merusak motor), layar LCD digital, serta kapasitas klem labu hingga 15 × 250 mL."
@@ -31232,8 +30156,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator pengocok desktop cerdas kapasitas 70L dengan motor servo presisi (bebas bising, akurasi ±1 RPM), teknologi pendingin bebas bunga es (frost-free defrost otomatis 4–65°C), dan sistem pelacakan data USB.",
     description: [
       "Infitek ICB-S Series (model pemanas RT+5–65°C atau berpendingin 4–65°C; penggerak multidimensi, unidimensi, atau track drive) adalah instrumen pengocok suhu konstan canggih untuk kultur sel dan bakteri berharga.",
       "Dilengkapi motor servo berkecepatan presisi (hingga 600 rpm, orbit Φ26 mm atau Φ0–50 mm variabel), teknologi refrigerasi bebas bunga es dengan defrost otomatis (refrigeran R134a bebas CFC), sistem akselerasi dan deselerasi perlahan untuk melindungi sel dari gaya geser berlebih, sistem perekaman data USB otomatis dengan analisis tabel dan grafik, serta proteksi henti putar saat pintu dibuka."
@@ -31287,8 +30209,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator suhu konstan (RT+5 hingga 70°C) berstruktur pintu ganda (pintu dalam kaca kualitas tinggi, pintu luar berstrip magnetik), sirkulasi angin sepoi-sepoi (breeze circulation), lampu UV steril, dan pembatas suhu digital.",
     description: [
       "Infitek ICB-P Series (45L, 65L, 125L, 210L) mengusung struktur pintu ganda dengan pintu kaca berkualitas tinggi di bagian dalam untuk memudahkan pengamatan sampel tanpa memengaruhi stabilitas termal chamber.",
       "Dilengkapi pintu luar berstrip magnetik dengan fitur pemutus daya otomatis saat dibuka (open door power-off), lampu penerangan standar dan lampu UV sterilisasi (otomatis mati saat pintu dibuka), kipas sirkulasi semilir angin (breeze circulation), pemanas film elektrotermal mika, pengontrol PID digital cerdas (suhu RT+5 hingga 70°C), serta pembatas suhu digital independen."
@@ -31345,8 +30265,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator CO2 tipe jaket udara (kapasitas 40L hingga 240L) dengan sensor inframerah (IR) impor pemulihan cepat (≤3 min), filter HEPA udara luar, pemanas pintu anti-kondensasi, dan desain dapat ditumpuk (stackable).",
     description: [
       "Infitek ICB-CO2-Y Series menghadirkan kestabilan kultur sel mamalia dengan pemanasan selimut udara (air-jacketed PID control) dan sensor CO2 inframerah (IR) impor yang kebal terhadap fluktuasi suhu dan kelembapan eksternal.",
       "Dilengkapi filter mikroba inlet gas 99.99% dan filter HEPA berefisiensi tinggi untuk memastikan pasokan gas steril, pemanas pintu independen pencegah kondensasi embun, kelembapan alami >90%, layar LCD besar di atas pintu luar dengan tampilan suhu/CO2/kelembapan, ruang stainless steel 304 bersudut lengkung, serta desain bodi yang dapat ditumpuk dua tingkat (stackable)."
@@ -31403,8 +30321,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator pengocok CO2 kapasitas besar 310L dengan struktur bertumpuk hingga 3 lapis independen (kontrol suhu RT-20 hingga 65°C, CO2 0–20%, kecepatan 20–350 rpm), motor servo, dan layar sentuh 7 inci.",
     description: [
       "Infitek ICB-CO2-2S202 menggabungkan fungsi inkubasi gas CO2 presisi tinggi dan pengocok mekanis bertenaga motor servo dalam struktur modular bertumpuk hingga 3 tingkatan (setiap unit bervolume 310 Liter).",
       "Setiap unit dapat dioperasikan secara mandiri dengan parameter suhu berbeda (rentang pendinginan RT-20 hingga 65°C), kontrol CO2 0–20.0%, kecepatan putar 20–350 rpm (orbit Φ50 mm), platform geser rel tarik untuk mempermudah bongkar-muat labu, fungsi bilas air bertekanan tinggi di dasar kabinet, layar sentuh 7 inci grafis, serta opsi kontrol nirkabel WiFi."
@@ -31466,8 +30382,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator pengocok horizontal kapasitas 203L & 220L dengan motor servo presisi (kecepatan 20–350 rpm, orbit Φ26 mm), pilihan refrigerasi 4–65°C, sistem defrost otomatis, dan platform luas (hingga 920×540 mm).",
     description: [
       "Infitek ICB-S111B Series (model S111B/BD tanpa pendingin Ambient+5–65°C dan S211B/BD dengan pendingin 4–65°C) adalah inkubator shaker model horizontal bervolume besar dengan platform luas untuk menampung puluhan labu kultur.",
       "Digerakkan oleh motor servo berkualitas tinggi dengan penggerak multidimensi berdesain keseimbangan dinamis, kecepatan 20–350 rpm (sensitivitas ±1 rpm), fungsi defrost otomatis, sistem sirkulasi udara berpresisi tinggi, rekaman data otomatis USB, serta perlindungan berhenti otomatis saat pintu dibuka."
@@ -31522,8 +30436,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator pemanas bakteriologis hemat energi rentang RT+5 hingga 65°C kapasitas 50L hingga 270L dengan sirkulasi konveksi paksa dua sisi, layar LCD cerdas, dan ruang stainless steel sikat.",
     description: [
       "Infitek ICB-E Series (50L, 80L, 160L, 270L) adalah inkubator bakteriologi standar laboratorium untuk penyimpanan galur dan kultur biologi pada rentang suhu ruang +5°C hingga 65°C.",
       "Dilengkapi segel silikon sintetis baru pencegah kehilangan panas, sirkulasi konveksi paksa isap belakang dan dua sisi (back suction and side air circulation), ruang dalam stainless steel tahan karat, rak berlubang laser, jendela pengamatan kaca, serta pengontrol PID dengan layar LCD besar."
@@ -31577,8 +30489,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator berpendingin (cooling incubator) kapasitas 70L hingga 450L dengan rentang suhu 0°C hingga 60°C, kompresor ramah lingkungan R134a bebas CFC, sirkulasi paksa bawah, dan layar LCD definisi tinggi.",
     description: [
       "Infitek ICB-BZ Series (70L, 100L, 150L, 250L, 350L, 450L) dirancang khusus untuk penelitian lingkungan, pengujian obat, dan mikrobiologi yang membutuhkan kontrol suhu stabil pada kisaran 0°C hingga 60°C.",
       "Menggunakan kompresor pendingin hemat energi bebas CFC (refrigeran R134a), sirkulasi konveksi paksa bawah dengan kipas impeler besar, ruang dalam stainless steel sikat berkualitas tinggi, layar LCD definisi tinggi cerdas, segel silikon penahan panas, serta perlindungan kebocoran arus."
@@ -31633,8 +30543,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator BOD cerdas layar sentuh 5.0 inci (rentang 0–65°C) kapasitas 70L, 150L, dan 250L dengan pengontrol mikroprosesor 30 segmen, pintu ganda kaca tempered, lampu UV standar, dan stopkontak universal internal.",
     description: [
       "Infitek ICB-BP Series (70L, 150L, 250L) adalah inkubator BOD mutakhir dengan antarmuka layar sentuh berwarna 5.0 inci dan kontroler program 30 segmen untuk pengujian kualitas air dan pelestarian mikroorganisme.",
       "Dilengkapi struktur pintu ganda (pintu dalam kaca tempered transparan dan pintu luar bersegel magnetik), kompresor hermetik berpendingin udara (refrigeran R134a), defrost cerdas otomatis, stopkontak daya universal internal yang terkontrol, lampu UV germisidal standar, pembatas suhu digital, serta diagnosis mandiri sistem loop."
@@ -31690,8 +30598,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator pengocok bertumpuk (stacked shaker) kapasitas 180L per unit (dapat ditumpuk hingga 3 tingkat kendali mandiri) dengan motor servo senyap (20–350 rpm, orbit Φ26 mm), rel platform tarik geser, dan defrost otomatis.",
     description: [
       "Infitek ICB-2S103 (tanpa pendingin Ambien+5–65°C) dan ICB-2S203 (berpendingin 4–65°C) adalah kombinasi shaker inkubator bertumpuk (1, 2, atau 3 lapis) yang menghemat ruang lantai sambil menyediakan kapasitas kultur masif.",
       "Setiap unit berkapasitas 180 Liter dan dapat dikendalikan secara terpisah (suhu, waktu, dan kecepatan), dilengkapi platform berel geser tarik (pull-out rail platform) untuk kemudahan penggantian klem wadah, motor servo berkecepatan 20–350 rpm, sistem akselerasi lambat anti-geser sel, pembilas air bertekanan di dasar ruang, perekam data USB, serta proteksi buka pintu otomatis."
@@ -31747,8 +30653,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator pengocok kabinet vertikal dengan dua platform goyang bertingkat (kapasitas 305L & 400L), motor servo presisi 20–350 rpm (orbit Φ26 mm), pilihan suhu 4–65°C, dan kapasitas hingga 114 labu.",
     description: [
       "Infitek ICB-S1102 Series (model S1102/1102D tanpa pendingin Ambient+5–65°C dan S2102/2102D dengan pendingin 4–65°C) adalah inkubator pengocok tipe lemari vertikal yang memiliki dua platform pengocok bertingkat di dalam satu ruang kabinet.",
       "Mampu menampung hingga 114 labu 100 mL atau 56 labu 500 mL secara bersamaan, digerakkan oleh motor servo berkualitas tinggi dengan keseimbangan dinamis mulus (kecepatan 20–350 rpm, sensitivitas ±1 rpm), sistem defrost otomatis, saluran sirkulasi udara berpresisi tinggi, rekaman data USB, serta lampu penerangan dan sterilisasi UV."
@@ -31805,8 +30709,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Toples anaerobik berbahan stainless steel SUS304 (kapasitas 7L, 10L, 15L) dengan 3 kait pengunci segel rapat, konduktivitas termal tinggi, dan tahan sterilisasi autoklaf pada 121°C.",
     description: [
       "Infitek ANJ Stainless Steel Series adalah bejana toples anaerobik (anaerobic jar) berdaya tahan tinggi yang terbuat dari baja tahan karat SUS304 untuk kultivasi mikroba anaerob menggunakan kantong generator gas anaerobik.",
       "Tahan terhadap sterilisasi panas tinggi di dalam autoklaf pada suhu 121°C, memiliki konduktivitas termal yang cepat sehingga suhu di dalam toples lekas seimbang dengan suhu inkubator, dilengkapi 3 kait pengunci (lock catches) dengan segel rapat bebas bocor, serta rak braket stainless steel untuk cawan Petri atau labu Erlenmeyer."
@@ -31862,8 +30764,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator jamur/kapang (mould incubator) rentang suhu sejuk 4°C hingga 60°C kapasitas 150L hingga 450L dengan sirkulasi konveksi paksa vertikal bawah, ruang stainless steel sikat, dan kontrol PID LCD.",
     description: [
       "Infitek ICB-MZ Series (150L, 250L, 350L, 450L) dirancang khusus untuk skrining kapang, budidaya spora fungi, dan uji pengawetan makanan-obat pada rentang suhu 4°C hingga 60°C.",
       "Mengadopsi sistem sirkulasi konveksi paksa isap belakang dan suplai udara vertikal dari bawah untuk keseragaman suhu ±1.0°C tanpa merusak miselium jamur, segel silikon sintetis hemat energi, ruang dalam stainless steel sikat tahan karat, jendela observasi kaca terintegrasi, serta proteksi kebocoran listrik."
@@ -31916,8 +30816,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Toples anaerobik transparan berbahan PVC polipropilena cetak injeksi kapasitas 2.5L (ketahanan suhu hingga 100°C) dengan segel 4 tombol unik, daya tahan anaerobik ≥120 jam, dan 3 lubang sambungan.",
     description: [
       "Infitek ANJ125-210-3 adalah toples anaerobik transparan berkapasitas 2.5 Liter yang dibuat dari cetakan injeksi polipropilena tahan panas tinggi sehingga isi kultur cawan Petri dapat diamati secara visual.",
       "Mampu menahan suhu hingga 100°C, kinerja penyegelan tinggi dengan waktu tahan anaerobik tidak kurang dari 120 jam, desain segel unik empat tombol (four-button seal) yang mudah dikunci dan diganti secara terpisah, tutup toples dengan 3 lubang sambungan standar untuk koneksi sistem gas, serta braket stainless steel untuk 1 tumpukan 12 cawan Petri (Φ9-10 cm)."
@@ -31971,8 +30869,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Toples anaerobik kejernihan tinggi berbahan poliester akrilik PMMA (kapasitas 1.35L hingga 10L) dengan ketahanan benturan tinggi, penguncian klem kokoh, dan dukungan pelat kultur sel (model 3L).",
     description: [
       "Infitek PMMA Anaerobic Jar ANJ Series (1.35L, 2.75L, 3L, 6L, 10L) dibuat dari material poliester akrilik PMMA berkekuatan tinggi dan berkejernihan optik tinggi untuk pengamatan kultur mikroba yang sangat jelas.",
       "Memiliki permukaan sangat halus, ketahanan benturan dan gempa yang kokoh, batas ketahanan suhu hingga 50°C, penguncian rapat dengan klem khusus (fixture locking), serta model ANJ130-290-3 yang dirancang khusus untuk menampung 4 buah pelat mikrotiter ELISA atau 6 pelat strip identifikasi mikroba."
@@ -32026,8 +30922,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus kecepatan tinggi (kecepatan maksimal 21.000 rpm, RCF 30.910×g) dengan motor konversi frekuensi torsi besar, kunci pintu induksi hisap elektrik, ruang stainless steel, dan kapasitas hingga 4 × 800 mL.",
     description: [
       "Infitek CFG-21SY adalah sentrifus berkecepatan tinggi bertenaga motor induksi AC frekuensi variabel tanpa sikat (brushless) yang bebas perawatan dan bebas debu karbon.",
       "Dilengkapi kunci pintu elektrik induktif otomatis dengan pembuka darurat, layar sentuh definisi tinggi 'Intelligent System' yang memantau RCF/kecepatan/waktu/akselerasi secara simultan, selongsong kerucut pegas 360° untuk pergantian rotor non-arah yang cepat, peredaman getaran tiga tahap, serta pilihan rotor sudut hingga 30.910×g maupun rotor ayun (swing-out) berkapasitas besar 4 × 800 mL."
@@ -32089,8 +30983,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus kecepatan rendah kapasitas besar (6000 rpm / 5502×g, kapasitas 4 × 750 mL) dengan layar sentuh LCD berwarna, motor frekuensi variabel AC, saluran buang anti-aerosol, dan rotor pelepas tutup otomatis (cap remover).",
     description: [
       "Infitek CFG-550JP adalah sentrifus bangku kecepatan rendah berkapasitas besar (hingga 4 × 750 mL) yang dikendalikan oleh mikroprosesor dengan antarmuka layar sentuh berwarna penuh.",
       "Dilengkapi penggerak motor frekuensi variabel AC bebas sikat, kunci pintu ganda otomatis, penyimpanan 20 program kerja, 15 tingkat akselerasi/deselerasi, 5 program sentrifugasi diferensial terprogram, perlindungan ketidakseimbangan otomatis, saluran pembuangan terbenam anti-aerosol, serta kompatibilitas dengan rotor khusus pelepas tutup tabung vakum (cap remover rotor 96 tabung)."
@@ -32146,8 +31038,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus berpendingin kecepatan tinggi (18.800 rpm / 26.870×g, suhu -20°C hingga 40°C) dengan fitur pendinginan cepat (21°C ke 4°C ≤5 min), pengenalan rotor magnetik otomatis, dan rotor kedap udara berstandar biosekuriti.",
     description: [
       "Infitek CFGR-18.5JP memadukan kecepatan putar tinggi 18.800 rpm dan pendinginan kompresor presisi (-20°C s.d. 40°C) untuk melindungi sampel biologis sensitif panas.",
       "Dilengkapi fungsi pendinginan cepat (mencapai 4°C dalam waktu ≤5 menit), fungsi pra-pendinginan saat standby, pengenalan magnetik rotor otomatis tanpa setel manual, rotor sudut kedap udara (airtight bio-safe) yang tahan autoklaf 121°C >2 jam, saluran drainase kondensat, serta layar sentuh warna LCD penuh."
@@ -32203,8 +31093,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Mikrosentrifus kecepatan tinggi (15.000 rpm / 21.380×g) dengan motor DC brushless, kunci pintu motorik magnetik satu sentuhan, rotor aluminium alloy bersegel rangkap tiga (triple-sealed), dan ruang berlapis PTFE.",
     description: [
       "Infitek CFG-15DP adalah mikrosentrifus bangku berkinerja tinggi untuk pemrosesan sampel asam nukleat dan fraksinasi seluler dengan akselerasi dan pengereman cepat (25 detik naik/turun).",
       "Dilengkapi kunci pintu bermotor magnetik yang dapat ditutup dengan satu tangan, rotor paduan aluminium berkekuatan tinggi tahan autoklaf 121°C dengan segel tiga lapis bio-safe, dinding ruang sentrifus berlapis PTFE tahan korosi kimia, deteksi keseimbangan dinamis, serta 9 slot memori program."
@@ -32259,8 +31147,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sentrifus berpendingin kecepatan rendah kapasitas besar (6000 rpm / 4390×g, kapasitas 4 × 750 mL, suhu -20°C hingga 40°C) dengan layar sentuh 5 inci, motor AC frekuensi variabel, dan kompresor ramah lingkungan.",
     description: [
       "Infitek CFGR-5BL dirancang untuk pemisahan larutan biologis, fraksinasi darah, dan produk farmasi pada suhu dingin presisi tinggi (-20°C hingga +40°C).",
       "Dilengkapi layar sentuh berdefinisi tinggi 5 inci, kompresor pendingin ramah lingkungan bebas CFC impor, 9 tingkat akselerasi dan 10 tingkat deselerasi untuk mencegah resuspensi sampel, penyimpanan 15 kelompok program, serta kapasitas muat hingga 4 × 750 mL atau pelat mikrotiter 96-well."
@@ -32315,8 +31201,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan tinggi non-pendingin (18.800 rpm / 26.870×g, kapasitas 12 × 10 mL) dengan layar sentuh warna LCD, pengenalan rotor magnetik otomatis, dan rotor bio-safe tahan autoklaf.",
     description: [
       "Infitek CFG-18.5JP adalah versi non-refrigerasi berdaya kompak dari seri 18.5JP yang mampu mencapai kecepatan tinggi 18.800 rpm (26.870×g).",
       "Dilengkapi motor frekuensi variabel AC tanpa sikat berdaya 400W, kunci pintu ganda otomatis, pengenalan rotor magnetik otomatis, 20 slot penyimpanan program, peredaman getaran multi-tahap, serta rotor sudut kedap udara tahan autoklaf 121°C."
@@ -32369,8 +31253,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan rendah (6000 rpm / 3800×g, kapasitas 4 × 500 mL) dengan layar sentuh 5 inci, pengenalan otomatis 4 jenis rotor, peredam kejut dua tahap, dan kenaikan suhu <10°C.",
     description: [
       "Infitek CFG-5BL adalah sentrifus meja kecepatan rendah serbaguna dengan kapasitas tampung hingga 4 × 500 mL (total 2 Liter) untuk pemisahan rutin larutan biologis dan kimia.",
       "Dilengkapi motor AC frekuensi variabel presisi tinggi, layar sentuh definisi tinggi 5 inci, pengenalan otomatis 4 jenis rotor, sistem saluran udara khusus yang menjaga kenaikan suhu ruang sentrifus kurang dari 10°C saat operasi kontinu, sistem peredam getaran dua tahap, serta 15 grup memori program."
@@ -32424,8 +31306,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikrosentrifus tipe telapak tangan (palm-type) kecepatan 7000 rpm (2680×g) dengan penggantian rotor tanpa perkakas, kebisingan ultra-senyap ≤45 dB, dan aktivasi tutup otomatis.",
     description: [
       "Infitek CFG-MINI7M adalah sentrifus mini telapak tangan (palm-type) yang sangat populer untuk aplikasi mikrofiltrasi dan spin-down cepat cairan tabung reaksi kecil.",
       "Operasi otomatis dimulai saat tutup ditutup dan berhenti seketika saat dibuka, kecepatan putar 7000 rpm (2680×g), tingkat kebisingan sangat hening ≤45 dB, penggantian rotor rilis cepat tanpa alat, serta kompatibel dengan tabung 0.2/0.5/1.5/2.0 mL (8 tabung) dan 4 strip PCR 8-sumur (32 tabung)."
@@ -32478,8 +31358,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikrosentrifus kompak berkecepatan 5000 rpm (1360×g) dengan desain penguncian klem rotor yang kokoh, kebisingan ≤45 dB, dan pilihan warna hijau/biru.",
     description: [
       "Infitek CFG-Mini5D adalah mikrosentrifus mini berkecepatan 5000 rpm (1360×g) yang mengadopsi desain penguncian klem (clamp locking design) untuk daya tahan rotor yang ekstra aman.",
       "Mudah dioperasikan dengan menutup penutup, motor DC senyap berdaya 20W (kebisingan ≤45 dB), akselerasi dan deselerasi dalam beberapa detik, serta kompatibel dengan rotor 8 tabung 1.5/2.0 mL dan strip PCR 8-sumur × 4."
@@ -32532,8 +31410,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikrosentrifus ultra-ringan (bobot hanya 0.5 kg) berkecepatan 7000 rpm (2680×g) dengan hambatan angin rendah, kenaikan panas minimal, dan kebisingan ≤50 dB.",
     description: [
       "Infitek CFG-Mini7E dirancang dengan aerodinamika hambatan angin rendah (low wind resistance) untuk meminimalkan kenaikan suhu sampel selama proses sentrifugasi berlangsung.",
       "Memiliki bobot sangat ringan (hanya 500 gram), kecepatan 7000 rpm (2680×g), operasi sangat halus dan stabil (suara ≤50 dB), penguncian rotor tipe klem aman yang dapat dilepas tanpa alat, serta kompatibilitas dengan tabung mikro dan strip PCR."
@@ -32586,8 +31462,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Sentrifus mini kecepatan tinggi (15.000 rpm / 15.100×g) bersertifikasi uji anti-ledakan IEC/EN 61010-2-20 dengan motor DC brushless, rotor 12 × 1.5/2.0 mL, dan kebisingan ≤54 dB.",
     description: [
       "Infitek CFG-Mini15D adalah mikrosentrifus berkecepatan tinggi yang telah terbukti andal melewati pengujian ketat keselamatan anti-ledakan sesuai standar internasional IEC/EN 61010-1 dan IEC/EN 61010-2-20.",
       "Menggunakan motor DC brushless bertenaga yang mencapai target kecepatan dalam 11 detik, rentang 500–15000 rpm (15.100×g, kenaikan 100 rpm), kapasitas rotor 12 tabung 1.5/2.0 mL, kunci pintu interlock elektrik, deteksi suhu & kecepatan berlebih, serta tingkat kebisingan senyap ≤54 dB."
@@ -32642,8 +31516,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus klinis kecepatan rendah 300–5000 rpm (2600×g) dengan motor DC brushless, rotor sudut 6 × 15 mL/10 mL/7 mL (kompatibel tabung darah 13×75 mm), dan 2 tombol program pintas.",
     description: [
       "Infitek CFG-5D adalah sentrifus klinis meja kecepatan rendah yang sangat praktis untuk pemisahan darah rutin, serum, dan urine di klinik, laboratorium diagnostik, dan rumah sakit.",
       "Dilengkapi motor DC brushless bebas sikat, rentang kecepatan 300–5000 rpm (kenaikan 10 rpm), kapasitas rotor sudut 6 tabung (kompatibel dengan tabung darah vakum 5 mL, 7 mL, 10 mL, dan 15 mL), dua program pintas P1/P2 untuk memulai prosedur dengan satu tombol, serta pelepasan kunci tutup otomatis pasca-siklus."
@@ -32697,8 +31569,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan rendah serbaguna (6000 rpm / 3660×g, kapasitas hingga 6 × 100 mL) dengan struktur baja anti-ledakan berlapis, motor DC brushless senyap (≤55 dBA), dan kunci pintu elektronik hening.",
     description: [
       "Infitek CFG-6BC adalah instrumen sentrifus meja serbaguna untuk pemisahan serum, plasma, dan urine di laboratorium biologi, kedokteran, dan kimia klinik.",
       "Dilengkapi struktur baja tahan ledakan berlapis dengan ruang sentrifus stainless steel, motor DC brushless bebas perawatan (operasi senyap ≤55 dBA), konversi otomatis satu tombol antara RPM dan RCF, 10 tingkat akselerasi dan 10 deselerasi, kunci pintu elektronik senyap dengan tuas darurat, serta kapasitas tabung fleksibel dari 6×15 mL hingga 6×100 mL."
@@ -32754,8 +31624,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus berpendingin tipe lantai kapasitas raksasa 6 × 1000 mL (6000 rpm / 6600×g, suhu -20°C hingga 40°C) dengan sistem pendingin pipa tembaga ganda bebas CFC, bodi baja penuh 310 kg, dan adaptor kantong darah.",
     description: [
       "Infitek CFGR-6Y adalah sentrifus berpendingin tipe lantai (floor-standing) tugas berat yang dirancang khusus untuk stasiun transfusi darah (blood bank), industri biofarmasi, dan pemrosesan biologis berskala besar.",
       "Mampu menampung 6 botol 1000 mL atau hingga 12 kantong darah 200 mL (atau 6 kantong 400–500 mL), digerakkan oleh motor konversi frekuensi torsi besar bersistem poros fleksibel (flexible shaft drive), unit kompresor bebas CFC berpipa tembaga sirkulasi ganda las timah penuh, peredam getaran 3 tahap dengan keseimbangan otomatis, pintu hidrolik ganda, serta rotor aluminium aeronautika."
@@ -32810,8 +31678,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sentrifus berpendingin kecepatan tinggi (16.500 rpm / 21.380×g, suhu -20°C hingga 40°C) dengan layar sentuh 5 inci, rotor kedap udara anti-aerosol, pengenalan otomatis 7 jenis rotor, dan kapasitas hingga 4 × 100 mL.",
     description: [
       "Infitek CFGR-B16B adalah pilihan utama untuk eksperimen biologi molekuler, genetika, dan PCR yang memerlukan kecepatan sentrifugasi tinggi di bawah suhu dingin konstan.",
       "Dilengkapi kecepatan hingga 16.500 rpm (21.380×g), layar sentuh berdefinisi tinggi 5 inci, unit kompresor impor bebas CFC (-20°C s.d. 40°C), 9 profil akselerasi dan 10 deselerasi anti-resuspensi, identifikasi otomatis 7 jenis rotor, serta rotor sudut kedap udara (airtight rotor) yang efektif memblokir aerosol patogen."
@@ -32866,8 +31732,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikrosentrifus berpendingin kecepatan tinggi (15.000 rpm / 21.380×g, suhu -20°C hingga 40°C) dengan refrigeran hijau R290 bebas fluorin, pendinginan cepat 7 menit ke 4°C, rotor bersegel tiga lapis, dan penutup sentuh satu jari.",
     description: [
       "Infitek CFGR-15D adalah mikrosentrifus berpendingin canggih yang menggunakan refrigeran ramah lingkungan mutakhir R290 bebas fluorin untuk jejak karbon rendah dan pendinginan bertenaga tinggi.",
       "Mampu mendinginkan dari suhu ruang ke 4°C dalam waktu 7 menit dan mempertahankan suhu dingin pada kecepatan maksimal 15.000 rpm (21.380×g), kunci elektronik satu sentuhan jari, fungsi pra-pendinginan otomatis, rotor aluminium berkekuatan tinggi bersegel rangkap tiga (triple-sealed), serta tangki kondensasi eksternal untuk mencegah akumulasi air di dalam ruang."
@@ -32921,8 +31785,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus berpendingin kecepatan tinggi (18.500 rpm / 23.800×g, suhu -20°C hingga +40°C) dengan layar sentuh 5 inci, identifikasi otomatis 9 jenis rotor, operasi hening (<55 dBA), dan rotor kedap aerosol.",
     description: [
       "Infitek CFGR-B18B adalah sentrifus berpendingin kecepatan tinggi berdaya tahan tinggi untuk pemisahan dan pemurnian sel mikroba, protein, kapang, dan uji imunitas pada suhu dingin terkontrol presisi (akurasi ±1.0°C).",
       "Dilengkapi layar sentuh berdefinisi tinggi 5 inci dengan masa pakai hingga 50.000 ketukan, motor AC frekuensi variabel bebas sikat, kompresor ramah lingkungan bebas CFC impor, 9 tingkat akselerasi dan 10 deselerasi anti-resuspensi, 15 memori program, rotor kedap udara anti-aerosol, serta kebisingan operasional sangat rendah (<55 dBA)."
@@ -32977,8 +31839,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan tinggi meja (16.000 rpm / 17.800×g, kapasitas 8 × 5 mL atau 18 × 0.5 mL) dengan motor DC brushless torsi besar, kontrol mikrokomputer layar digital, dan bodi baja kokoh.",
     description: [
       "Infitek CFG-16D adalah sentrifus konvensional meja berkecepatan tinggi yang ideal untuk pengujian mikro-sampel dengan kebutuhan gaya sentrifugal besar tanpa persyaratan kontrol suhu dingin.",
       "Digerakkan oleh motor DC brushless torsi tinggi bebas perawatan dengan akselerasi cepat dan rem dinamis, penyerap getaran kokoh untuk putaran stabil, cangkang baja premium dengan ruang sentrifus stainless steel, layar sentuh digital LED, serta kunci pintu elektronik otomatis."
@@ -33034,8 +31894,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sentrifus berpendingin kecepatan rendah kapasitas 4 × 300 mL (6000 rpm / 5502×g, suhu -20°C hingga 40°C) dengan pendinginan cepat ≤5 menit, layar sentuh warna, dan 5 program sentrifugasi diferensial.",
     description: [
       "Infitek CFGR-B550JP memadukan fungsi sentrifugasi kecepatan rendah kapasitas menengah (4 × 300 mL) dengan sistem pendingin kompresor tertutup berfitur pendinginan cepat (21°C ke 4°C dalam waktu ≤5 menit).",
       "Dilengkapi penggerak motor AC frekuensi variabel, kunci pintu ganda otomatis, 20 slot memori program, 15 profil akselerasi/deselerasi, 5 program sentrifugasi diferensial terprogram, pengenalan magnetik rotor otomatis, serta lubang drainase kondensat di dalam ruang sentrifus."
@@ -33089,8 +31947,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan rendah non-pendingin (6000 rpm / 5502×g, kapasitas 4 × 500 mL) dengan layar sentuh LCD berwarna, saluran buang anti-aerosol, dan opsi rotor cap remover tabung vakum.",
     description: [
       "Infitek CFG-6JP adalah sentrifus meja berkapasitas muat hingga 4 × 500 mL (total 2 Liter) yang dilengkapi sistem saluran buang terbenam untuk mencegah penyebaran aerosol patogen.",
       "Menggunakan motor AC frekuensi variabel tanpa sikat, layar sentuh warna LCD penuh, kunci pintu ganda otomatis, 20 memori program, 15 tingkat akselerasi/deselerasi, 5 program sentrifugasi diferensial, serta opsi rotor pembuka tutup tabung darah otomatis (cap remover swing rotor hingga 84/100 tabung)."
@@ -33144,8 +32000,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus berpendingin kapasitas besar 4 × 750 mL (6000 rpm / 5502×g, suhu -20°C hingga 40°C) dengan daya 2000W, pendinginan cepat ≤5 menit, dan layar sentuh LCD berwarna.",
     description: [
       "Infitek CFGR-6JP adalah sentrifus berpendingin berkapasitas besar (4 × 750 mL / total 3 Liter) bertenaga 2000W untuk fasilitas bank darah dan pemrosesan biologis berbeban berat.",
       "Dilengkapi rentang suhu dingin -20°C hingga 40°C dengan fitur pendinginan cepat (≤5 menit ke 4°C), motor AC frekuensi variabel tanpa sikat, pengenalan magnetik rotor otomatis, saluran drainase kondensat, 20 program kerja, serta struktur baja lapis ganda dengan ruang sentrifus stainless steel."
@@ -33199,8 +32053,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus berpendingin kecepatan sangat tinggi (21.000 rpm / 30.815×g, suhu -20°C hingga 40°C) dengan layar sentuh 5 inci, pengenalan otomatis 9 jenis rotor, dan dukungan kapasitas hingga 4 × 750 mL.",
     description: [
       "Infitek CFGR-B21B adalah sentrifus berpendingin serbaguna tingkat atas yang menggabungkan kecepatan sangat tinggi 21.000 rpm (30.815×g) dengan fleksibilitas kapasitas besar hingga 4 × 750 mL.",
       "Dilengkapi unit kompresor impor berperforma tinggi bebas CFC (-20°C s.d. 40°C), motor konversi frekuensi AC presisi, layar sentuh definisi tinggi 5 inci, identifikasi otomatis 9 jenis rotor, saluran udara khusus pengontrol suhu rotor, serta rotor sudut kedap udara anti-aerosol."
@@ -33254,8 +32106,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan rendah keseimbangan otomatis (4000 rpm / 2200×g, kapasitas hingga 6 × 50 mL atau 24 × 5 mL) dengan motor DC brushless, peredam kejut kombinasi khusus, dan kunci pintu elektronik senyap.",
     description: [
       "Infitek CFG-4BA adalah sentrifus meja klinis dan biokimia berkecepatan 4000 rpm yang dilengkapi sistem keseimbangan otomatis dan perangkat peredam kejut khusus untuk putaran yang sangat stabil dan minim getaran.",
       "Digerakkan oleh motor DC brushless bebas perawatan bertorsi tinggi, panel kontrol sentuh digital intuitif, bodi baja berkualitas dengan ruang sentrifus stainless steel, kunci pintu elektronik terintegrasi, serta beragam pilihan rotor sudut untuk tabung 5 mL, 7 mL, 10 mL, 15 mL, 20 mL, dan 50 mL."
@@ -33309,8 +32159,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus berpendingin tipe lantai kapasitas 6 × 1000 mL (6000 rpm / 6680×g, suhu -20°C hingga 40°C) dengan fungsi rem 'SOFT', layar sentuh cerdas, kompresor impor bebas CFC, dan rotor tahan autoklaf.",
     description: [
       "Infitek CFGR-6DL adalah sentrifus berpendingin kapasitas besar tipe lantai (floor-standing) yang cerdas dan canggih untuk aplikasi bank darah, bioteknologi, dan industri farmasi.",
       "Ditenagai motor AC frekuensi variabel dengan fungsi pengereman 'SOFT' guna mencegah suspensi sekunder sampel, layar sentuh cerdas yang menghafal parameter secara otomatis, kompresor bebas CFC dengan katup kontrol impor, fungsi pendinginan standby, rotor yang dapat diautoklaf (121°C selama 20 menit), serta dukungan ember bulat/kotak 6 × 1000 mL."
@@ -33365,8 +32213,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus mikrohematokrit presisi 12.000 rpm (13.680×g, kapasitas 24 tabung kapiler) dengan motor DC brushless, layar LCD intuitif, rotor aluminium kekuatan tinggi, dan fitur spin cepat pulsa.",
     description: [
       "Infitek CFG-14D dan CFG-12D adalah sentrifus mikrohematokrit presisi tinggi untuk penentuan fraksi volume eritrosit darah (hematokrit) dan pemisahan larutan mikro darah.",
       "Dilengkapi rotor aluminium berkekuatan tinggi berkapasitas 24 tabung kapiler darah (kecepatan maksimal 12.000 rpm / 13.680×g), motor DC brushless bebas perawatan, layar LCD intuitif, fungsi pulse spin untuk putaran cepat, serta fitur pengaman lengkap mencakup interlock pintu, deteksi kecepatan berlebih, dan diagnosis internal otomatis."
@@ -33420,8 +32266,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus kartu gel darah khusus serologi (kapasitas 12 atau 24 kartu gel) dengan teknologi sentrifugasi gradien khusus, motor brushless senyap (≤55 dBA), dan kunci pintu elektronik hening.",
     description: [
       "Infitek CFG-4Y Series dirancang khusus untuk pengujian serologi golongan darah, penentuan tipe darah, aglutinasi kolom mikro, dan imunodeteksi menggunakan kartu gel darah.",
       "Dilengkapi teknologi sentrifugasi gradien khusus yang dapat disesuaikan dengan kebutuhan reagen kartu gel, motor brushless bebas perawatan tanpa polusi serbuk, pengontrol mikrokomputer berlayar digital, 10 tingkat akselerasi/deselerasi, kunci pintu elektronik senyap dengan pembuka darurat, serta pilihan kapasitas rotor ayun untuk 12 kartu (4000 rpm / 1480×g) atau 24 kartu (3000 rpm / 1192×g)."
@@ -33475,8 +32319,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus mikrohematokrit bodi baja penuh (all-steel structure) kecepatan 12.000 rpm (15.800×g, kapasitas 24 tabung kapiler) dengan motor frekuensi variabel torsi besar, layar LCD, dan ruang baja tahan karat 304.",
     description: [
       "Infitek CFG-12Y(HCT) adalah sentrifus mikrohematokrit kokoh berkonstruksi baja penuh dengan ruang sentrifus stainless steel 304 dan desain tahan ledakan multi-lapis untuk penentuan hematokrit darah.",
       "Dilengkapi motor konversi frekuensi tanpa sikat bertorsi besar, kecepatan 12.000 rpm (15.800×g), peredam getaran 3 tahap dengan fungsi keseimbangan otomatis, kunci pintu induksi elektronik dengan tuas darurat, 10 tingkat akselerasi/deselerasi, serta tapak meja kecil dengan bukaan tutup rendah yang cocok untuk meja berpapan rak."
@@ -33532,8 +32374,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Sentrifus klinis khusus preparasi PRP, PRF, dan CGF (kecepatan hingga 4500 rpm / 2490×g) dengan 3 program bawaan (PRP/PRF/CGF), lulus uji medis IVD EN 61010-2-101, dan motor brushless DC.",
     description: [
       "Infitek CFG-4.5D(PRP) dirancang secara spesifik untuk ekstraksi Platelet-Rich Plasma (PRP), Platelet-Rich Fibrin (PRF), dan Concentrated Growth Factor (CGF) dalam bidang kedokteran regeneratif, estetika, dan bedah gigi.",
       "Telah terprogram pabrik dengan protokol resmi (PRP: 3480 rpm 5 min; PRF: 2690 rpm 7 min; CGF: 4-tahap bertingkat), lulus uji peralatan medis diagnostik in-vitro (IVD) EN 61010-2-101 dan anti-ledakan IEC 61010-2-20, kapasitas rotor 8 × 15 mL atau 12 × 10/7/5 mL, motor DC brushless bebas perawatan, serta pelepasan tutup otomatis."
@@ -33593,8 +32433,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus pelat mikrotiter PCR kapasitas 2 pelat (kecepatan 2200–2800 rpm / 550×g) dengan akselerasi instan ≤10 detik, rem 4 detik, dan henti otomatis saat penutup dibuka.",
     description: [
       "Infitek CFG-MP2R dirancang khusus untuk spin-down cepat sampel cairan di dalam pelat PCR 96 atau 384 sumur (menerima tipe skirted, semi-skirted, dan non-skirted) sebelum proses amplifikasi termal.",
       "Dilengkapi motor DC brushless bertenaga 45W, akselerasi cepat dari diam ke kecepatan penuh dalam ≤10 detik, pengereman sangat singkat hanya 4 detik, penghenti putaran otomatis saat tutup dibuka (lid open auto-stop), serta mode hitung mundur digital."
@@ -33648,8 +32486,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus klinis meja kecepatan 300–4500 rpm (2490×g) dengan pilihan rotor A12-10P (8×15mL / 12×10mL) atau A6-50P (6×50mL / 6×15mL), motor DC brushless, dan fungsi pulse quick-spin.",
     description: [
       "Infitek CFG-4.5D adalah sentrifus klinis meja serbaguna untuk pemisahan sampel darah, urin, dan biokimia dengan akurasi kecepatan tinggi.",
       "Dilengkapi pilihan rotor plastik berkekuatan tinggi A12-10P (4500 rpm / 2490×g untuk 8×15mL atau 12×10mL) atau A6-50P (4000 rpm / 1800×g untuk 6×50mL), motor DC brushless bebas perawatan, layar LCD intuitif, fungsi quick-spin pulsa, kunci pintu elektrik dengan pelepasan otomatis, serta pengereman 2 tahap yang dapat disesuaikan."
@@ -33704,8 +32540,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sitrosentrifus (cytocentrifuge) klinis berkecepatan hingga 3000 rpm (730×g, kapasitas 12 × 2 mL) untuk pemekatan sel cairan tubuh ke atas kaca preparat mikroskop secara seragam dan utuh.",
     description: [
       "Infitek CFG-3B (Cyto) adalah mesin sitosentrifus khusus yang memekatkan sel dari cairan tubuh (cairan serebrospinal, urine, efusi pleura, aspirat jarum halus) langsung ke lapisan tipis di atas kaca objek mikroskop.",
       "Sangat penting untuk pemeriksaan sitopatologi dan uji serologis eritrosit (Coombs test), dilengkapi motor DC brushless bebas sikat, kecepatan 3000 rpm (730×g), kapasitas 12 posisi slide/ruang sampel 2 mL, panel kontrol sentuh berlayar LCD, konversi real-time RPM/RCF, serta sistem pengunci keselamatan penutup otomatis."
@@ -33763,8 +32597,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus klinis kecepatan rendah 4000 rpm (2500×g) dengan 3 program pramuat (Blood, Urine, Faecal), motor DC brushless, dan fleksibilitas rotor ayun (4×50mL / 6×15mL) serta rotor sudut (24×15mL).",
     description: [
       "Infitek CFG-4D adalah sentrifus meja klinis serbaguna yang dirancang dengan 3 program bawaan khusus untuk aplikasi medis rutin: Darah (3200 rpm, 10 min), Urine (1800 rpm, 5 min), dan Feses (1300 rpm, 10 min).",
       "Dilengkapi kecepatan hingga 4000 rpm (2500×g), motor DC brushless bebas perawatan, kompatibel dengan berbagai konfigurasi rotor ayun (Swing 4×50mL, 6×15mL) maupun rotor sudut (Angle 24×15mL, 12×10mL), layar LCD digital, serta diagnosis mandiri internal."
@@ -33817,8 +32649,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus berpendingin tipe lantai kecepatan ultra-tinggi (hingga 25.000 rpm / 64.983×g, suhu -20°C s.d. +40°C) dengan kompresor Tecumseh Prancis bebas CFC, layar sentuh TFT true-color, dan kapasitas 4 × 1000 mL.",
     description: [
       "Infitek CFGR-BP Series (CFGR-25BP: 25.000 rpm / 64.983×g; CFGR-21BP: 21.000 rpm / 50.400×g) adalah sentrifus berpendingin tipe berdiri lantai tugas berat yang dirancang untuk riset biokimia dan biofarmasi tingkat lanjut.",
       "Ditenagai motor konversi frekuensi AC bertorsi tinggi dengan kontrol mikrokomputer cerdas, unit kompresor Tecumseh impor Prancis berefrigeran R404a ramah lingkungan, layar sentuh TFT warna sejati berukuran besar yang menampilkan parameter set dan aktual pada satu layar, 10 profil akselerasi/deselerasi, serta fitur keselamatan menyeluruh (kunci elektronik, deteksi overspeed, over-temperature, dan imbalance)."
@@ -33874,8 +32704,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan tinggi meja non-pendingin (16.500 rpm / 21.380×g, kapasitas 4 × 100 mL) dengan layar sentuh 5 inci, saluran udara pendingin suhu normal, rotor kedap aerosol, dan opsi identifikasi 7 rotor.",
     description: [
       "Infitek CFG-16.5B adalah sentrifus meja berkecepatan tinggi (16.500 rpm / 21.380×g) yang dirancang untuk analisis biologi molekuler, genetika, dan PCR tanpa pendinginan aktif.",
       "Dilengkapi motor frekuensi variabel AC presisi tinggi, layar sentuh HD 5 inci, 9 profil akselerasi dan 10 deselerasi anti-resuspensi, penyimpanan 15 kelompok program, saluran sirkulasi udara khusus untuk menjaga rotor tetap bekerja pada suhu normal, rotor tertutup kedap udara anti-aerosol, serta opsi identifikasi otomatis 7 jenis rotor."
@@ -33929,8 +32757,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus pemanas khusus pengujian minyak mentah (5000 rpm / 4730×g, suhu RT+10°C s.d. 80°C) dengan pemanas cincin seragam, dudukan polimer PA peredam getaran tabung kaca, dan kapasitas 4 × 100 mL.",
     description: [
       "Infitek CFG-5D (Oil) dirancang khusus untuk industri perminyakan dan laboratorium petrokimia dalam mengukur kadar air dan sedimen pada fluida minyak mentah (water-containing crude oil).",
       "Dilengkapi pemanas cincin (ring heater) bertemperatur seragam (suhu ruang +10°C hingga 80°C), motor konversi frekuensi brushless torsi besar, cangkir paduan aluminium berperedam bantalan polimer PA untuk melindungi tabung kaca silikat dari benturan getaran, koneksi poros selongsong kerucut pegas, kunci induksi elektrik, serta layar sentuh sistem cerdas HD."
@@ -33989,8 +32815,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan rendah meja (5000 rpm / 4020×g, kapasitas hingga 6 × 50 mL atau 24 × 5/10 mL) dengan motor DC brushless, peredam kejut kombinasi khusus, dan ruang sentrifus stainless steel.",
     description: [
       "Infitek CFG-5B adalah sentrifus bangku kecepatan rendah yang andal untuk eksperimen dan pengujian klinis rutin di rumah sakit dan laboratorium biokimia.",
       "Digerakkan oleh motor DC brushless bertorsi tinggi bebas perawatan dengan peredam getaran kombinasi, bodi baja berkualitas dengan ruang sentrifus stainless steel tahan lama, panel kontrol sentuh digital cerdas dengan memori otomatis parameter terakhir, serta perlindungan penutup pintu, overspeed, dan ketidakseimbangan."
@@ -34044,8 +32868,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan rendah (5000 rpm / 4420×g, kapasitas 4 × 100 mL swing rotor atau 6 × 100 mL angle rotor) dengan kunci pintu induksi hisap elektrik, layar sentuh sistem cerdas, dan rotor aluminium tempa.",
     description: [
       "Infitek CFG-5ES adalah sentrifus meja kecepatan rendah multifungsi yang dirancang untuk analisis cairan klinis dan riset biologi dengan dukungan rotor ayun maupun sudut.",
       "Dilengkapi motor konversi frekuensi brushless bertorsi besar, kunci pintu induksi hisap elektrik otomatis dengan tuas darurat, layar sentuh definisi tinggi yang menampilkan status operasi lengkap, rotor aluminium tempa aeronautika (aero forged aluminum), penyimpanan 100 set program, peredam getaran 3 tahap, serta bodi baja penuh."
@@ -34101,8 +32923,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sentrifus berpendingin kecepatan tinggi (16.000 rpm / 20.600×g, kapasitas 6 × 100 mL) dengan pendinginan ultra-cepat (25°C ke 4°C dalam 4 menit), kompresor bebas fluorin pipa sirkulasi ganda, dan kunci pintu hisap elektrik.",
     description: [
       "Infitek CFGR-16BY menggabungkan kecepatan tinggi 16.000 rpm (20.600×g) dan efisiensi refrigerasi superior yang mampu menurunkan suhu dari 25°C ke 4°C hanya dalam waktu 4 menit.",
       "Menggunakan unit kompresor bebas fluorin impor dengan pipa tembaga sirkulasi ganda berbalut solder timah penuh di sekeliling ruang sentrifus, motor konversi frekuensi brushless bertorsi besar, koneksi rotor selongsong kerucut pegas 360°, bodi baja penuh dengan ruang stainless steel, serta 10 profil akselerasi/deselerasi."
@@ -34157,8 +32977,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan tinggi non-pendingin (21.000 rpm / 30.410×g, kapasitas 6 × 100 mL) dengan layar sentuh LCD berwarna, 5 program sentrifugasi diferensial, dan rotor sudut kedap udara tahan autoklaf 121°C.",
     description: [
       "Infitek CFG-21JP adalah sentrifus meja non-refrigerasi berkecepatan tinggi yang mampu memacu putaran hingga 21.000 rpm (30.410×g) untuk pemisahan biologis intensif.",
       "Dilengkapi motor AC frekuensi variabel bebas sikat, layar sentuh warna LCD penuh, kunci pintu elektrik ganda, 20 memori program kerja, 15 tingkat akselerasi/deselerasi, 5 program sentrifugasi diferensial terprogram, serta rotor sudut kedap udara (airtight) berstandar biosekuriti tinggi yang tahan autoklaf 121°C >2 jam."
@@ -34214,8 +33032,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sentrifus berpendingin kecepatan ultra-tinggi (23.000 rpm / 36.796×g, suhu -20°C hingga 40°C) dengan waktu akselerasi/rem ≤15 detik, pendinginan cepat ≤5 menit ke 4°C, dan pengenalan magnetik rotor otomatis.",
     description: [
       "Infitek CFGR-23JP adalah sentrifus berpendingin meja dengan performa luar biasa, mencapai kecepatan 23.000 rpm dan gaya RCF 36.796×g dengan waktu akselerasi/deselerasi tersingkat ≤15 detik.",
       "Dilengkapi rentang temperatur presisi -20°C hingga 40°C dengan fungsi pendinginan cepat (21°C ke 4°C ≤5 menit), motor AC frekuensi variabel bertenaga 1500W, layar sentuh warna LCD penuh, pengenalan otomatis rotor magnetik, rotor sudut kedap udara tahan autoklaf 121°C >2 jam, serta lubang pembuangan kondensat internal."
@@ -34270,8 +33086,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus kecepatan rendah meja (5500 rpm / 5310×g, kapasitas 4 × 500 mL) dengan motor DC brushless bertorsi tinggi, layar digital sentuh, kunci tutup elektrik, dan opsi rotor berpelindung angin (windshield).",
     description: [
       "Infitek CFG-5DK menerapkan teknologi pemisahan partikel terkini untuk pengujian klinis dan biokimia dengan kapasitas muat hingga 4 × 500 mL (total 2 Liter).",
       "Ditenagai motor DC brushless bertorsi tinggi dengan akselerasi cepat dan pengereman dinamis, penyerap getaran kokoh untuk putaran stabil, cangkang baja premium dengan ruang sentrifus stainless steel, layar kontrol digital sentuh, kunci tutup elektrik berpengaman otomatis, serta pilihan rotor ayun dengan penutup pelindung angin (windshield rotor)."
@@ -34325,8 +33139,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sentrifus klinis serbaguna (kecepatan 300–6000 rpm / 4020×g, kapasitas 4 × 100 mL) dengan 9 profil akselerasi/10 rem, motor DC brushless, identifikasi rotor otomatis, dan kompatibilitas blok pembuka tutup (uncapping block).",
     description: [
       "Infitek CFG-6D adalah sentrifus multi-guna yang ideal untuk laboratorium kimia klinis, sitologi, dan penelitian dengan fleksibilitas menampung tabung bertutup, tabung darah, tabung urine, hingga pelat kultur 384/96-well.",
       "Dilengkapi kecepatan variabel 300–6000 rpm (4020×g, kenaikan 10 rpm), kapasitas muat hingga 4 × 100 mL pada rotor ayun dan rotor sudut, pengenalan rotor otomatis, 9 prosedur memori tersimpan, motor DC brushless bebas perawatan, tombol pulsa quick spin, serta aksesori standar blok pembuka tutup tabung (uncapping block rotor)."
@@ -34379,8 +33191,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pemurni air deionisasi (kapasitas 10, 20, dan 30 L/jam) dengan 4 tahap pemurnian (PPF, GAC, membran RO 0.0001 µm, kolom deionisasi), pemisahan jalur air dan listrik, serta tangki tekan 12L.",
     description: [
       "Infitek LWP-F5-M Series adalah sistem pemurni air laboratorium yang dirancang untuk menghasilkan air murni RO dan air deionisasi (resistivitas 10–16 MΩ·cm @25°C, konduktivitas ≤0.1 µS/cm) sebagai pengganti mesin distilasi air konvensional.",
       "Dilengkapi sistem filtrasi 4 tahap (kapas PP 5 µm, karbon aktif granular, membran reverse osmosis 0.0001 µm, dan kolom pemurnian deionisasi tipe quick-insert Korea), sistem pemantauan kualitas air online, program pencucian anti-kerak membran RO otomatis, pemisahan total jalur kelistrikan dan jalur air untuk mencegah korsleting, pintu buka depan-belakang bebas alat, tangki tekan eksternal 12L, serta pena uji TDS portabel."
@@ -34441,8 +33251,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sistem pemurni air ultra-murni ASTM Tipe I (18.25 MΩ·cm, TOC <3 ppb, pirogen <0.001 EU/mL) dengan pre-filter stainless steel 316L 10 µm terintegrasi, modul KDF, lampu UV dual-panjang gelombang, dan ultrafiltrasi 5000D.",
     description: [
       "Infitek LWP-S3-20VF (20 L/jam) dan LWP-S3-30VF (30 L/jam) adalah pemurni air ultra-murni kelas riset tingkat tinggi yang mampu menghasilkan air standar ASTM Tipe I (resistivitas 18.25 MΩ·cm @25°C, bebas pirogen, RNase <1 pg/mL, DNase <5 pg/mL).",
       "Menggantikan kapas PP konvensional dengan saringan presisi stainless steel 316L 10 µm yang dapat dibersihkan mandiri melalui mekanisme pengikis lembut (soft-scraping), modul KDF impor untuk reduksi klorin dan pencegahan jamur, tangki tekan internal 8L dengan kantung antibakteri transparan, lampu UV sterilisasi ganda untuk degradasi TOC (<3 ppb), modul ultrafiltrasi 5000D penghilang endotoksin, layar LCD backlit pemantau konduktivitas/resistivitas ganda, serta opsi pistol dispenser teleskopik 3 meter."
@@ -34498,8 +33306,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Pemurni air ultra-murni meja ringkas (produksi 20, 40, atau 60 L/jam) dengan resistivitas 18.2 MΩ·cm, konduktivitas 0.055 µS/cm, tangki tekan internal 1.8L, dan pilihan modul eliminasi endotoksin/TOC.",
     description: [
       "Infitek LWP-S2 Series adalah instrumen pemurni air ultra-murni desktop yang mengintegrasikan sistem membran RO tahap pertama berefisiensi rejeksi ion tinggi dan unit pemurnian resin penukar ion berkapasitas besar.",
       "Tersedia dalam varian Standard, Low TOC (V), Eliminating Endotoxin (F), dan Comprehensive Synthesizing (VF) dengan laju produksi 20, 40, atau 60 L/jam. Mampu mengeluarkan air ultra-murni 18.2 MΩ·cm (konduktivitas 0.055 µS/cm, partikel <1/mL) dan air RO primer secara bersamaan, dilengkapi tangki tekan built-in 1.8L, serta kontrol otomatis berlayar LCD."
@@ -34554,8 +33360,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pemurni air deionisasi berdesain ramping (tebal hanya 20 cm) untuk penempatan di dalam kabinet meja lab, kapasitas 10–30 L/jam, resistivitas 10–16 MΩ·cm, dan kolom ganda deionisasi.",
     description: [
       "Infitek LWP-F5-S Series mengusung desain bodi bergaya Korea yang ultra-ramping dan hemat tempat (lebar 40 cm × kedalaman 20 cm × tinggi 36 cm), memungkinkannya dipasang langsung di dalam kabinet bawah meja laboratorium.",
       "Dilengkapi filter kartrid terbuka tipe quick-insert yang mudah diganti, sistem kendali mikrokomputer dengan layar LCD lampu latar, pemantauan status pembilasan dan pembuatan air secara visual, kolom deionisasi ganda (2× DI columns) yang menghasilkan air standar laboratorium Kelas I (resistivitas 10–16 MΩ·cm @25°C, konduktivitas ≤0.1 µS/cm), serta dua saluran keluar air (RO dan DI)."
@@ -34610,8 +33414,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sistem pemurni air ultra-murni layar sentuh berwarna berdaya 24V DC dengan filter KDF tahan lama, pra-filter kasa 316L 10 µm soft-scraping, tangki tekan internal 8L, dan ekspor data USB.",
     description: [
       "Infitek LWP-F3 Series adalah pemurni air ultra-murni generasi modern dengan antarmuka layar sentuh berwarna penuh yang menyajikan pemantauan status kerja real-time dan kurva kualitas air 3 saluran (air umpan, air RO, air UP).",
       "Dilengkapi filter awal kasa stainless steel 316L 10 µm yang dapat dibersihkan mandiri dengan bilah silikon lembut, modul KDF berdaya tahan 10 kali lebih lama dari karbon aktif, tangki tekan bawaan 8L berkantung antibakteri transparan, pengukur tekanan air umpan internal, ekspor data riwayat dan alarm via USB host, serta suplai daya aman bertegangan rendah 24V DC yang anti-kebocoran listrik di lingkungan lembap."
@@ -34671,8 +33473,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sistem pemurni air deionisasi tipe lantai (floor-standing) berkapasitas besar 45 hingga 150 L/jam dengan filtrasi 5 tahap, layar LCD ganda, tangki tekan hingga 60L, dan standar air laboratorium GB6682-2008 Tipe I.",
     description: [
       "Infitek LWP-F5 Series adalah pemurni air deionisasi model berdiri (floor-standing) berkapasitas tinggi (45L, 60L, 90L, 120L, hingga 150 L/jam) untuk menyuplai kebutuhan air murni terpusat di fasilitas laboratorium dan industri.",
       "Mengadopsi proses pemurnian 5 tahap (kapas PP 5 µm, karbon aktif granular, karbon aktif terkompresi, membran RO 0.0001 µm, dan tangki deionisasi kapasitas besar), layar LCD ganda pemantau status kerja otomatis, program pencucian membran RO anti-kerak berkala, bodi berdiri beroda dengan kaki pengunci, serta opsi tangki tekan eksternal 60 Liter."
@@ -34728,8 +33528,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sistem pemurni air ultra-murni tipe lantai (kapasitas 45, 60, dan 120 L/jam) dengan resistivitas 18.25 MΩ·cm, tangki pemurnian kapasitas ultra-besar, tangki tekan eksternal 40L/60L, dan pemantauan resistivitas online.",
     description: [
       "Infitek LWP-F4 Series adalah sistem pemurni air ultra-murni skala lantai tugas berat untuk laboratorium institusi dan pusat riset yang membutuhkan suplai harian air Tipe I dalam volume besar.",
       "Mengusung tangki pemurnian berkapasitas ultra-besar dengan komponen merek impor berkualitas, kontrol mikrokomputer penuh yang memantau aliran dan tekanan secara online, saluran keluaran air independen di bagian depan bodi, resistivitas air UP mencapai 18.25 MΩ·cm @25°C (konduktivitas <0.05 µS/cm, partikel <1/mL), serta pilihan tangki tekan eksternal 40 Liter atau 60 Liter."
@@ -34784,8 +33582,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sistem pemurni air ultra-murni meja kapasitas 10 L/jam (ASTM Tipe I: 18.25 MΩ·cm, TOC <3 ppb, pirogen <0.001 EU/mL) dengan pre-filter 316L 10 µm soft-scraping, modul KDF, dan tangki tekan internal 8L.",
     description: [
       "Infitek LWP-S3-10VF adalah pemurni air ultra-murni berkapasitas 10 L/jam yang dirancang untuk laboratorium biomedis dan pengujian obat yang memerlukan air Tipe I dengan kemurnian biologis tertinggi.",
       "Mengintegrasikan pre-filter stainless steel 316L 10 µm yang dapat dibersihkan mandiri (soft-scraping), media KDF impor untuk reduksi klorin dan pencegahan jamur, lampu UV dual-wavelength untuk dekomposisi TOC (<3 ppb), modul ultrafiltrasi 5000D penghilang pirogen dan nuklease (RNase <1 pg/mL, DNase <5 pg/mL), tangki tekan internal 8L dengan kantung antibakteri transparan, serta layar LCD backlit pemantau konduktivitas/resistivitas ganda."
@@ -34840,8 +33636,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sistem pemurni air pemoles (polishing system) berbahan baku air murni/air suling (laju keluaran hingga 120 L/jam) menghasilkan air ultra-murni 18.2 MΩ·cm (TOC <3 ppb, pirogen <0.001 EU/mL) dengan filter U-type Korea 11 inci.",
     description: [
       "Infitek LWP-S3-2 Series adalah sistem pemoles air ultra-murni (water polishing unit) yang dirancang khusus menggunakan air murni atau air hasil distilasi (pure/distilled water) sebagai air baku masukannya.",
       "Menghasilkan debit pengeluaran air ultra-murni tinggi (normal 90 L/jam, maksimal hingga 120 L/jam) dengan resistivitas 18.2 MΩ·cm @25°C, tersedia dalam tipe Fisikokimia (2E), Rendah Endotoksin (2F), Rendah TOC (2V), dan Komprehensif (2VF). Dilengkapi kolom filter U-type Korea 11 inci cepat pasang, sistem sirkulasi internal ultra-pure water untuk menjaga kestabilan nilai resistivitas tertinggi setiap saat, lampu UV dual-wavelength, serta modul ultrafiltrasi 5000D."
@@ -34896,8 +33690,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penghitung sel otomatis throughput tinggi (6 sampel dalam 1 menit) dengan algoritma AI terintegrasi, sensor CMOS resolusi tinggi 6.3 MP, layar sentuh warna 7 inci mandiri, dan autofokus cepat (<1 detik per bidang pandang).",
     description: [
       "Infitek FACC-Venus adalah penganalisis viabilitas dan penghitung sel otomatis terpadu (all-in-one standalone) yang bekerja sama dengan slide penghitung 6-ruang untuk menghitung 6 sampel sel secara akurat dalam waktu hanya 1 menit.",
       "Menggunakan kamera sensor CMOS kelas industri 6.3 megapiksel ber-autofokus cepat, algoritma berbasis AI yang dioptimalkan untuk sel berdiameter kecil, suspensi berdensitas tinggi, dan agregat sel (CV <5% pada multi-bidang pandang, korelasi R² >0.999), rentang konsentrasi 1×10⁴ hingga 3×10⁷ sel/mL, layar sentuh 7.0 inci tanpa perlu komputer eksternal, penyimpanan internal 128 GB, serta kepatuhan LIMS dan FDA."
@@ -34958,8 +33750,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Bioreaktor / fermenter kaca desktop presisi (volume 1L hingga 10L) dengan kontroler Siemens PLC, layar sentuh warna 64-bit, elektroda pH & DO steril Mettler/Hamilton Swiss, dan motor servo 0–1000 rpm.",
     description: [
       "Infitek GF-J Series (nominal 1L, 2L, 3L, 5L, 7L, 10L; koefisien pengisian optimal 70%) adalah bioreaktor kaca presisi untuk laboratorium mikrobiologi dan optimasi proses bioteknologi.",
       "Menggunakan tangki kaca borosilikat tinggi tahan suhu dan tekanan dengan penutup atas stainless steel 316L, sistem pengadukan mekanis motor servo atas (0–1000 rpm) berbilah 3 lapis yang dapat disesuaikan, sistem kontrol industri Siemens PLC dengan layar sentuh true-color 64-bit, elektroda pH dan DO impor Mettler/Hamilton Swiss tahan autoklaf, filter aerasi sterilisasi Sartorius 0.2 µm, serta pompa peristaltik terintegrasi untuk kontrol asam/basa, penambahan nutrisi bertingkat (feeding), dan pencegah busa (defoaming) otomatis."
@@ -35019,8 +33809,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok orbital (orbital shaker) kapasitas beban 7.5 kg dengan orbit 10 mm, kecepatan 100–500 rpm, layar LCD ganda independen (waktu dan kecepatan), motor DC brushless, dan port komunikasi RS232.",
     description: [
       "Infitek SHK-O0710 adalah pengocok orbital tugas berat yang mampu menopang platform dan bejana sampel dengan berat total hingga 7.5 kg.",
       "Menggunakan motor DC brushless bertenaga bebas perawatan, diameter orbit 10 mm, kecepatan 100–500 rpm, layar LCD ganda untuk pemantauan waktu (1 min–99h59min) dan kecepatan secara independen, deteksi dan perlindungan overspeed, serta port data RS232 untuk kendali PC."
@@ -35075,8 +33863,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok orbital kompak berkecepatan tinggi 100–800 rpm (orbit 4 mm, beban maks 2.5 kg) dengan layar LCD ganda, motor DC brushless bebas perawatan, dan port RS232.",
     description: [
       "Infitek SHK-O0204 dirancang untuk aplikasi pengocokan orbital berkecepatan tinggi hingga 800 rpm dengan orbit gerakan 4 mm, sangat ideal untuk pelat mikrotiter dan tabung reaksi mikro.",
       "Dilengkapi motor DC brushless bebas sikat, kapasitas beban 2.5 kg, layar LCD independen untuk waktu dan kecepatan, deteksi overspeed otomatis, perlindungan IP21, serta port komunikasi RS232."
@@ -35130,8 +33916,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok orbital beramplitudo lebar 20 mm (kecepatan 40–200 rpm, beban maks 2 kg) dengan layar LED ganda independen, motor DC brushless, dan pelat kerja 268×268 mm.",
     description: [
       "Infitek SHK-O0320 adalah pengocok orbital beramplitudo putar besar (diameter orbit 20 mm) yang dirancang khusus untuk aerasi cairan yang lembut dan homogen di dalam labu konikal, cawan Petri, dan bejana kultur.",
       "Dilengkapi motor DC brushless bertenaga 20W, rentang kecepatan 40–200 rpm, kapasitas beban 2.0 kg, layar digital LED ganda untuk pemantauan waktu (1 min–99h59min) dan kecepatan, serta pelat kerja berukuran 268 × 268 mm."
@@ -35185,8 +33969,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok orbital penggerak langsung (direct brushless DC motor) dengan kendali mikroprosesor (kecepatan 50–300 rpm, orbit 10 mm, beban 2.5 kg) dan dukungan beragam platform modular.",
     description: [
       "Infitek SHK-O0310III menggunakan teknologi transmisi langsung motor DC brushless (direct-drive) yang dikendalikan oleh mikroprosesor untuk kinerja pengocokan yang sangat mulus, presisi, dan andal di berbagai laboratorium bioteknologi.",
       "Dilengkapi kecepatan putar 50–300 rpm, orbit 10 mm, timer 1 menit hingga 99 jam 59 menit, daya 50W, serta fleksibilitas penggunaan aneka ragam platform (PP-1 untuk 8 cawan Petri, PP-2 platform universal batang silang, PP-3 berklem untuk 12 labu 100 mL atau 6 labu 250 mL)."
@@ -35241,8 +34023,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok goyang (rocking shaker) sudut kemiringan 10° (kecepatan 10–100 rpm, beban 5 kg) dengan palet stainless steel beralas karet tahan aus dan asam-basa, serta layar LED.",
     description: [
       "Infitek SHK-R0525 adalah perangkat pengocok goyang (rocking shaker) yang digerakkan oleh motor DC brushless untuk pencampuran cairan secara lembut maupun intensif pada bejana, cawan Petri, atau kantung reaktor plastik.",
       "Sangat ideal untuk proses pewarnaan/destaining gel elektroforesis dan hibridisasi membran, dapat beroperasi di dalam inkubator maupun cold room (- freezer), memiliki sudut kemiringan 10°, kecepatan 10–100 rpm, kapasitas beban 5.0 kg, palet stainless steel dengan bantalan karet tahan bahan kimia, serta opsi baki bertingkat (single/double tray)."
@@ -35296,8 +34076,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok orbital fixed-top kapasitas beban 3 kg (kecepatan 70–400 rpm, orbit 10 mm) dengan layar LCD ganda independen, kaki bersekrup penyetel kestabilan, dan motor DC brushless.",
     description: [
       "Infitek SHK-O0310 adalah pengocok orbital tipe meja dengan dudukan platform tetap yang kokoh untuk penanganan sampel laboratorium berbobot hingga 3 kg.",
       "Dilengkapi motor DC brushless bertenaga bebas perawatan, diameter orbit 10 mm, kecepatan 70–400 rpm (nilai kecepatan dan waktu dapat diubah langsung saat mesin sedang berputar), layar LCD independen untuk waktu dan kecepatan, serta sekrup kaki yang dapat diatur ketinggiannya untuk memastikan kerataan dan kestabilan operasi."
@@ -35352,8 +34130,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok gerak linier bolak-balik (linear shaker) kecepatan 100–350 rpm dengan pilihan beban 7.5 kg (amplitudo 10 mm) atau 2.5 kg (amplitudo 4 mm), motor DC brushless, layar LCD ganda, dan port RS232.",
     description: [
       "Infitek SHK-L Series (SHK-L0710 berbeban 7.5 kg amplitudo 10 mm dan SHK-L0204 berbeban 2.5 kg amplitudo 4 mm) menyajikan gerakan pengocokan bolak-balik linier yang tegas untuk ekstraksi cairan dan pelarutan zat padat.",
       "Dilengkapi motor DC brushless bertenaga bebas perawatan, rentang kecepatan 100–350 rpm, layar LCD ganda untuk pemantauan waktu (1 min–99h59min) dan frekuensi secara independen, deteksi overspeed otomatis, kompatibilitas dengan beragam platform bejana, serta port data RS232 untuk kontrol jarak jauh komputer."
@@ -35407,8 +34183,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok goyang (rocker shaker) tugas berat sudut kemiringan 9° dengan daya muat hingga 10 kg, kecepatan 10–70 rpm, layar LCD ganda independen, dan aneka ragam platform bejana.",
     description: [
       "Infitek SHK-R1009 adalah pengocok goyang (rocker shaker) tugas berat dengan kapasitas beban platform mencapai 10 kg untuk pencampuran sampel dalam bejana bervolume besar secara lembut dan menyeluruh.",
       "Menggunakan motor DC berdaya input 40W (output 24W), sudut goyang 9°, rentang kecepatan 10–70 rpm, layar LCD ganda untuk pengaturan waktu (1 min–99h59min) dan kecepatan putar yang terpisah, perlindungan IP21, serta kompatibilitas dengan berbagai jenis platform bejana."
@@ -35463,8 +34237,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penghancur sel ultrasonik (probe sonicator) berlayar sentuh warna 7 inci dengan frekuensi 20 kHz, daya 100W hingga 2000W (regulasi daya 1%–100%), kompensasi amplitudo otomatis, dan kotak peredam suara.",
     description: [
       "Infitek USCG-T Series (daya 100W hingga 2000W; kapasitas sampel 0.5 mL hingga 3000 mL) adalah prosesor ultrasonik probe terdepan untuk lisis sel biologis, ekstraksi senyawa obat, dan dispersi nanomaterial.",
       "Dilengkapi transduser keramik piezoelektrik PZT (Lead Zirconate Titanate) CV33, titik resonansi frekuensi otomatis (tanpa penyetelan manual), kompensasi amplitudo otomatis untuk menjaga intensitas kavitasi saat viskositas cairan berubah, layar sentuh warna 7.0 inci (resolusi 800×480), timer on/off pulsa fleksibel hingga 99 jam, penyimpanan 10 kelompok memori data, probe klakson paduan titanium, serta kotak peredam suara (soundproof box)."
@@ -35524,8 +34296,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Probe sonicator digital frekuensi 20 kHz (daya 80W hingga 1800W) dengan batang penguat paduan titanium TI-6AL-4V, pelacakan frekuensi otomatis, sensor suhu sampel, dan kotak kedap suara.",
     description: [
       "Infitek USCG-N Series (daya 80W hingga 1800W; kapasitas 0.5 mL hingga 3000 mL) adalah sonicator probe digital untuk ekstraksi senyawa aktif, dispersi nanopartikel, dan fragmentasi sel.",
       "Dilengkapi batang penguat (luffing lever) berbahan paduan titanium kelas penerbangan TI-6AL-4V, pelacakan titik resonansi otomatis 20 kHz, pengatur daya digital 0%–100% (kenaikan 5%), mode pulsa dan kontinu terprogram (1 detik hingga 99 jam), sensor suhu sampel eksternal dengan alarm proteksi over-temperature, serta kotak kedap suara (soundproof box 240×250×390 mm)."
@@ -35580,8 +34350,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penghancur sel ultrasonik probe eksponensial 2 dimensi (efisiensi jauh melampaui probe konvensional) dengan fitur frequency sweep 18–26 kHz saat startup, layar sentuh industri 7 inci, dan daya 300W–2000W.",
     description: [
       "Infitek USCG-F Series menghadirkan efisiensi keluaran energi ultrasonik superior berkat desain probe eksponensial dua dimensi (2D exponential probe) yang meminimalkan kehilangan energi pada horn dan melipatgandakan gaya kavitasi mikro.",
       "Dilengkapi fungsi deteksi sapuan frekuensi (frequency sweep 18–26 kHz) otomatis saat pertama dinyalakan untuk identifikasi karakteristik beban fluida, kompensasi energi adaptif otomatis terhadap perubahan viskositas, layar sentuh industri 7.0 inci (resolusi 800×480), penyimpanan 99 grup pengaturan pengguna, probe titanium alloy TC4, sensor suhu cairan real-time (1–200°C), serta sakelar pemilihan tegangan ganda 110V/220V terpasang."
@@ -35636,8 +34404,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Homogenizer sel ultrasonik probe 2D/3D (daya 300W, 1500W, 1800W, 2000W) dengan pemindaian frekuensi otomatis 19–26 kHz, layar sentuh 7 inci, lampu penerang sampel internal, dan probe titanium TC4.",
     description: [
       "Infitek USCG Series memanfaatkan fenomena kavitasi ultrasonik gelombang kejut ribuan atmosfer untuk menghancurkan sel, mendegradasi polimer, dan menghomogenkan zat anorganik atau nanomaterial secara mendalam.",
       "Mengusung desain probe 2D dan 3D bermaterial titanium alloy TC4, pemindaian frekuensi otomatis 19–26 kHz, kompensasi amplitudo otomatis berdasarkan fluiditas sampel, kontrol layar sentuh warna 7 inci dengan lampu indikator emisi ultrasound, lampu penerang internal di dalam kotak peredam untuk memantau sampel, sensor suhu sampel eksternal, serta penyimpanan 99 set program."
@@ -35691,8 +34457,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Prosesor ultrasonik genggam (handheld sonicator) frekuensi 30 kHz daya 150W (kapasitas 100 µL hingga 100 mL) berbobot ringan 1.0 kg, probe titanium Φ6 mm, dan kompatibilitas daya ganda AC/DC (termasuk kabel mobil 12V).",
     description: [
       "Infitek USCG-P150N adalah sonicator genggam terintegrasi (probe dan host menyatu dalam satu unit ramping 265 × Φ42 mm) yang sangat fleksibel untuk pemrosesan sampel mikro seperti tabung mikrosentrifus atau vial reaksi.",
       "Bekerja pada frekuensi tinggi 30 kHz berdaya 150W, probe berbahan titanium alloy Φ6 mm (opsi Φ2, Φ3, Φ8 mm), sirkuit teknologi SMD dengan pelacakan frekuensi otomatis dan efisiensi konversi elektro-akustik tinggi, bobot sangat ringan (hanya 1.0 kg), serta mendukung tegangan fleksibel AC 110–220V, DC 12–24V, maupun colokan pemantik rokok mobil 12V untuk kerja lapangan."
@@ -35745,8 +34509,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Seri prosesor ultrasonik genggam frekuensi 30 kHz (pilihan daya 150W, 200W, 300W) berdesain terintegrasi ringan, probe titanium berkekuatan tinggi, dan kompensasi amplitudo otomatis.",
     description: [
       "Infitek USCG-P Series (USCG-P150 150W, USCG-P200 200W, USCG-P300 300W) adalah rangkaian alat sonikator genggam portabel berkapasitas pemrosesan 0.1 mL hingga 300 mL.",
       "Mengadopsi frekuensi tinggi 30 kHz, sirkuit berteknologi chip dengan pelacakan frekuensi dan kompensasi amplitudo otomatis, klakson titanium alloy berkecepatan suara tinggi dan tahan korosi, serta fleksibilitas operasional digenggam satu tangan atau dipasang pada klem statif laboratorium."
@@ -35799,8 +34561,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Osilator vertikal throughput masif hingga 576 sampel sekaligus (kecepatan 500–1800 rpm, amplitudo vertikal 32 mm) khusus metode ekstraksi QuEChERS dengan layar sentuh 7 inci, bodi kedap suara, dan kunci pintu elektronik.",
     description: [
       "Infitek SHK-R20V adalah osilator vertikal berkapasitas tinggi untuk pencampuran intensif, disrupsi sel, dan homogenisasi jaringan, khususnya memenuhi persyaratan ekstraksi metode QuEChERS pada uji residu pangan.",
       "Mampu memproses hingga 576 sampel dalam satu batch, kecepatan 500–1800 rpm dengan amplitudo vertikal 32 mm, program kontrol gradien 4 tahap (maksimal 20 siklus berulang), layar sentuh warna 7.0 inci, jendela observasi transparan dengan lampu LED, kapas insulasi suara internal untuk operasi hening, sistem deteksi kelebihan beban berat sampel, serta kunci pintu elektronik berpengaman rem darurat."
@@ -35859,8 +34619,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok tiga dimensi (3D shaker) dengan sudut goyang 9° (kecepatan 10–70 rpm, kapasitas beban 5 kg) dengan layar LCD ganda independen dan penggerak motor DC bertenaga.",
     description: [
       "Infitek SHK-TD0509 menggabungkan gerakan menggelinding dan mengayun dalam gerak rocking tiga dimensi (3D motion dengan sudut 9°) untuk pencampuran cairan yang sangat homogen tanpa turbulensi kasar.",
       "Dilengkapi kapasitas beban hingga 5.0 kg dengan platform, motor DC bertenaga (kecepatan 10–70 rpm), layar LCD ganda untuk pemantauan waktu (1 min–99h59min) dan kecepatan putar yang terpisah, perlindungan IP21, serta kompatibilitas dengan beragam aksesori platform bejana."
@@ -35915,8 +34673,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis sel fluoresensi otomatis saluran ganda (eksitasi 475nm & 545nm, emisi 530nm & 605nm) dengan kamera CMOS 6.3 MP autofokus, pembacaan slide 6-ruang, dan kepatuhan FDA 21 CFR Part 11.",
     description: [
       "Infitek FACC-Tuger adalah penganalisis sel terotomatisasi canggih yang dilengkapi sistem optik digital mikroskopis untuk pengujian brightfield dan fluoresensi dual-channel (mendukung uji AO, PI, AO/PI, GFP, RFP, dan organoid).",
       "Dilengkapi panjang gelombang eksitasi ganda (475 nm & 545 nm) dan filter emisi (530 nm & 605 nm), kamera CMOS kelas industri 6.3 megapiksel dengan autofokus presisi, pengambilan 5 bidang pandang per sampel secara otomatis, analisis 6 sampel dalam waktu 2 menit (brightfield) atau ~5.5 menit (fluoresensi AO/PI), layar sentuh 7.0 inci mandiri tanpa PC, serta kepatuhan penuh FDA 21 CFR Part 11 (tanda tangan elektronik, jejak audit, ekspor data terenkripsi, format FCS/PDF/CSV/JPG)."
@@ -35975,8 +34731,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Spektrofotometer UV/Vis mikrovolume (180–910 nm) layar sentuh kapasitif 7 inci sistem Android mandiri (tanpa PC), volume sampel 0.5–2 µL tanpa pengenceran, lampu Xenon flash awet (>10⁹ kedipan), dan slot kuvet OD600.",
     description: [
       "Infitek SP-YUV100 adalah spektrofotometer UV/Vis mikrovolume cerdas mandiri (standalone tanpa perlu komputer) yang dilengkapi sistem operasi Android dan layar sentuh kapasitif multi-touch 7.0 inci.",
       "Mampu mendeteksi konsentrasi sampel asam nukleat (hingga 15.000 ng/µL dsDNA) dan protein murni secara langsung dari volume tetesan mikro 0.5–2 µL dalam waktu <6 detik, dilengkapi slot kuvet terintegrasi untuk pengukuran turbiditas/kepadatan bakteri OD600 (0–4.000 Abs), lampu kilat Xenon berumur sangat panjang (>10⁹ kedipan), detektor array CMOS 2048 piksel (resolusi spektral ≤1.5 nm), serta ekspor data tabel Excel dan gambar via port USB."
@@ -36035,8 +34789,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat ekstraksi asam nukleat otomatis berbasis manik magnetik kapasitas 96 sampel (ekstraksi selesai dalam 13 menit) dengan filter HEPA Level 11, sterilisasi UV, pengenalan level cairan, dan pemulihan manik >99.5%.",
     description: [
       "Infitek NAE-0196 menggunakan teknologi pemisahan manik magnetik canggih untuk mengisolasi dan memurnikan DNA/RNA berkualitas tinggi dari 96 sampel secara simultan dalam waktu hanya 13 menit.",
       "Dilengkapi penutup ruang tertutup dengan filter udara berefisiensi tinggi HEPA Level 11 dan lampu UV untuk mengeliminasi kontaminasi aerosol, modul pemanas dan batang magnetik 96/24 kanal yang dapat diganti untuk sampel bervolume besar, deteksi level cairan otomatis untuk mencegah cairan meluap, tingkat pemulihan manik magnetik >99.5% (residu <0.5%), layar sentuh warna 7 inci, serta memori >500 program."
@@ -36091,8 +34843,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Alat ekstraksi asam nukleat otomatis kapasitas 1–32 sampel (volume proses 20–1000 µL) dengan transmisi sekrup presisi tinggi, sistem operasi Android layar sentuh 10.1 inci, koneksi Wi-Fi/LAN, dan lampu UV.",
     description: [
       "Infitek NAE-32P adalah ekstraktor asam nukleat otomatis berbasis reagen manik magnetik untuk laboratorium biologi molekuler dan diagnostik klinis berkapasitas 1 hingga 32 sampel per siklus (20–1000 µL).",
       "Menggunakan transmisi sekrup presisi tinggi yang digerakkan oleh motor stepper dengan sistem pengereman akurat, sistem operasi Android pada layar sentuh kapasitif 10.1 inci yang lebar, jendela observasi transparan terlindung UV dengan sensor pengaman buka pintu otomatis, rentang pemanasan pelat hingga 125°C, waktu ekstraksi cepat 10–50 menit/siklus, serta kendali jarak jauh melalui Wi-Fi dan LAN."
@@ -36149,8 +34899,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Ekstraktor asam nukleat otomatis 32 sampel (volume kerja 20–1000 µL) dengan filter HEPA Level 11, pemanas kolom independen (2, 6, 8, 12), sistem Linux layar 10 inci, dan residu manik <0.5%.",
     description: [
       "Infitek NAE-0132 dirancang untuk pemurnian asam nukleat otomatis berstandar laboratorium molekuler dengan batang magnetik yang dapat dilepas untuk kemudahan pembersihan dan penggantian.",
       "Dilengkapi fungsi penyerapan manik magnetik bersiklus pintar (residu <0.5%), strip pemanas vakum dalam dengan pembungkusan rapat pada kolom 2, 6, 8, dan 12 untuk meminimalkan deviasi suhu aktual (10–99°C), filter udara HEPA Level 11 dan lampu UV penangkal kontaminasi aerosol, sistem operasi Linux pada layar sentuh warna 10.0 inci (1024×768), serta manajemen akun hingga 64 pengguna (100 program per akun)."
@@ -36206,8 +34954,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Fluorometer kanal ganda (dual-channel) presisi tinggi untuk kuantifikasi spesifik asam nukleat dan protein dalam 3 detik, sensitivitas hingga 0.5 pg/µL dsDNA, rentang respon 5 orde magnitudo, dan layar sentuh 7 inci.",
     description: [
       "Infitek FLUOM-100 adalah fluorometer laboratorium berbasis deteksi fluoresensi fluoresen immunoassay dan pewarna interkalasi untuk analisis kuantitatif asam nukleat dan protein dengan spesifisitas jauh lebih tinggi dibanding spektrofotometer serapan UV.",
       "Hanya membutuhkan waktu pengukuran 3 detik per sampel (tabung PCR 0.5 mL dengan volume sampel 1–20 µL), sensitivitas luar biasa hingga 0.5 pg/µL dsDNA, dua kanal optik mandiri (eksitasi 470/625 nm, emisi 525/690 nm), linearitas R² ≥0.995 pada 5 orde magnitudo, layar sentuh warna 7 inci, serta penyimpanan 10.000 data dengan ekspor CSV/PDF via USB."
@@ -36267,8 +35013,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Instrumen hibridisasi in situ (FISH) kapasitas 12 kaca objek dengan kontrol suhu presisi (RT+5 s.d. 100°C), waktu pemanasan cepat (37°C ke 95°C ≤2 min), pendinginan cepat, dan layar sentuh penuh.",
     description: [
       "Infitek ISH-12-01 adalah instrumen hibridisasi in situ (FISH) terprogram yang memadukan tahap denaturasi termal dan hibridisasi molekuler secara otomatis pada 12 kaca preparat sekaligus.",
       "Mengurangi kontak teknisi dengan reagen toksik berbahaya, kontrol suhu platform berpresisi tinggi (akurasi ≤±1°C, fluktuasi rendah), laju pemanasan cepat dari 37°C ke 95°C dalam ≤2 menit dan pendinginan dari 95°C ke 45°C dalam ≤6 menit, 3 mode operasi (denaturasi & hibridisasi, hibridisasi saja, multi-tahap), serta memori penyimpanan 105 program kustom."
@@ -36323,8 +35067,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sistem Real-Time PCR 96-well kelas premium dengan 6 saluran deteksi fluoresensi simultan (pemindaian 96 sampel dalam 5 detik), laju kenaikan suhu hingga 8.0°C/s, tutup panas otomatis, dan layar sentuh 12.1 inci.",
     description: [
       "Infitek PCR-Q96-6P adalah sistem Real-Time PCR (qPCR) 96-well berkinerja tinggi yang menerapkan teknologi pemindaian samping (side-scan technology) untuk mengumpulkan sinyal fluoresensi dari seluruh 6 kanal secara simultan hanya dalam waktu 5 detik.",
       "Dilengkapi laju perubahan suhu termal ultra-cepat hingga 8.0°C/s (akurasi ±0.1°C), gradien suhu 0.1–42°C, sensitivitas deteksi hingga 1 salinan (rentang dinamis 1–10¹⁰ salinan), kalibrasi pabrik untuk pewarna FAM/SYBR, HEX/VIC, ROX, Cy5, Cy5.5, dan Cy3, tutup pemanas otomatis (automatic hot lid) yang mendukung integrasi robotik, serta layar sentuh berwarna lebar 12.1 inci mandiri."
@@ -36387,8 +35129,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sistem Real-Time PCR portabel 32 sumur (blok ganda 2 × 16 sumur independen, 4 kanal fluoresensi) dengan peltier kustom Marlow AS, Windows 10 tertanam pada layar sentuh 7 inci, dan bobot ringan 8 kg.",
     description: [
       "Infitek PCR-Q32-4 adalah sistem qPCR portabel berdesain blok ganda (dual 16-well blocks) yang memungkinkan dua program amplifikasi berbeda dijalankan secara bersamaan pada 32 sampel.",
       "Mengadopsi elemen pemanas peltier Marlow kustom Amerika Serikat berdaya tahan >1.000.000 siklus (ramp rate 5°C/s), teknologi serat optik 32 bundel pemindai samping untuk intensitas sinyal stabil, detektor fotolistrik sensitivitas tinggi tanpa crosstalk, blok reaksi hitam anti-noise, sistem operasi Windows 10 tersemat pada layar sentuh TFT 7.0 inci (memori 20 GB untuk 40.000 data), tutup berpengunci elektromagnetik, serta koneksi Wi-Fi."
@@ -36444,8 +35184,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sistem Real-Time PCR 96 sumur (pilihan 4 atau 6 kanal fluoresensi) dengan detektor MPPC mutakhir, teknologi pemisahan sinyal time-resolved tanpa perlu pewarna rujukan ROX, dan kompensasi suhu tepi.",
     description: [
       "Infitek PCR-Q96 Series (PCR-Q96-5 4 kanal dan PCR-Q96-6 6 kanal) adalah instrumen qPCR mutakhir yang mengeliminasi fenomena crosstalk multi-warna dan efek tepi sumuran (edge effect) tanpa memerlukan normalisasi pewarna ROX.",
       "Menggunakan sistem deteksi fotodioda silikon berdaya sensitivitas tinggi (MPPC detector) dengan pemisahan sinyal beresolusi waktu (time-resolved signal separation), sumber cahaya 5/6 LED monokromatik efisiensi tinggi, laju pemanasan/pendinginan Peltier 6.0°C/s, gradien suhu 30–100°C (rentang diferensial 1–36°C), serta kemampuan membedakan perbedaan jumlah salinan hingga 1.33 kali lipat."
@@ -36499,8 +35237,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mesin PCR gradien 96-well (laju pemanasan/pendinginan 5°C/s, rentang gradien 1–42°C) dengan layar sentuh berwarna 7 inci, modul Wi-Fi/USB terintegrasi, dan memori hingga 20.000 program.",
     description: [
       "Infitek PCRTC-GP adalah mesin thermal cycler gradien andal untuk amplifikasi rantai polimerase (PCR) dengan keseragaman termal blok aluminium berpresisi tinggi.",
       "Dilengkapi elemen pemanas/pendingin Peltier berdaya tahan lama (laju perubahan suhu hingga 5°C/s), rentang gradien suhu luas 30–105°C (rentang sebaran 1–42°C), tutup pemanas adaptif (30–115°C) yang kompatibel dengan berbagai tinggi tabung, layar sentuh berwarna 7.0 inci (1024×600), modul Wi-Fi dan LAN untuk kendali simultan banyak unit dari satu PC, serta penyimpanan >20.000 program via USB."
@@ -36555,8 +35291,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin PCR gradien 3 blok independen (3 × 32 sumur) yang mampu menjalankan 3 program gradien PCR berbeda secara simultan, OS Android layar sentuh 8 inci, laju 5°C/s, dan memori 200.000 program.",
     description: [
       "Infitek PCR-G96XG adalah mesin PCR berkinerja tinggi yang memiliki 6 unit pemanas Peltier berumur panjang yang membentuk 3 sirkuit kendali independen untuk 3 blok sampel terpisah (masing-masing 32 sumur).",
       "Mampu menjalankan 3 eksperimen gradien suhu berbeda secara bersamaan tanpa saling mengganggu, laju perubahan suhu 5°C/s, blok aluminium teranodisasi tahan korosi, tutup panas stepless dengan proteksi tekanan anti-meleleh, sistem operasi Android pada layar sentuh TFT 8 inci (800×600 piksel), penyimpanan internal untuk 200.000 file PCR, fungsi inkubasi kilat satu tombol (denaturasi/enzim), serta koneksi Wi-Fi dan notifikasi email."
@@ -36612,8 +35346,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mesin PCR gradien blok ganda (2 × 48 sumur) berkecepatan ramping 6°C/s dengan 8 unit Peltier Marlow AS (4 sirkuit 4 zona suhu), sistem operasi Android layar sentuh 8 inci, dan memori 200.000 program.",
     description: [
       "Infitek PCR-482 dilengkapi 8 unit pemanas Peltier Marlow (AS) berdaya tahan >1.000.000 siklus yang membentuk 4 zona kontrol suhu independen untuk mendukung pengoperasian dua blok gradien 48-sumur secara terpisah.",
       "Menghadirkan laju pemanasan/pendinginan sangat cepat hingga 6°C/s untuk menghemat waktu kerja laboratorium, sistem operasi Android pada layar sentuh TFT 8 inci, tutup pemanas stepless berpelindung tekanan, fungsi inkubasi kilat satu tombol, laporan kepatuhan GLP, manajemen login 3 tingkat berotentikasi kata sandi, serta koneksi Wi-Fi dan kendali aplikasi seluler."
@@ -36668,8 +35400,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mesin PCR standar 96-well non-gradien berlayar sentuh 7 inci (1024×600) dengan laju pemanasan/pendinginan 5°C/s, blok aluminium presisi tinggi, dan penyimpanan >20.000 program via USB.",
     description: [
       "Infitek PCRTC-S adalah mesin PCR termal standar 96-sumur yang ekonomis dan tangguh untuk aplikasi amplifikasi DNA rutin tanpa memerlukan fitur gradien suhu.",
       "Dilengkapi elemen pemanas/pendingin Peltier presisi (laju hingga 5°C/s), pengontrol suhu berbasis DSP performa tinggi (akurasi ±0.1°C, keseragaman ±0.2°C pada 55°C), tutup pemanas bersuhu 30–115°C, layar sentuh berwarna 7.0 inci (1024×600), penyimpanan >20.000 program via USB Flash, serta proteksi pemadaman listrik otomatis."
@@ -36724,8 +35454,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mesin PCR gradien 96-well berbasis OS Android (laju 5°C/s, 3 sirkuit kendali 3 zona suhu) dengan layar sentuh TFT 8 inci, koneksi Wi-Fi/App, notifikasi email, dan fungsi inkubasi kilat satu tombol.",
     description: [
       "Infitek PCR-96S menggabungkan 6 unit pemanas Peltier berumur panjang (>1.000.000 siklus) yang membentuk 3 sirkuit kontrol untuk mengendalikan 3 zona suhu gradien secara presisi pada blok 96-sumur.",
       "Dilengkapi sistem operasi Android pada layar sentuh kapasitif TFT 8.0 inci (800×600 piksel), modul Wi-Fi bawaan untuk kontrol banyak mesin melalui aplikasi seluler atau PC, fungsi pemberitahuan email saat eksperimen selesai, tutup pemanas stepless berpelindung tekanan, fungsi inkubasi cepat satu klik (denaturasi/enzim/ELISA), laporan GLP otomatis, serta memori internal 10.000 file."
@@ -36781,8 +35509,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin PCR gradien kecepatan tinggi (ramping rate 6°C/s, sebaran gradien 0.1–42°C) dengan layar sentuh kapasitif besar 10.1 inci (1280×800), OS Android, tutup pemanas adaptif otomatis, dan saluran ventilasi depan-belakang.",
     description: [
       "Infitek PCR-96A menghadirkan pengalaman visual terbaik di kelasnya dengan layar sentuh kapasitif IPS berukuran besar 10.1 inci (resolusi 1280×800 piksel) yang ditenagai sistem operasi Android responsif.",
       "Menghasilkan laju pemanasan/pendinginan sangat cepat hingga 6°C/s berdaya tahan >1.000.000 siklus, sebaran gradien suhu lebar 0.1–42°C, tutup pemanas bertekanan adaptif otomatis (menutup dan mengencangkan dalam satu langkah), saluran ventilasi udara depan dan belakang yang memungkinkan mesin diletakkan berjejer rapat tanpa celah samping, serta modul Wi-Fi untuk kontrol multi-unit via aplikasi ponsel."
@@ -36836,8 +35562,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Sistem Real-Time PCR portabel 16 sumur (blok ganda 2 × 8 sumur independen, pilihan 1 atau 4 kanal fluoresensi) dengan peltier kustom Marlow AS, Windows 10 tersemat pada layar sentuh 7 inci, dan laju ramping hingga 7°C/s.",
     description: [
       "Infitek PCR-Q16 Series (Q16-1B single-channel FAM/SYBR dan Q16-4F 4-channel FAM/HEX/ROX/CY5) adalah instrumen kuantitatif fluoresensi portabel berdesain blok ganda 2 × 8 sumur yang mampu menjalankan dua pengujian berbeda sekaligus.",
       "Menggunakan elemen Peltier kustom Marlow Amerika Serikat (laju ramping hingga 7°C/s), teknologi pemindaian samping serat optik berjarak dekat untuk akurasi sinyal stabil, blok reaksi hitam peredam background noise, sistem operasi Windows 10 terintegrasi pada layar sentuh 7 inci (memori 20 GB untuk 40.000 data), tutup berpengunci elektromagnetik, serta koneksi Wi-Fi."
@@ -36892,8 +35616,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sistem Real-Time PCR ultra-portabel 8 sumur (bobot hanya 3 kg, dukungan daya baterai litium) dengan 4 kanal fluoresensi (FAM, HEX, ROX, CY5), laju ramping 7°C/s, peltier Marlow, dan koneksi Wi-Fi.",
     description: [
       "Infitek PCR-Q88-4 adalah instrumen qPCR genggam ultra-portabel seberat 3 kg yang dirancang khusus untuk pengujian lapangan bergerak (peternakan, perkebunan, inspeksi karantina pangan, dan sumber air terpencil).",
       "Mendukung pasokan daya baterai litium untuk pengujian di lokasi tanpa sambungan listrik, kapasitas 8 sumur tabung PCR 0.2 mL (laju perubahan suhu hingga 7°C/s berbasis Peltier Marlow), 4 kanal deteksi fluoresensi (FAM, HEX/VIC, ROX, CY5), teknologi pemindaian samping bersinyal stabil, blok reaksi hitam anti-noise, analisis kuantitatif dan kurva peleburan terpadu, serta koneksi Wi-Fi dan USB 2.0."
@@ -36948,8 +35670,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Microplate reader 8 kanal (rentang 400–725 nm, pembacaan ≤3 detik) dengan layar sentuh warna 7 inci, printer termal bawaan, pengocok linear 3 kecepatan, dan kapasitas memori 200.000 data pengujian.",
     description: [
       "Infitek MPR-H200BC adalah pembaca mikroplat (microplate reader) mandiri 8-kanal berbasis fotodioda silikon dan sumber cahaya LED tahan hingga 10.000 jam untuk pengujian ELISA pada pelat 96/48 sumuran.",
       "Mampu melakukan pengukuran panjang gelombang tunggal (≤3s) maupun ganda (≤6s) dengan filter standar 405, 450, 492, dan 630 nm (tersedia 4 posisi filter opsional), menjalankan 12 pengujian berbeda sekaligus dalam satu pelat, dilengkapi printer termal bawaan, layar sentuh LCD 7 inci, pengocok linear 3 kecepatan, perangkat lunak PC DIATEK ELISA tanpa biaya tambahan, serta memori 200.000 data pengujian."
@@ -37010,8 +35730,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pencuci pelat ELISA (microplate washer) dengan manifold 8-pin & 12-pin, volume residu ultra-rendah ≤1 µL/well, memori 120 protokol, dan opsi pompa impor Jerman (MPW-H320).",
     description: [
       "Infitek MPW-H Series (MPW-H310 standar dan MPW-H320 dengan pompa impor Jerman) adalah instrumen pencuci mikroplat ELISA otomatis untuk pelat 96 sumuran maupun strip mandiri (1–12 strip).",
       "Mendukung pelat dasar rata, V-bottom, maupun U-bottom, metode pencucian dua titik hisap (two-point liquid suction) dengan bilas dasar dan luapan untuk menghasilkan volume residu cairan sangat minim (≤1 µL/well), layar LCD cerdas berantarmuka intuitif, fungsi perendaman (dipping 0–3600s) dan pengocokan (shaking 0–600s), serta memori penyimpanan lebih dari 120 prosedur pencucian pengguna."
@@ -37072,8 +35790,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Microplate reader multimoda (Absorbansi berbasis monokromator 200–1000 nm, Fluoresensi PMT filter, Luminesensi PMT) berlayar sentuh 10 inci Android mandiri, inkubasi hingga 45°C, dan pemindaian kode QR program.",
     description: [
       "Infitek MPR-A300 adalah pembaca mikroplat multimoda (multimode microplate reader) kelas atas yang memadukan monokromator fleksibel untuk absorbansi tanpa filter dan optik PMT sensitivitas tinggi untuk pengujian fluoresensi dan bioluminesensi.",
       "Mendukung pelat 6 hingga 384 sumur, rentang absorbansi 200–1000 nm (langkah 1 nm, rentang 0–4 OD), fluoresensi pembacaan atas (deteksi limit ≤1 pM, rentang dinamis 6 log), luminesensi deteksi hingga 15 amol/sumur (crosstalk ≤0.005%), sistem operasi Android mandiri pada layar sentuh 10 inci (dapat dihubungkan mouse), inkubasi suhu RT+4°C hingga 45°C, pengocok 3 mode (linear, orbital, double orbital), pemindai kode QR untuk impor instan protokol, serta dukungan pelat u-Nano dan modul injektor otomatis."
@@ -37129,8 +35845,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Microplate reader berbasis monokromator kisi difraksi (200–1000 nm tanpa filter) untuk pelat 96/384-well dengan sistem berkas ganda (double-beam), layar sentuh 10 inci Android, dan slot kuvet berpemanas (pada MPR-A200HT).",
     description: [
       "Infitek MPR-A200 Series (MPR-A200 standar dan MPR-A200HT dengan slot kuvet spektrofotometri mandiri) adalah pembaca mikroplat berbasis kisi monokromator untuk pemindaian spektral berkelanjutan 200–1000 nm (kenaikan 1 nm).",
       "Menggunakan sistem optik berkas ganda (double beam) dengan saluran referensi untuk akurasi data prima, lampu kilat Xenon berdaya tahan >10⁹ kedipan, kalibrasi mandiri saat dinyalakan, layar sentuh 10 inci ber-OS Android (memori internal 16 GB untuk >20.000 data), inkubasi suhu RT+4°C hingga 45°C, serta kompatibilitas pelat mikro volume rendah u-Nano (2–4 µL)."
@@ -37186,8 +35900,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Microplate reader multimoda tingkat lanjut (Absorbansi 200–1000 nm, Fluoresensi, Luminesensi 5 amol/well, dan Time-Resolved Fluorescence TRF 0.02 pM) dengan layar sentuh sudut kemiringan dapat diatur dan pemindai kode QR.",
     description: [
       "Infitek MPR-A400 dirancang khusus untuk lembaga penelitian biomedis dan farmasi dengan penambahan kapabilitas Time-Resolved Fluorescence (TRF) berkepekaan tinggi (batas deteksi mencapai 0.02 pM).",
       "Mengintegrasikan deteksi absorbansi berbasis monokromator kisi kontinu (200–1000 nm tanpa filter), fluoresensi berfilter dengan detektor PMT (deteksi limit 1 pM), luminesensi bercrosstalk rendah ≤0.005% (5 amol/well), sudut layar sentuh 10 inci yang dapat diubah kemiringannya secara ergonomis, fungsi pembacaan kode QR untuk impor instan protokol uji, serta teknologi kontrol suhu PID diferensial untuk mengeliminasi efek tepi (edge effect) pada pelat tertutup."
@@ -37243,8 +35955,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Microplate reader otomatis berlayar sentuh warna 10.4 inci (resolusi 1024×600) dengan kapasitas memori raksasa hingga 20 juta data pengujian, printer termal bawaan, sistem optik 8 kanal, dan 20 format laporan.",
     description: [
       "Infitek MPR-H200B adalah pembaca mikroplat ELISA otomatis berevolusi tinggi yang dilengkapi kapasitas memori internal raksasa hingga 20.000.000 data pengujian dan 500 proyek pengujian.",
       "Menggunakan sistem optik pemindaian serat 8 kanal dengan lampu LED hemat energi (masa pakai 10.000 jam, panjang gelombang 400–725 nm), layar sentuh LCD berwarna lebar 10.4 inci (1024×600), tata letak pelat fleksibel (Blanko, Standar, Sampel, Referensi, QC pada satu tampilan layar), printer termal terpasang, serta port koneksi lengkap (DVI, VGA, Network LAN, USB, Audio, RS-232)."
@@ -37300,8 +36010,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pembaca ELISA 8 kanal berbobot ringan 7 kg dengan sistem pemusatan pelat otomatis (auto plate centering), pembacaan cepat ≤3s, printer termal bawaan, dan perangkat lunak Found Workstation PC.",
     description: [
       "Infitek MPR-H200BN adalah instrumen pembaca ELISA 8 kanal yang terbukti andal dengan fitur sistem pemusatan pelat otomatis (auto plate centering system) untuk memastikan berkas cahaya selalu tepat mengenai titik tengah sumuran mikroplat.",
       "Dilengkapi pengukuran panjang gelombang tunggal dan ganda, evaluasi data kualitatif dan kuantitatif lengkap (cut-offs, curve-fits, rumus transformasi), menjalankan 12 pengujian berbeda dalam 1 pelat, printer termal internal, perangkat lunak komputer Found Workstation berfitur lengkap, serta bodi ringan 7.0 kg."
@@ -37358,8 +36066,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Microplate reader otomatis layar sentuh 8 inci dengan jalur optik tertutup penuh (fully enclosed bebas debu/perawatan), rentang serapan luas 0–5.000 Abs, dapat dipasangi hingga 15 filter, dan formula Cut-Off terbuka.",
     description: [
       "Infitek MPR-D111 adalah pembaca mikroplat 8-kanal vertikal yang mengadopsi sistem jalur optik tertutup penuh (fully enclosed optical path) untuk mencegah kontaminasi debu dan menjamin operasi bebas perawatan jangka panjang.",
       "Dilengkapi lampu halogen tungsten DC 12V 22W (masa pakai 5000 jam), rentang panjang gelombang 400–1000 nm (opsi 340–1100 nm) yang dapat memuat hingga 15 filter interferensi, rentang pembacaan sangat luas 0–5.000 Abs (linear hingga 3.500 Abs), layar sentuh LCD berwarna 8 inci, formula penilaian Cut-Off terbuka, pengocok linear 3 jenis, serta opsi fungsi inkubasi pelat (RT+4°C hingga 50°C)."
@@ -37416,8 +36122,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Microplate reader multimoda komprehensif tingkat tertinggi (Absorbansi monokromator 200–1000 nm, Fluoresensi, Luminesensi, Time-Resolved Fluorescence TRF, dan Fluorescence Polarization FP) dengan layar sentuh 10 inci sudut konvertibel.",
     description: [
       "Infitek MPR-A500 adalah model unggulan tertinggi dalam lini pembaca mikroplat multimoda yang menggabungkan lima modalitas deteksi canggih: Absorbansi monokromator kisi kontinu, Fluoresensi PMT, Chemiluminescence, Time-Resolved Fluorescence (TRF 0.02 pM), dan Fluorescence Polarization (FP ≤5 mP).",
       "Dirancang untuk institusi riset biofarmasi dan penemuan obat terdepan, mendukung format pelat 6 hingga 384 sumur, layar sentuh 10 inci dengan engsel sudut yang dapat dikonversi sesuai posisi kerja analis, sistem inkubasi PID diferensial anti-edge effect (RT+4°C s.d. 45°C), pembacaan kode QR filter dan protokol instan, serta kompatibilitas dengan modul injektor otomatis ganda."
@@ -37472,8 +36176,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Pembaca mikroplat fluoresensi tunggal (fluorescence microplate reader) berkinerja tinggi dengan lampu Xenon awet 10 tahun (siap pakai tanpa pemanasan awal), detektor PMT berbatas deteksi 1 pM, dan layar sentuh 10 inci.",
     description: [
       "Infitek MPR-F100 adalah pembaca mikroplat fluoresensi mandiri yang ekonomis dan presisi tinggi untuk riset kuantifikasi biomolekul, interaksi molekuler, dan analisis fluks Ca²⁺.",
       "Menggunakan lampu kilat Xenon berenergi tinggi dengan masa pakai hingga 10 tahun (langsung aktif tanpa waktu pemanasan), filter interferensi berkinerja tinggi untuk transmisi cahaya superior, detektor Photomultiplier Tube (PMT) dengan batas deteksi 1 pM (rentang dinamis 6 log), mendukung pelat 6–384 sumur, layar sentuh kapasitif 10 inci ber-OS tersemat, serta kompatibilitas injektor presisi untuk kinetika cepat."
@@ -37529,8 +36231,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Pembaca mikroplat bioluminesensi kompak (luminescence microplate reader) dengan detektor PMT ultra-low noise (batas deteksi 5 amol/sumur ATP), crosstalk sangat rendah ≤0.05%, dan filter ganda 470/560 nm.",
     description: [
       "Infitek MPR-L100 adalah luminometer mikroplat mandiri berkinerja tinggi yang dirancang untuk analisis bioluminesensi sensitivitas tinggi pada pelat 6 hingga 384 sumuran.",
       "Menggunakan tabung pengganda foton (PMT) berderau ultra-rendah yang mampu mendeteksi sinyal hingga 5 amol/sumur (rentang dinamis 7 log untuk flash ATP), desain jalur optik unik dengan crosstalk antar-sumuran <0.05%, dua filter optik standar (470 nm dan 560 nm) untuk meningkatkan rasio sinyal uji luciferase ganda, layar sentuh kapasitif 10 inci, serta hierarki izin pengguna 4 tingkat."
@@ -37586,8 +36286,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pencuci mikroplat cerdas berlayar sentuh kapasitif 3 inci dengan sensor level cairan (anti-habis larutan cuci & anti-luap limbah), saluran pembilas terpisah, memori 600 program, dan fungsi auto-flushing anti-kristalisasi.",
     description: [
       "Infitek MPW-H330 adalah mesin pencuci pelat mikro ELISA otomatis berfitur proteksi sensor level cairan canggih yang secara otomatis memperingatkan pengguna saat larutan pencuci menipis atau wadah limbah hampir penuh.",
       "Mendukung pelat dasar rata, U-bottom, dan V-bottom, kepala pencuci 8 atau 12 jarum dengan saluran larutan cuci dan bilas terpisah, fungsi auto-flushing otomatis sebelum dan sesudah pencucian untuk mencegah kristalisasi jarum, metode pencucian dua titik hisap (residu ≤1 µL/sumur), volume dispensi 10–9999 µL, waktu perendaman/pengocokan hingga 24 jam, serta memori luas untuk lebih dari 600 program pencucian pengguna."
@@ -37643,8 +36341,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Thermo shaker inkubator mikroplat kapasitas besar 6 pelat standar atau deep-well (suhu RT+5 hingga 100°C, kecepatan 200–1600 rpm) dengan pewaktu independen di setiap pelat dan tutup pemanas wrap-around.",
     description: [
       "Infitek DBI-PR80-5 adalah pengocok termostatik serbaguna berkapasitas besar yang mampu menampung hingga 6 pelat mikrotiter standar atau pelat sumur dalam (deep well plates) secara bersamaan.",
       "Ditenagai motor DC brushless tanpa sikat berdaya tahan tinggi, rentang kendali suhu RT+5 hingga 100°C (akurasi ≤±0.5°C @37°C), kecepatan pengocokan 200–1600 rpm (orbit 3 mm), tutup pemanas berdesain wrap-around untuk mengeliminasi efek tepi termal, fitur pemanasan awal otomatis (auto preheating), serta keunggulan pewaktu independen (independent timing) yang memungkinkan penyetelan waktu secara terpisah untuk masing-masing dari 6 pelat."
@@ -37700,8 +36396,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator pengocok mikroplat kapasitas 2 pelat (suhu RT+5 hingga 80°C, kecepatan 200–1600 rpm, orbit 3 mm) dengan motor DC brushless, pemanas film presisi PID, dan kontrol tombol satu sentuhan.",
     description: [
       "Infitek DBI-PR80-2 adalah thermo shaker kompak untuk pengocokan dan inkubasi simultan pada 2 pelat mikro ELISA (96/384 sumur) atau pelat kultur jaringan (24/48/96 sumur).",
       "Menggunakan motor DC brushless penggerak langsung, kontrol suhu cerdas PID dengan elemen pemanas film (laju pemanasan dari suhu ruang ke 80°C dalam waktu ≤10 menit), kecepatan 200–1600 rpm (orbit 3 mm), layar LCD informatif, fungsi pemulihan daya otomatis pasca-pemadaman listrik, serta bodi ringkas berbobot 7.0 kg."
@@ -37756,8 +36450,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator pengocok mikroplat pemanas dua sisi atas-bawah (up and down heating) kapasitas 2 pelat dengan kecepatan 200–1500 rpm (rotasi horizontal 2 mm), homogenitas suhu ±0.3°C, dan suhu hingga 80°C.",
     description: [
       "Infitek DBI-PS80-2 mengombinasikan teknologi mikroprosesor terpadu dengan algoritma PID dan inovasi pemanasan dua arah (up and down heating the microplate) untuk memastikan pelat mikro dipanaskan secara seimbang dari sisi atas dan bawah.",
       "Mencegah pengembunan air pada penutup pelat yang kerap mengacaukan konsentrasi larutan reaksi, menyediakan homogenitas dan akurasi suhu ketat (±0.3°C), rentang suhu RT+5 hingga 80°C (naik ke 80°C dalam 15 menit), kecepatan putar 200–1500 rpm (amplitudo rotasi horizontal 2 mm), layar LCD parameter lengkap, serta bodi ringan 6.2 kg."
@@ -37810,8 +36502,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator mikroplat kompak kapasitas 2 pelat (suhu RT+5 hingga 80°C) dengan sistem pemanasan ganda (double heating), kontrol PID fluktuasi rendah, dan kenop sentuh tunggal.",
     description: [
       "Infitek DBI-P80-2 adalah inkubator mikroplat kompak yang dikendalikan oleh mikroprosesor dengan algoritma PID presisi untuk kultivasi sampel pada pelat ELISA (96/384 wells) dan pelat kultur jaringan 96-well.",
       "Dilengkapi sistem pemanasan ganda (double heating system) untuk menjamin stabilitas suhu inkubasi, rentang kendali suhu RT+5 hingga 80°C (akurasi ≤±0.5°C, waktu pemanasan ≤10 menit ke 80°C), layar LCD, pengoperasian kenop satu sentuhan yang mudah, serta catu daya internal bersertifikasi UL, CSA, dan CE."
@@ -37865,8 +36555,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator mikroplat 4 pelat standar atau deep-well (suhu RT+5 hingga 80°C) dengan teknologi kontrol fuzzy PID, fungsi pra-pemanasan otomatis, dan pemulihan daya mandiri.",
     description: [
       "Infitek DBI-P80-4 memanfaatkan teknologi kendali fuzzy PID mikroprosesor untuk mengontrol presisi suhu dan menyesuaikan laju pemanasan secara otomatis guna mengurangi waktu tunggu eksperimen.",
       "Mampu menampung 4 buah pelat mikrotiter standar atau deep-well plates, rentang kendali suhu RT+5 hingga 80°C (akurasi ≤±0.5°C), fungsi preheating otomatis, fungsi auto-resume setelah pemadaman listrik, kalibrasi suhu mandiri, serta proteksi perangkat lunak dan perangkat keras terhadap suhu berlebih."
@@ -37919,8 +36607,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok mikroplat 4 pelat (kecepatan 200–1500 rpm, rotasi horizontal 3 mm) dengan kendali PID presisi, peredam getaran karet 4 sudut, dan layar LCD digital.",
     description: [
       "Infitek SHK-M4 dirancang khusus untuk mengocok larutan dalam pelat ELISA (96/384 sumur) dan pelat kultur jaringan (24/48/96 sumur) dengan rentang kecepatan luas untuk pengujian imunologi dan pewarnaan.",
       "Dilengkapi pengontrol kecepatan presisi PID, rotasi horizontal beramplitudo 3 mm (200–1500 rpm), desain unik dengan empat penyangga karet di sudut-sudut platform untuk kestabilan pengocokan bebas getaran liar, layar LCD, serta timer hingga 99 jam 59 menit."
@@ -37973,8 +36659,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok mikroplat kecepatan tinggi 4 pelat (200–1500 rpm, orbit 3 mm) dengan motor DC brushless, kenop sentuh satu sentuhan, dan deteksi kerusakan otomatis.",
     description: [
       "Infitek SHK-M4II adalah varian pengocok mikroplat 4-pelat generasi mutakhir yang digerakkan oleh motor DC brushless tanpa sikat berdaya tahan tinggi dan dikendalikan mikroprosesor.",
       "Menyediakan kecepatan 200–1500 rpm (kenaikan bertahap 10 rpm, orbit 3 mm), pengoperasian intuitif dengan kenop satu sentuhan, layar LCD pemantau parameter, sistem deteksi kesalahan otomatis dengan alarm buzzer, bodi berbobot 4.0 kg yang stabil, serta efisiensi daya 45W."
@@ -38028,8 +36712,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pengocok mikroplat kecepatan tinggi 200–2000 rpm (orbit 2 mm, kapasitas 2 pelat standar atau deep-well) dengan motor DC brushless penggerak langsung, indikator status kerja, dan mekanisme klem cepat tanpa alat.",
     description: [
       "Infitek SHK-M2000 adalah pengocok mikroplat kecepatan tinggi yang mampu berputar hingga 2000 rpm dengan orbit gerakan 2 mm untuk memfasilitasi pencampuran intensif cairan di dalam pelat ELISA dan pelat sumur dalam (deep-well).",
       "Menggunakan motor DC brushless penggerak langsung (direct-drive), sistem penjepit khusus untuk pemasangan dan pelepasan pelat secara cepat tanpa alat bantu, lampu indikator status operasional bawaan, timer digital hingga 99 jam 59 menit atau tak terbatas, serta catu daya DC 24V yang aman."
@@ -38083,8 +36765,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator mikroplat 2 pelat dengan tutup berpemanas (heated lid) untuk keseragaman suhu maksimal (akurasi ±0.3°C, rentang RT+5 hingga 80°C), kontrol PID, dan kenaikan suhu <15 menit.",
     description: [
       "Infitek DBI-P80-2II adalah inkubator mikroplat presisi yang dilengkapi tutup berpemanas (heated lid) untuk mencegah pengembunan pada tutup pelat kultur dan menjaga keseragaman suhu di seluruh sumuran.",
       "Menggunakan kontroler suhu PID stabil (akurasi dan keseragaman ±0.3°C), rentang suhu RT+5 hingga 80°C (laju kenaikan suhu dari 20°C ke 80°C dalam <15 menit), kapasitas 2 pelat ELISA atau kultur jaringan, timer 0–99 jam 59 menit dengan alarm buzzer, serta bodi kokoh berdaya 150W."
@@ -38137,8 +36817,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penyegel panas pelat mikro manual (suhu 80°C–200°C) dengan platform geser tipe laci unik, waktu pemanasan cepat (ke 170°C dalam 300s), dan kompatibilitas tinggi pelat 9–48 mm.",
     description: [
       "Infitek SLM-P200 adalah alat penyegel panas pelat mikro manual yang dirancang untuk menyegel berbagai jenis pelat (PCR, ELISA, kultur sel, dan deep-well) guna mencegah penguapan cairan sampel dan kontaminasi.",
       "Dilengkapi platform geser tipe laci (drawer-type sliding platform) yang memudahkan pemasangan pelat, rentang suhu penyegelan 80°C hingga 200°C (akurasi ±1°C, mencapai 170°C dalam 300 detik), waktu segel 0.5–99 detik, kompatibel dengan tinggi pelat 9 hingga 48 mm, serta proteksi panas berlebih terintegrasi."
@@ -38192,8 +36870,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penyegel pelat semi-otomatis berlayar OLED (suhu 80°C–200°C) dengan sistem sensor gaya tekan seragam, laci bermotor berfitur auto-reverse pengaman tangan, dan mode hemat energi dua tahap.",
     description: [
       "Infitek SLM-P1000 adalah mesin penyegel pelat semi-otomatis yang menerapkan gaya tekan dan perpindahan panas secara seragam ke seluruh permukaan pelat mikro untuk hasil segel yang kedap sempurna.",
       "Dilengkapi layar OLED tajam, rentang suhu penyegelan 80°C hingga 200°C (akurasi dan keseragaman ±1°C), waktu segel 0.5–10 detik, laci bermotor pintar yang otomatis mundur (auto-reverse) jika mendeteksi rintangan tangan guna mencegah cedera, laci yang dapat dilepas untuk pembersihan, mode hemat daya otomatis (turun ke 60°C setelah 60 menit dan mati elemen pemanas setelah 120 menit), serta kompatibilitas dengan bahan PP, PS, dan PE."
@@ -38254,8 +36930,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Thermo shaker inkubator mikroplat kapasitas 4 pelat standar atau deep-well (suhu RT+5 hingga 80°C, kecepatan 200–1350 rpm, orbit 3 mm) dengan kontrol fuzzy PID, motor DC brushless, dan pemanasan awal otomatis.",
     description: [
       "Infitek DBI-PR80-4 memadukan fungsi inkubasi suhu konstan dan pengocokan mekanis secara simultan untuk 4 pelat mikro standar atau pelat sumur dalam (deep-well).",
       "Dilengkapi teknologi kontrol fuzzy PID untuk memastikan ketepatan suhu dan mengatur laju pemanasan secara otomatis, motor DC brushless bebas perawatan (kecepatan 200–1350 rpm, orbit 3 mm), pemanasan dari 25°C ke 80°C dalam ≤10 menit, pemanasan awal otomatis (auto-preheating), pemulihan daya mandiri, serta proteksi suhu berlebih ganda."
@@ -38310,8 +36984,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pembaca mikroplat serapan berbasis filter (340–750 nm, pembacaan 96-well dalam 6 detik) dengan layar sentuh kapasitif 7 inci, roda filter 8-posisi, memori 1000 program, dan fungsi inkubasi hingga 50°C (pada MPR-100T).",
     description: [
       "Infitek MPR-100 dan MPR-100T adalah microplate reader berbasis filter optik berkinerja tinggi untuk aplikasi klinis dan penelitian ilmiah pada rentang panjang gelombang 340 nm hingga 750 nm.",
       "Dilengkapi layar sentuh warna kapasitif 7 inci tanpa perlu keyboard eksternal, roda filter 8-posisi (standar 4 filter: 405, 450, 492, 630 nm), rentang absorbansi 0.0–4.000 Abs (linear R² ≥0.995), pembacaan cepat 96 sumur dalam 6 detik, perangkat lunak analisis bawaan ReaderIt-I, serta model MPR-100T yang dilengkapi fungsi inkubasi pelat dari RT+4°C hingga 50°C."
@@ -38367,8 +37039,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Microplate reader otomatis 8 kanal jalur optik tertutup penuh dengan modul khusus pengukuran laju hambatan (inhibition rate) keamanan pangan, rentang 400–1000 nm, layar sentuh 7 inci, dan memori 500 program.",
     description: [
       "Infitek MPR-D110 adalah pembaca mikroplat otomatis 8 kanal vertikal yang secara khusus dikonfigurasikan dengan modul pengukuran laju penghambatan (inhibition rate measurement module) untuk deteksi residu pestisida dan keamanan pangan.",
       "Mengadopsi sistem jalur optik tertutup penuh bebas perawatan, lampu halogen tungsten DC 12V 22W (masa pakai 5000 jam), rentang panjang gelombang 400–1000 nm (dapat dipasangi hingga 15 filter), pembacaan cepat (tunggal ≤5s, ganda ≤7s), getaran pelat linear 3 jenis, layar sentuh LCD 7 inci, serta memori internal untuk 500 grup program dan 100.000 hasil sampel."
@@ -38422,8 +37092,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penghitung koloni bakteri digital untuk cawan Petri Φ50–Φ150 mm dengan pena sensor sensitif, konfirmasi suara, lup pembesar 3x/9x pada lengan fleksibel, dan pilihan tampilan 3-digit (CC-J3) atau 4-digit (CC-J3A).",
     description: [
       "Infitek CC-J3 Series (CC-J3 kapasitas 0–999 dan CC-J3A kapasitas 0–9999) adalah penghitung koloni bakteri berbasis sirkuit terpadu CMOS untuk cawan Petri berdiameter Φ50 hingga Φ150 mm.",
       "Dilengkapi pena sentuh sensor khusus yang sensitif dengan indikator bunyi klik untuk memastikan setiap koloni terhitung benar, tombol koreksi penambah (+) dan pengurang (-) jika terjadi kekeliruan hitung, tombol kembali ke nol otomatis, lampu penerang 50W, serta kaca pembesar 3x (hingga 9x) dengan lengan fleksibel yang dapat diatur ke posisi pandang terbaik."
@@ -38476,8 +37144,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penghitung koloni bakteri kompak (kapasitas 0–999, cawan Petri Φ50–Φ100 mm) dengan pena sensor berdering, layar LED 3 digit, daya hemat 20W, dan pembesaran 3x/9x.",
     description: [
       "Infitek CC-J2 adalah instrumen penghitung koloni bakteri model kompak yang dirancang untuk stasiun pencegahan epidemi, laboratorium sanitasi, dan klinik medis untuk cawan Petri ukuran standar Φ50 hingga Φ100 mm.",
       "Dilengkapi tampilan LED 3-digit (0–999), pena penghitung khusus yang berdering saat menyentuh cawan untuk memastikan keakuratan pengujian, kaca pembesar variabel 3x hingga 9x, pelat hitung diameter Ø115 mm, konsumsi daya rendah hanya 20W, serta bodi ringan 3.7 kg."
@@ -38529,8 +37195,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penghitung koloni sensitif tekanan (pressure-sensitive) berteknologi tinggi dengan sensitivitas sentuh dapat disetel, pencahayaan array LED putih bebas silau berperedam kontras, dan lup pembesar tanpa bingkai.",
     description: [
       "Infitek CC-J2S adalah penghitung koloni berteknologi tinggi yang dirancang dengan ergonomi unggul untuk menghitung koloni pada cawan kultur maupun membran filter mikrobiologi.",
       "Sensitivitas sentuh sensor tekanan dapat disetel sesuai kebiasaan operator, sistem pencahayaan array LED putih bebas silau dengan intensitas yang dapat disesuaikan menghasilkan kontras tajam untuk mikroorganisme transparan, kaca pembesar besar tanpa bingkai (3x/9x) dengan kompensasi cahaya atas, tombol koreksi manual penambah/pengurang, serta kompatibilitas cawan Petri Φ50, Φ55, Φ60, Φ70, dan Φ90 mm."
@@ -38584,8 +37248,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penghitung koloni bakteri digital dengan bilik hitung latar belakang hitam berpenerangan fluoresen kontras tinggi, probe sensor sentuh sensitif, dan tampilan tabung LED karakter besar 13 mm (0–999).",
     description: [
       "Infitek CC-N50 adalah instrumen pengujian bakteri otomatis digital yang menggunakan bilik hitung berlatar belakang hitam dengan pencahayaan lampu fluoresen untuk menghasilkan kontras koloni yang sangat tajam dan tidak melelahkan mata analis.",
       "Dilengkapi sirkuit terpadu CMOS, layar tabung digital LED berkarakter besar setinggi 13 mm yang sangat jernih (kapasitas 0–999 sesuai regulasi cawan bakteri), pena probe sensor sentuh berakurasi tinggi, daya hemat kurang dari 20W, serta bodi kompak berbobot hanya 1.7 kg."
@@ -38638,8 +37300,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat pembuat gel kolagen plasma autologus (plasma bio-filler) dengan dua kompartemen terpisah (pemanasan hingga 90°C dan pendinginan cepat <4 menit), kapasitas spuit 1–5 mL (10 lubang), dan layar LED ganda.",
     description: [
       "Infitek DBI-GM5 adalah instrumen khusus estetika medis dan dermatologi untuk mengubah plasma darah miskin trombosit (PPP/PRP) menjadi gel kolagen autologus alami (bio-filler) tanpa efek samping beracun.",
       "Dilengkapi dua kompartemen terpisah yang independen: ruang pemanasan (hingga 90°C dalam <10 menit) dan ruang pendinginan cepat (90°C ke suhu ruang dalam <4 menit) untuk meniadakan proses pendinginan manual yang merepotkan, kapasitas 10 lubang untuk spuit 1–5 mL, layar LED independen untuk suhu dan waktu, serta 2 program pramuat satu sentuhan."
@@ -38698,8 +37358,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Thermo shaker dry bath serbaguna berkecepatan 200–3000 rpm (orbit 2 mm) dengan tutup berpemanas mandiri (RT+5 hingga 110°C) anti-kondensasi, kipas pendingin aktif, kontrol PID (RT+5 s.d. 105°C), dan 10 program.",
     description: [
       "Infitek DBI-R3000 adalah thermostatic shaker dry bath berkecepatan tinggi yang dikendalikan motor DC brushless untuk inkubasi, katalisis reaksi, dan pencampuran sampel biologis.",
       "Menghadirkan teknologi kontrol suhu cerdas PID (RT+5 hingga 105°C, akurasi ≤±0.3°C), tutup pemanas mandiri (independent heating lid RT+5 hingga 110°C) untuk mencegah penguapan dan kontaminasi silang sampel tabung mikro, kipas pendingin internal untuk mempercepat penurunan suhu (100°C ke 37°C ≤12 min), kecepatan pengocokan 200–3000 rpm, fungsi short-mixing, 10 program tersimpan (masing-masing hingga 5 tahap dan 99 siklus), serta beragam pilihan blok aluminium."
@@ -38756,8 +37414,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Dry bath incubator berbahan konduksi blok aluminium kemurnian tinggi dengan opsi pemanas saja (DBI-100: RT+5 s.d. 100°C) atau pendingin aktif (DBI-R100: RT-30 s.d. 100°C, penyimpanan 4°C), dan akurasi ≤±0.3°C.",
     description: [
       "Infitek DBI-100 dan DBI-R100 adalah inkubator penangas kering (dry bath) berbasis mikroprosesor yang menggunakan blok aluminium kemurnian tinggi sebagai media penghantar panas pengganti water bath tradisional.",
       "Model DBI-100 menawarkan pemanasan stabil dari RT+5 hingga 100°C, sedangkan model DBI-R100 dilengkapi teknologi termoelektrik semikonduktor yang mampu mendinginkan hingga RT-30°C (-10°C hingga 100°C) serta penyimpanan sampel pada 4°C. Dilengkapi layar LCD, kalibrasi suhu mandiri, deteksi kesalahan otomatis dengan alarm buzzer, serta lebih dari 10 jenis pilihan blok tabung."
@@ -38812,8 +37468,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator penangas kering suhu tinggi (DBI-160: RT+5 s.d. 160°C; DBI-130: RT+5 s.d. 130°C) dengan pilihan 1, 2, atau 4 blok modular aluminium, pemanasan cepat ≤15 menit, dan proteksi suhu berlebih.",
     description: [
       "Infitek DBI-160/130 Series dirancang khusus untuk aplikasi pemanasan suhu tinggi pada pelestarian sampel, reaksi amplifikasi DNA, dan koagulasi serum biokimia.",
       "Tersedia model 1 blok (DBI-160-1 300W), 2 blok (DBI-160-2 500W) dengan suhu hingga 160°C, serta model 4 blok berkapasitas besar (DBI-130-4 600W) dengan suhu hingga 130°C. Menggunakan blok aluminium kemurnian tinggi, waktu pemanasan cepat ≤15 menit ke 160°C, tampilan hitung mundur dan suhu real-time, fungsi kalibrasi deviasi suhu, serta proteksi batas panas berlebih."
@@ -38866,8 +37520,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penangas blok kering mini (pilihan suhu hingga 105°C atau 150°C) dengan sensor suhu eksternal PT1000, pengatur kenop intuitif, tutup pelindung panas, dan opsi blok manik aluminium (bead bath).",
     description: [
       "Infitek DBI-1 Series (DBI-105 hingga 105°C dan DBI-150 hingga 150°C; daya 100W atau 200W) adalah blok pemanas meja berukuran mini yang dilengkapi sensor suhu eksternal PT1000 untuk memantau suhu langsung pada sampel.",
       "Dilengkapi pengatur kenop putar yang mudah dioperasikan, layar LED digital, tutup pelindung penahan panas dan pencegah kontaminasi debu, akurasi kontrol suhu ±0.3°C (keseragaman ±0.2°C @37°C), timer hingga 99 jam 59 menit, serta kompatibilitas dengan blok tabung mikro, tabung 50 mL, maupun blok 2-in-1 manik aluminium (aluminum beads bath)."
@@ -38920,8 +37572,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Block heater pemanas standar hingga 120°C (laju pemanasan cepat 5.5°C/min) dengan proteksi panas berlebih 140°C, layar LED, tutup pelindung panas, dan beragam blok aluminium.",
     description: [
       "Infitek DBI-120 adalah penangas kering meja yang andal dengan laju kenaikan suhu cepat mencapai 5.5°C per menit untuk meningkatkan efisiensi alur kerja laboratorium.",
       "Dilengkapi rentang pemanasan dari suhu ruang hingga 120°C (akurasi dan keseragaman ±0.5°C pada 37°C), timer 0 hingga 99 jam 59 menit, layar LED digital, sakelar pelindung panas berlebih 140°C, tutup pelindung insulasi, serta beragam pilihan blok aluminium (tabung PCR, strip PCR, tabung darah vacutainer 5 mL, dan pelat 96/384-well)."
@@ -38974,8 +37624,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Dry bath 5 gigi suhu tetap (25°C, 30°C, 37°C, 45°C, 60°C) khusus preparasi sampel analyzer biokimia dengan blok campuran (30 tabung 5 mL + 8 tabung 15 mL) dan laju 5.5°C/min.",
     description: [
       "Infitek DBI-60 dirancang secara spesifik untuk penyiapan dan inkubasi sampel reagen penganalisis biokimia semi-otomatis dengan 5 pilihan gigi suhu tetap yang paling umum digunakan (25°C, 30°C, 37°C standar diagnostik, 45°C, dan 60°C).",
       "Dilengkapi blok pemanas campuran bawaan berkapasitas 30 tabung 5 mL dan 8 tabung 15 mL, laju pemanasan cepat 5.5°C/menit, akurasi suhu ±0.5°C (keseragaman ±0.3°C), timer hingga 99 jam 59 menit atau operasi kontinu, serta proteksi batas aman 80°C."
@@ -39028,8 +37676,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Dry bath saku seukuran telapak tangan berdaya listrik DC 12V (kompatibel colokan mobil) dengan opsi pendingin semikonduktor (DBI-R100V: RT-30 s.d. 100°C) atau tutup pemanas, bobot hanya 0.9–1.1 kg.",
     description: [
       "Infitek DBI-100V Series adalah penangas kering portabel seukuran telapak tangan (palm-size) yang dirancang untuk pengujian kit diagnostik cepat di lapangan dengan suplai daya kendaraan DC 12V.",
       "Tersedia model standar pemanas DBI-100V (RT+5 s.d. 100°C), model bertutup pemanas (heating lid), dan model berpendingin semikonduktor DBI-R100V (mendinginkan hingga 30°C di bawah suhu ruang). Dilengkapi kontrol PID akurasi ±0.3°C, timer fleksibel (detik/menit/jam), 9 program tersimpan (masing-masing 3 segmen), serta bobot sangat ringan kurang dari 1.1 kg."
@@ -39082,8 +37728,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator penangas kering mikroprosesor dengan 5 program tersimpan yang dapat disambung dan disikluskan (linkable & cycled), pilihan pemanas membran (100IV) atau pendingin semikonduktor (R100IV: RT-30 s.d. 100°C).",
     description: [
       "Infitek DBI-100IV Series adalah perangkat penangas kering multifungsi yang dilengkapi 5 kelompok program tersimpan yang dapat dijalankan secara terpisah maupun ditautkan berurutan dalam siklus berkelanjutan.",
       "Tersedia model pemanas membran DBI-100IV (RT+5 s.d. 100°C) dan model berpendingin semikonduktor DBI-R100IV (RT-30 s.d. 100°C; pendinginan 30°C di bawah suhu ruang dalam ≤30 menit), akurasi dan stabilitas termal ±0.3°C, layar LCD dengan pengatur waktu hingga 99 jam 59 menit, serta beragam blok paduan aluminium yang mudah ditukar."
@@ -39137,8 +37781,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Thermo shaker penangas kering (kecepatan 300–2000 rpm, orbit 2 mm) dengan pilihan pemanas saja (S100II) atau pendingin semikonduktor (RS100II: RT-20 s.d. 100°C, laju dingin ≥7°C/min), dan motor BLDC.",
     description: [
       "Infitek DBI-S100II Series menggabungkan pengocokan orbital berkecepatan tinggi dengan pemanasan dan pendinginan termoelektrik presisi untuk riset biologi molekuler.",
       "Tersedia model pemanas DBI-S100II (kecepatan hingga 2000 rpm, RT+5 s.d. 100°C) dan model berpendingin semikonduktor DBI-RS100II (kecepatan hingga 1500 rpm, rentang RT-20 s.d. 100°C dengan laju pendinginan cepat ≥7°C/min), penggerak motor DC brushless tanpa sikat (BLDC), amplitudo rotasi horizontal 2 mm, 5 program terintegrasi yang dapat ditautkan, serta akurasi termal ±0.3°C."
@@ -39193,8 +37835,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Inkubator penangas kering 4 blok dengan 2 kelompok kontrol suhu independen (Two-Group A/B, rentang RT+5 hingga 100°C) yang dapat diatur pada suhu dan pewaktu berbeda secara bersamaan.",
     description: [
       "Infitek DBI-100VII menghadirkan efisiensi ganda di laboratorium dengan sistem kendali dua zona suhu independen (A/B control groups) yang memungkinkan pengguna mengatur dua nilai temperatur dan durasi waktu yang berbeda pada satu unit mesin.",
       "Mampu menampung 4 blok modular paduan aluminium, rentang suhu RT+5 hingga 100°C (akurasi ≤±0.3°C @37°C, kenaikan suhu ke 100°C ≤15 menit), fungsi pemanasan awal otomatis, pemulihan otomatis setelah listrik padam, kalibrasi suhu mandiri, serta pilihan blok MiniBox untuk tabung mikro 0.2 mL hingga 2.0 mL dan tabung reaksi hingga 16 mm."
@@ -39246,8 +37886,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Thermo shaker penangas kering pengontrol suhu (RT-20°C s.d. 100°C) dengan kecepatan pengocokan 200–1500 rpm (orbit 3 mm), penyimpanan dingin 4°C, dan motor DC brushless.",
     description: [
       "Infitek DBI-TCS10 adalah penangas kering pengocok termostatik (thermo shaker) presisi yang berguna untuk aplikasi biologi molekuler seperti reaksi ligasi (14°C), penyimpanan oosit (17°C), dan preservasi enzim.",
       "Dilengkapi rentang kendali suhu dari RT-20°C hingga 100°C, kecepatan 200–1500 rpm (orbit 3 mm), waktu pendinginan cepat (100°C ke 25°C ≤10 menit; RT ke RT-20°C ≤20 menit), fungsi penyimpanan dingin otomatis pada 4°C, motor DC brushless bebas perawatan, layar LCD yang menampilkan nilai aktual dan target bersamaan, serta lifter penggantian blok praktis."
@@ -39302,8 +37940,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator penangas kering 4 blok (suhu RT+5 hingga 110°C) dengan fitur 4 grup pewaktu independen (A/B/C/D), tutup transparan biru anti-ciprat, dan akurasi suhu ≤±0.3°C.",
     description: [
       "Infitek DBI-110 adalah pemanas blok kering berkapasitas 4 blok modular yang dilengkapi fitur 4 kelompok pewaktu independen (four groups A/B/C/D timing) untuk menjalankan pengujian beberapa kelompok tabung dengan waktu inkubasi berbeda.",
       "Dilengkapi penutup transparan biru untuk mencegah cipratan sampel, rentang kendali suhu RT+5 hingga 110°C (akurasi ≤±0.3°C @37°C), fungsi pemanasan awal otomatis, pemulihan mandiri setelah listrik padam, serta kompatibilitas luas dengan blok tabung mikro 0.2 mL hingga tabung kerucut 40 mm dan pelat PCR/ELISA."
@@ -39357,8 +37993,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator penangas kering semikonduktor dengan sensor suhu dan pemanas/pendingin internal pada setiap blok (auto-recognized), rentang RT-25°C hingga 100°C, tutup pemanas mandiri, dan penyimpanan 4°C.",
     description: [
       "Infitek DBI-100VI adalah instrumen penangas kering pemanas dan pendingin berbasis semikonduktor yang mengintegrasikan sistem sensor suhu dan unit pemanas/pendingin langsung di dalam setiap blok modular (blok seri ES dan ESC).",
       "Memastikan laju pemanasan yang jauh lebih cepat dan kontrol suhu yang lebih presisi, pengenalan blok otomatis (auto-recognized), tutup pemanas bersuhu terkontrol (OFF hingga +10°C dari suhu blok), penyimpanan dingin otomatis 4°C, pemrograman multi-titik (5 titik) dan multi-siklus (99 kali), serta pemulihan daya otomatis."
@@ -39411,8 +38045,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penangas kering modular teknologi adhesi magnetik (magnet adhesion) tanpa alat dengan layar TFT berwarna, kalibrasi 3 titik, dan opsi fungsi pemanas, pendingin, serta pengocok (200–1500 rpm).",
     description: [
       "Infitek DBI-100 Series (DBI-RS100 pemanas/pendingin/pengocok, DBI-S100 pemanas/pengocok, DBI-100III pemanas saja) menggunakan teknologi adhesi magnetik inovatif untuk mengganti blok pemanas secara instan tanpa baut pengunci.",
       "Dilengkapi layar TFT berwarna cerdas, kontrol suhu presisi (hingga 100°C; pendinginan hingga 15°C di bawah suhu kamar pada model RS100), frekuensi pengocokan 200–1500 rpm (orbit 3 mm), laju pemanasan 5.5°C/menit, tutup blok penahan panas, 9 program tersimpan, serta kalibrasi suhu 3 titik."
@@ -39466,8 +38098,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penangas kering ultra-kompak berbobot hanya 0.5–1.0 kg (pilihan pemanas Mini100: RT+5 s.d. 100°C atau pendingin Mini100R: RT-20 s.d. 100°C) dengan tegangan DC 12V/24V dan fitur AUTO-4°C.",
     description: [
       "Infitek DBI-Mini100 Series adalah penangas kering mikro terkecil yang muat di bangku lab paling padat dan dapat dioperasikan di dalam mobil atau perahu lapangan.",
       "Tersedia model pemanas DBI-Mini100 (daya 40W, bobot 500 gram) dan model pendingin semikonduktor DBI-Mini100R (daya 60W, bobot 1.0 kg dengan pendinginan hingga 20°C di bawah suhu ruang dan fungsi AUTO-4°C), pengatur waktu 1 detik hingga 99 menit 59 detik atau tak terbatas, akurasi ≤±0.3°C, serta pilihan blok MiniBox untuk tabung 0.2 mL hingga 2.0 mL."
@@ -39518,8 +38148,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penangas kering pemanas dan pendingin (suhu -5°C hingga 110°C, pendinginan hingga 25°C di bawah ambien) dengan teknologi adhesi magnetik penggantian blok cepat, layar TFT, dan kalibrasi 3 titik.",
     description: [
       "Infitek DBI-R110III adalah inkubator blok kering pemanas dan pendingin mandiri yang menggunakan teknologi adhesi magnetik untuk pertukaran blok modular secara instan tanpa baut.",
       "Menyediakan rentang suhu pemanasan hingga 110°C dan pendinginan hingga 25°C di bawah suhu ambien (pengaturan -5°C s.d. 110°C), laju pemanasan 5.5°C/min, layar TFT berwarna cerdas, tutup blok penahan suhu, serta 9 program memori terintegrasi."
@@ -39572,8 +38200,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penangas kering mini berbobot ≤1 kg dengan laju pemanasan cepat hingga 8°C/menit, port USB penyimpanan data, tutup panas (hot lid pada model R100II), dan 9 program memori.",
     description: [
       "Infitek DBI-100II Series (DBI-100II pemanas saja dan DBI-R100II pemanas & pendingin ber-hot lid) adalah blok pemanas mini berbobot ringan (≤1 kg) dengan laju perubahan suhu termal ultra-cepat mencapai 8°C per menit.",
       "Dilengkapi layar LCD digital ganda untuk suhu dan waktu, port USB untuk penyimpanan data eksperimen, kalibrasi cepat, 9 program memori (masing-masing 2 langkah), serta model DBI-R100II yang dilengkapi tutup panas (hot lid) untuk menjaga suhu uap dan mencegah kondensasi pada sampel."
@@ -39627,8 +38253,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis hematologi otomatis 3-part (21 parameter + 3 histogram, kecepatan 60 uji/jam) dengan layar sentuh warna 10.4 inci, bilik ganda independen (WBC & RBC/PLT), dan memori ≥200.000 data sampel.",
     description: [
       "Infitek HEMA-D6190 adalah alat analisis hematologi otomatis 3-part berbasis prinsip Coulter elektrik impedansi dan kolorimetri hemoglobin bebas sianida untuk pemeriksaan darah rutin berkecepatan 60 tes per jam.",
       "Menyediakan 21 parameter darah lengkap dan 3 histogram kurva (WBC, RBC, PLT), bilik ganda terpisah untuk penghitungan WBC dan RBC/PLT guna meminimalkan interferensi, layar sentuh berwarna lebar 10.4 inci dengan dukungan 8 bahasa, volume sampel mikro (darah utuh 10 µL / predilusi 20 µL), memori internal untuk ≥200.000 hasil uji, printer termal eksternal, serta koneksi LIS dua arah."
@@ -39690,8 +38314,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis kimia klinik otomatis penuh (kecepatan konstan 120 tes/jam) dengan 80 posisi reagen berpendingin non-stop 2–14°C, 40 posisi sampel, spuit keramik presisi 0.1 µL, dan sistem optik tertutup penuh.",
     description: [
       "Infitek BA-A-120 adalah penganalisis biokimia klinis otomatis penuh (fully automatic chemistry analyzer) sistem terbuka dengan kapasitas kecepatan konstan 120 tes per jam untuk reagen tunggal maupun ganda.",
       "Dilengkapi 80 posisi reagen dengan pendinginan Peltier 24 jam non-stop (2°C–14°C), 40 posisi sampel, spuit keramik permanen presisi tinggi dengan dispensi mikro hingga 0.1 µL, probe sampel berpelindung benturan dengan pelacak level cairan sensitif, mikser berlapis Teflon pencegah kontaminasi silang, piringan reaksi 50 kuvet optik amorf bervolume rendah (150–330 µL), serta perangkat lunak analitik Windows berstandar Westgard QC."
@@ -39753,8 +38375,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis hematologi otomatis 5-part berkecepatan tinggi (90 sampel/jam, 29 parameter + 1 scattergram + 4 histogram) dengan teknologi hamburan laser solid-state optik, layar sentuh 12.1 inci, dan fokus hidrodinamik ganda.",
     description: [
       "Infitek HEMA-D6052 adalah penganalisis hematologi otomatis 5-part tingkat lanjut untuk rumah sakit rujukan dan laboratorium klinik berskala besar dengan kapasitas pengujian cepat hingga 90 sampel per jam.",
       "Mengadopsi teknologi hamburan laser keadaan-padat (optical solid-state laser scattering) dengan pengumpul cahaya sudut lebar dan fokus hidrodinamik ganda untuk diferensiasi sel darah putih yang akurat, menyediakan 29 parameter pengujian (termasuk parameter riset ALY dan LIC), 1 scattergram WBC, 4 histogram, layar sentuh TFT berwarna besar 12.1 inci, volume sampel darah utuh hanya 10 µL, serta memori hingga 100.000 hasil sampel."
@@ -39810,8 +38430,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis hematologi otomatis 3-part (21 parameter + 3 histogram, 60 sampel/jam) dengan memori otomatis 600.000 data sampel, sistem anti-tersumbat pembakaran tegangan tinggi, dan printer termal bawaan.",
     description: [
       "Infitek HEMA-D6032 adalah penganalisis hematologi 3-part dua kanal berkapasitas memori ekstra masif (mampu menyimpan hingga 600.000 hasil sampel lengkap dengan histogram).",
       "Dilengkapi sistem penghilangan sumbatan pipa (clog removal) melalui pembilasan maju-mundur dikombinasikan dengan pembakaran tegangan tinggi (high-voltage burning) untuk memastikan tingkat kemacetan sangat rendah, ambang batas mengambang cerdas (floating thresholds), printer termal bawaan, layar sentuh warna 10.4 inci yang menampilkan seluruh hasil dan kurva pada satu layar, serta hanya membutuhkan dua jenis reagen operasional (diluent dan lyse)."
@@ -39867,8 +38485,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis hematologi otomatis 5-part (CBC+5DIFF, 60 sampel/jam) dengan teknologi aliran selubung hamburan laser (sheath flow), klasifikasi mengambang (floating classification), 4 scatter plot, dan 2 histogram.",
     description: [
       "Infitek HEMA-D6053 menggunakan teknologi laser semikonduktor berumur panjang yang dikombinasikan dengan aliran selubung (sheath flow) untuk menganalisis ukuran sel, struktur inti, dan kompleksitas partikel leukosit secara akurat.",
       "Dilengkapi teknologi klasifikasi mengambang (floating classification technology) yang secara adaptif mengenali batas populasi sel darah putih meskipun terdapat variasi individual sampel, 4 scatter plot, 2 histogram, reagen bersuhu konstan internal, pemeliharaan satu tombol, layar sentuh warna 10.4 inci tanpa perlu komputer eksternal, printer termal eksternal standar, serta integrasi penuh LIS/HIS."
@@ -39924,8 +38540,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis hematologi 3-part ekonomis (19 parameter + 3 histogram, 60 tes/jam) dengan layar sentuh 8.4 inci, volume sampel darah vena 9.7 µL, printer termal bawaan, dan rentang daya lebar AC 100–264V.",
     description: [
       "Infitek HEMA-D6031 adalah penganalisis hematologi otomatis 3-part yang hemat biaya dan beroperasi cepat untuk meningkatkan operasional laboratorium medis dan perawatan pasien.",
       "Menyediakan 19 parameter darah lengkap dan 3 histogram, volume sampel darah vena hanya 9.7 µL (20 µL untuk darah tepi), kecepatan 60 tes/jam, layar sentuh TFT berwarna 8.4 inci (800×600), perekam termal efisiensi tinggi terpasang langsung, deteksi suhu sampel real-time, serta kemampuan perluasan memori flash USB hingga 16 GB (>1.000.000 data)."
@@ -39982,8 +38596,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penganalisis hematologi hewan otomatis 3-part (21 parameter + 3 histogram, 60 tes/jam) dengan 12 spesies hewan terprogram (anjing, kucing, kuda, sapi, kelinci, dll.), volume darah 10 µL, dan konektivitas Wi-Fi/Bluetooth.",
     description: [
       "Infitek HEMA-V6190 adalah penganalisis hematologi hewan (veterinary CBC machine) yang dirancang khusus untuk memenuhi kebutuhan diagnostik darah pada berbagai hewan peliharaan, ternak, dan laboratorium hewan coba.",
       "Menyediakan 21 parameter darah lengkap dan 3 histogram dengan 12 spesies hewan terprogram pramuat (Canine, Feline, Equine, Bovine, Murine, Swine, Leporid, plus 4 spesies pengguna), hanya memerlukan 10 µL darah utuh, kecepatan 60 tes/jam, layar sentuh warna 10.4 inci, penyimpanan >200.000 hasil uji, pemeliharaan satu tombol, serta koneksi nirkabel Wi-Fi dan Bluetooth untuk pencetakan nirkabel dan integrasi LIS."
@@ -40040,8 +38652,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator pengocok trombosit darah (suhu 22.0°C ± 2.0°C) kapasitas 5 hingga 60 kantong darah dengan osilasi horizontal kontinu 60 siklus/menit (amplitudo 50 mm), pencetak suhu real-time, kompresor R134a, dan sterilisasi UV.",
     description: [
       "Infitek POI Series (POI-5II 5 rak 5–10 kantong, POI-7 7 rak 7–14 kantong, POI-20 10 rak 30–60 kantong) adalah inkubator penyimpanan trombosit darah khusus yang mempertahankan viabilitas platelet melalui kontrol suhu 22.0°C ± 2.0°C dan pengocokan horizontal terus menerus.",
       "Dilengkapi osilator horizontal beramplitudo 50 mm (frekuensi 60±5 siklus/menit), sistem refrigerasi berpendingin udara R134a bebas fluorin dan pemanas 300W, alarm suhu abnormal (<20°C atau >24°C), alarm pemadaman listrik, pencetak suhu real-time dan ekspor data USB untuk ketertelusuran mutu darah, sterilisasi lampu UV internal, serta roda kastor senyap berpelindung kunci."
@@ -40100,8 +38710,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Inkubator pengocok trombosit darah kapasitas raksasa 200–260 kantong darah (suhu 22.0°C ± 2.0°C) dengan 4 unit osilator independen (masing-masing 10 rak), pendingin 500W, dan pencetak suhu.",
     description: [
       "Infitek POI-80 adalah inkubator penyimpanan trombosit skala sentral terbesar dengan kapasitas tampung mencapai 200 hingga 260 kantong darah platelet konsentrat.",
       "Dilengkapi empat unit osilator independen yang dapat diaktifkan dan dikontrol secara terpisah sesuai beban kebutuhan (masing-masing memiliki 10 lapisan rak), sistem kontrol suhu mikroprosesor 22.0°C ± 2.0°C dengan alarm suhu <20°C/>24°C, pendingin bertenaga 500W (R134a) dan pemanas 600W, pencetak riwayat suhu real-time, sterilisasi UV, serta bodi berdiri lantai berdimensi 1520 × 750 × 1800 mm."
@@ -40155,8 +38763,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator penyimpanan trombosit bebas bunga es (no-frost air cooling) dengan kompresor Embraco, rel laci geser SUS impor yang senyap, baterai cadangan alarm pemadaman listrik 72 jam, dan printer termal bawaan.",
     description: [
       "Infitek POI-5 (5 laci SUS, 10 kantong 450 mL) dan POI-10 (10 laci SUS, 20 kantong 450 mL) adalah inkubator trombosit bereputasi tinggi yang ditenagai oleh kompresor bermerek Embraco dengan sistem pendinginan udara bebas bunga es (no-frost).",
       "Dilengkapi rel laci osilasi impor berumur panjang dan senyap (kebisingan hanya 49–50 dB), kontrol suhu mikroprosesor 20°C–24°C (22±2°C), baterai cadangan pengontrol yang mempertahankan alarm pemadaman listrik hingga 72 jam, pintu kaca insulasi berpemanas anti-embun dengan mekanisme tutup balik otomatis (auto-rebound), printer termal bawaan, serta lampu sterilisasi UV."
@@ -40212,8 +38818,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Printer kaca objek mikroskop teknologi laser UV non-kontak (resolusi 2500 DPI, kecepatan 3–5 detik/slide) tanpa bahan habis pakai tinta/pita, layar sentuh LED 11 inci, pemindai barcode internal, dan filter pemurni udara.",
     description: [
       "Infitek LSP-H2 adalah printer kaca preparat mikroskop berkecepatan tinggi yang memanfaatkan teknologi laser UV non-kontak untuk mencetak teks, barcode, dan kode QR permanen pada kaca preparat buram warna (color frosted slides).",
       "Mencetak dengan kecepatan 3–5 detik per slide pada resolusi sangat tajam 2500 DPI tanpa memerlukan pita tinta atau kartrid habis pakai, kompatibel penuh dengan LIS/HIS, hopper pemuatan berkapasitas 100 slide, layar sentuh LED 11 inci dengan software bawaan (dapat dihubungkan ke PC eksternal), pemindai barcode terintegrasi, serta sistem pemurnian udara internal pencegah bau uap laser."
@@ -40273,8 +38877,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Inkubator pengocok trombosit kapasitas 40–120 kantong darah (suhu 22.0°C ± 2.0°C) dengan 2 osilator independen (total 20 lapisan rak), pendingin 500W, pemanas 500W, dan pencetak suhu real-time.",
     description: [
       "Infitek POI-40 adalah inkubator penyimpanan trombosit berkapasitas menengah-besar yang memiliki 2 unit osilator independen (total 20 lapisan rak berukuran 590 × 450 × 1130 mm) untuk menampung 40 hingga 120 kantong trombosit.",
       "Dilengkapi pengontrol suhu digital mikroprosesor 22.0°C ± 2.0°C, pendingin bertenaga 500W (R134a) dan pemanas 500W, osilasi horizontal kontinu 60 siklus/menit (amplitudo 50 mm), pencetak data suhu real-time dan ekspor USB, sterilisasi lampu UV, serta alarm suhu abnormal dan pemadaman listrik."
@@ -40329,8 +38931,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin penutup kaca objek otomatis (coverslipper) kecepatan hingga 550 slide/jam dengan layar sentuh berwarna, dispensing media mounting stepless, pembuangan otomatis kaca penutup rusak, dan filter karbon aktif.",
     description: [
       "Infitek CS-400T adalah mesin penutup kaca objek mikroskop otomatis (automated coverslipper) yang menggantikan proses penutupan kaca preparat manual yang lambat dan berisiko gelembung udara di departemen patologi rumah sakit.",
       "Mampu menutup hingga 550 slide per jam dengan kualitas seragam, kompatibel dengan berbagai ukuran kaca penutup standar (24 × 40–60 mm) dan slide 26 × 75 mm, dispensing medium perekat (mounting medium) dengan volume dan kecepatan yang dapat disesuaikan secara stepless, pembuangan otomatis kaca penutup yang cacat/retak ke kotak limbah, pemindaian slide ganda untuk mencegah slide terlewat, mode basah dan kering, serta kipas hisap senyap berfilter karbon aktif bawaan."
@@ -40386,8 +38986,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Printer kaset jaringan histologi berbasis laser (kecepatan ≥25 kaset/menit, resolusi 2500 DPI) tanpa bahan habis pakai tinta/pita, tahan gores dan pelarut organik, kapasitas muat ≥100 kaset, dan koneksi LIS/HIS.",
     description: [
       "Infitek CAP-C1 adalah printer kaset penanaman jaringan (embedding cassette) teknologi laser mutakhir yang mencetak secara permanen tanpa memerlukan pita tinta atau bahan habis pakai khusus.",
       "Mencetak dengan kecepatan tinggi ≥25 kaset per menit pada resolusi tajam 2500 DPI, hasil teks dan kode QR tahan gores serta kebal terhadap xylene dan pelarut organik lainnya, magasin pemuatan tunggal berkapasitas ≥100 kaset, jendela observasi transparan depan yang dapat dibuka untuk penambahan kaset mendesak, kontrol posisi pendorong elektrik, serta integrasi sistem LIS/HIS rumah sakit."
@@ -40443,8 +39041,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Timbangan dan pencampur kantong darah pintar (kapasitas 0–1200 mL, akurasi 2%) dengan mode goyang lembut (sudut 13°, frekuensi 33 kali/menit), alarm volume target, dan klem pemutus aliran otomatis (BCM-12B).",
     description: [
       "Infitek BCM-12A dan BCM-12B adalah instrumen timbangan dan pengocok darah pintar (blood collection mixer/balance) untuk mempermudah proses pengambilan darah donor ke dalam kantong plastik secara presisi.",
       "Dilengkapi sensor modern dengan layar LED, fungsi prasetel volume kantong darah, mode goyang lembut berkecepatan 33 kali/menit (sudut ayun 13°) untuk mempertahankan viabilitas komponen darah dan mencampur antikoagulan secara seragam, perlambatan otomatis saat mendekati sisa 10 mL volume target, alarm visual-akustik, serta penjepit pemutus selang otomatis bertenaga dorong ≤14N pada model BCM-12B."
@@ -40500,8 +39096,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Mikrotom putar presisi tinggi (ketebalan irisan 1–35 µm, trimming 0–500 µm) dengan pemegang spesimen dapat berputar 360° (orientasi XY ±8°), langkah vertikal 60 mm, dan umpan horizontal 28 mm.",
     description: [
       "Infitek RMT-150 adalah mikrotom putar (rotary microtome) presisi tinggi yang menggabungkan rekayasa mekanis canggih untuk menghasilkan irisan pita jaringan parafin yang rata, tipis, dan konsisten tanpa kerutan.",
       "Dilengkapi pengaturan ketebalan irisan 1–35 µm (inkremen minimum 1 µm; serta pemotongan bebas >35 µm), rentang ketebalan trimming 0–500 µm, pemegang spesimen yang dapat diputar bebas 360° pada orientasi sumbu XY ±8°, umpan spesimen horizontal 28 mm dengan langkah vertikal 60 mm, dudukan bilah pisau yang dapat digeser maju-mundur 0–50 mm, serta ukuran spesimen maksimum 40 × 32 mm."
@@ -40559,8 +39153,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Meja operasi bedah elektrik berbahan baja karbon tinggi dengan penutup stainless steel 304, penyesuaian tinggi elektrik (670–920 mm), kemiringan lateral/longitudinal ≥20°, dan translasi meja 400 mm.",
     description: [
       "Infitek ORB-X1N adalah meja operasi elektrik multifungsi yang dirancang untuk memenuhi kebutuhan fisiologis tubuh manusia dan tuntutan bedah klinis modern.",
       "Rangka utama terbuat dari baja karbon berkualitas tinggi dengan penutup luar stainless steel 304 anti-korosif, pergerakan naik-turun, sandaran punggung, serta kemiringan maju-mundur dan kiri-kanan dikontrol motor elektrik yang halus dan senyap, pelat kepala dan kaki dapat disetel secara manual, serta kasur berbahan anti-bakteri yang tahan disinfektan kimia."
@@ -40616,8 +39208,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Prosesor jaringan otomatis tipe carousel 12 tahap dengan kontrol PLC layar sentuh 7 inci, 9 beker kaca 2.3L, 3 cangkir parafin berlapis teflon (56–86°C), kapasitas 80 kaset, dan opsi bantuan vakum (TSP-6B).",
     description: [
       "Infitek TSP-6A dan TSP-6B adalah pemroses jaringan otomatis tipe korsel (carousel tissue processor) yang dikendalikan oleh PLC untuk dehidrasi dan infiltrasi jaringan histologi rumah sakit dan laboratorium riset.",
       "Dilengkapi lengan mekanik fleksibel, 9 beker kaca medis 2.3L untuk observasi visual, 3 cangkir parafin 1.8L berlapis Teflon anti-korosi (suhu 56–86°C ±1°C), pengocokan keranjang otomatis (≥10 kali/jam), kapasitas keranjang hingga 80 kaset jaringan, sistem proteksi listrik padam, serta model TSP-6B yang dilengkapi pompa vakum (0.053 MPa) untuk mempercepat penetrasi reagen ke jaringan padat."
@@ -40673,8 +39263,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Pusat penanaman jaringan modular (tangki parafin 4L kapasitas besar, 5 zona pemanas independen RT–99°C) dan modul pendingin terpisah EBD-CL3 dengan kompresor inverter (-20°C s.d. -28°C).",
     description: [
       "Infitek EBD-3 dan EBD-CL3 adalah sistem penanaman jaringan parafin modular yang memisahkan unit pemanas embedding dan unit pelat dingin (cryo module) untuk fleksibilitas tata letak dan kemudahan perawatan.",
       "Modul EBD-3 memiliki 5 zona pemanas independen (tangki parafin 4L, dispenser, kompartemen penyimpanan termal kiri/kanan, dan meja kerja), pengatur aliran parafin via sensor sentuh dan pedal kaki, lampu penerang LED bertegangan rendah, serta lubang pemanas pinset. Modul pendingin EBD-CL3 menggunakan kompresor inverter berpendinginan cepat (+5°C hingga -20°C, super cooling hingga -28°C) dengan pelat dingin mikro terintegrasi (<-5°C)."
@@ -40729,8 +39317,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikrotom putar otomatis penuh (pemotongan 0.25–100 µm, trimming 1–600 µm) dengan mekanisme sekrup presisi internasional, kecepatan potong otomatis 15 tingkat, rem darurat, dan panel digital hijau.",
     description: [
       "Infitek RMT-FA398 adalah mikrotom putar otomatis penuh yang memadukan pengoperasian motorik presisi tinggi dengan kebebasan beralih ke mode manual konvensional.",
       "Mengadopsi mekanisme gerak sekrup internasional berkepresisian tinggi, rentang ketebalan irisan 0.25 hingga 100 µm (inkremen minimum 0.25 µm), pemangkasan 1–600 µm, retraksi spesimen 0–50 µm, kecepatan pemotongan otomatis 15 tingkat yang dapat disesuaikan, sistem pengereman darurat elektrik dan mekanis, klem kaset dan blok parafin yang dapat ditukar cepat, serta dudukan pisau berpengaman bilah penuh."
@@ -40790,8 +39376,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat pewarna preparat jaringan otomatis berkapasitas 36 stasiun (26 reagen, 5 tangki cuci, kapasitas 400 slide/jam) dengan layar sentuh 10.4 inci, lengan mekanik 1 detik, dan pemuatan berkelanjutan 10 rak.",
     description: [
       "Infitek TSST-36 adalah instrumen pewarna preparat histologi otomatis berkecepatan tinggi yang dirancang untuk pewarnaan konvensional (H&E) maupun pewarnaan khusus pada berbagai protokol laboratorium patologi.",
       "Memiliki total 36 stasiun (26 stasiun reagen 550 mL, 5 tangki pencucian air mengalir), lengan robotik cepat yang berpindah antar stasiun dalam 1 detik, kapasitas pewarnaan masif hingga 400 slide per jam (30 slide/rak), sistem pemuatan berkelanjutan (continuous loading 10 rak bersamaan melalui laci atas/bawah), layar sentuh berwarna 10.4 inci, serta 10 program kerja berkode warna."
@@ -40845,8 +39429,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Dispenser lilin parafin kapasitas besar 10 Liter dengan pemanas efisiensi tinggi 1200W (suhu 0–100°C, presisi ±1°C), sensor suhu buatan AS, keran pemanas anti-beku, dan layar digital LED.",
     description: [
       "Infitek PRDP-BMR adalah dispenser parafin otomatis berkapasitas besar 10 Liter (10.000 mL) untuk memastikan ketersediaan lilin parafin cair secara berkelanjutan di laboratorium histologi.",
       "Dilengkapi elemen pemanas hemat energi dan cepat, sensor suhu presisi buatan Amerika Serikat (rentang suhu 0–100°C, presisi ±1°C), keran pengeluaran parafin berpemanas untuk mencegah penyumbatan lilin beku, memori penyimpanan parameter operasi terakhir secara otomatis, serta bodi yang kokoh dan higienis."
@@ -40899,8 +39481,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Stasiun perentang dan pengering preparat jaringan 2-in-1 (penangas air kaca borosilikat RT–70°C & meja pemanggang 50 slide RT–99°C) dengan kontrol independen PID ganda, lampu LED bebas silau, dan bodi kompak.",
     description: [
       "Infitek TSBW-TK menggabungkan penangas air perentang pita parafin (water bath) dan meja pengering kaca objek (slide dryer kapasitas 50 slide) dalam satu stasiun kerja terpadu.",
       "Dilengkapi pengontrol PID independen untuk kedua zona pemanas (penangas RT–70°C dan meja gerigi hitam RT–99°C), mangkuk air kaca borosilikat tinggi tahan panas model pisah yang mudah dibersihkan, sistem pencahayaan DC horizontal anti-silau untuk visualisasi pita irisan yang jelas, pengatur waktu mingguan otomatis, proteksi panas berlebih 3 tingkat, serta daya hemat 400W."
@@ -40955,8 +39535,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Stasiun kerja analisis urine terpadu menggabungkan penganalisis kimia urine UA-A3-240 (240 strip/jam, 50 tabung onboard) dan penganalisis sedimen digital berbasis AI UA-S3-120 (120 sampel/jam, flow cell 4 kanal).",
     description: [
       "Infitek UA-S3-120 & UA-A3-240 adalah stasiun kerja diagnostik urine otomatis penuh yang mengintegrasikan pengujian kimia kering dan mikroskopi sedimen urine dalam satu alur kerja tertutup bebas polusi.",
       "Unit kimia UA-A3-240 menguji 12 parameter (240 strip/jam) dengan kolorimetri fotolistrik presisi dan kapasitas 50 tabung onboard. Unit sedimen UA-S3-120 menggunakan sel alir 4 kanal, pencitraan mikroskopis digital ber-autofokus (tanpa cairan fokus), serta algoritma pengenalan kecerdasan buatan (AI) untuk mengklasifikasikan eritrosit, leukosit, silinder hialin/granular, sel epitel, kristal, bakteri, dan ragi (akurasi >95%, kontaminasi silang <0.05%), menghasilkan laporan grafis terpadu komprehensif."
@@ -41011,8 +39589,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Penganalisis kimia urine otomatis penuh (240 strip/jam) dengan kapasitas 50 tabung onboard, sistem penetesan sampel presisi tinggi, kontrol kartu IC untuk mengeliminasi variasi batch strip, dan printer termal.",
     description: [
       "Infitek UA-A3-240 adalah penganalisis kimia urine otomatis mandiri dengan arsitektur kontroler ARM 32-bit dan bus CAN untuk penanganan 50 sampel tabung uji sekaligus.",
       "Mampu menyelesaikan seluruh alur kerja mulai dari pemuatan rak, aspirasi cairan (<1 mL dari minimal 3 mL), penetesan presisi ke strip reagen, analisis kolorimetri fotolistrik 12 parameter, hingga cetak laporan secara otomatis tanpa pengawasan manual, dilengkapi sistem kalibrasi kartu IC cerdas untuk meniadakan variasi antar-batch strip, printer termal bawaan, serta port integrasi RS-232."
@@ -41068,8 +39644,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis urine semi-otomatis berukuran kompak (kecepatan 120 sampel/jam, 10–14 parameter) berbasis sumber cahaya dingin ultra-terang (reflektometri 525–660 nm), printer termal bawaan, dan bobot 2.6 kg.",
     description: [
       "Infitek UA-SA-200 (dan varian veteriner UA-SA-200Vet) adalah penganalisis urine semi-otomatis yang populer berkat ukurannya yang kompak, pengoperasian mudah, dan pembacaan yang cepat.",
       "Menggunakan prinsip reflektometri dengan sumber cahaya dingin ultra-terang pada panjang gelombang 525–660 nm, mendukung strip 10, 11, 12, dan 14 parameter (termasuk Kreatinin, Kalsium, dan Mikroalbumin), kecepatan 120 sampel/jam, fitur pencegah kebocoran urine otomatis untuk mencegah kontaminasi silang, printer termal internal berkecepatan tinggi, serta memori 2000 data."
@@ -41124,8 +39698,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penganalisis urine semi-otomatis berkecepatan tinggi 514 sampel/jam berbasis kecerdasan buatan (AI) & computer vision dengan sistem operasi Linux, layar sentuh 7 inci, dan pengarsipan foto setiap strip uji.",
     description: [
       "Infitek UA-SA-300 (dan varian veteriner UA-SA-300Vet) membawa teknologi visi komputer (computer vision) dan kecerdasan buatan (AI) terkini ke dalam pengujian strip urine untuk akurasi pembacaan warna yang objektif dan bebas bias manusia.",
       "Menghasilkan kecepatan pengujian luar biasa hingga 514 sampel per jam, sistem operasi tertanam Linux yang stabil, setiap hasil pemeriksaan difoto langsung dan diarsipkan secara digital untuk kebutuhan peninjauan ulang (traceability), sensor pemantau suhu lingkungan untuk koreksi pembacaan, layar sentuh 7.0 inci, memori berkapasitas jutaan data, printer termal internal cepat, serta konektivitas Wi-Fi, LAN, dan RS-232."
@@ -41180,8 +39752,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis sedimen urine otomatis penuh berbasis sel alir 4-kanal digital imaging dan kecerdasan buatan AI (kecepatan 120 sampel/jam, akurasi >95%) dengan autofokus mikroskop otomatis dan fungsi self-learning.",
     description: [
       "Infitek UA-S3-120 adalah penganalisis unsur sedimen urine otomatis penuh yang mengeliminasi kebutuhan sentrifugasi dan penyiapan kaca preparat manual dalam pemeriksaan mikroskopis urine.",
       "Menggunakan sel alir penghitung 4 kanal tetap (four channels fixed flow counting cell) dengan teknologi pencitraan digital dan fusi gambar medis, kecepatan analisis 120 sampel per jam, sistem autofokus mikroskopis otomatis tanpa cairan pemfokus, algoritma AI yang dapat dilatih ulang oleh operator (self-learning function), sensitivitas 5 sel/µL, carryover <0.05%, serta penyimpanan 200.000 hasil bergambar."
@@ -41237,8 +39807,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penyegel selang kantong darah otomatis (waktu segel 0.8–2 detik untuk selang Φ3–Φ6 mm) dengan perangkat tambahan anti-hemolisis, penyesuaian voltase otomatis 190–250V, dan sensor fotoelektrik.",
     description: [
       "Infitek SLM-T2008 adalah mesin penyegel selang kantong darah medis frekuensi tinggi yang dirancang untuk menghasilkan sambungan las kedap udara, steril, dan bebas polusi pada selang plastik kantong darah.",
       "Dilengkapi kepala segel berpengarah pegas tambahan elastis untuk mencegah atau mereduksi risiko hemolisis sel darah selama proses penyegelan panas, kontrol mikroprosesor dengan durasi pemanasan 0.8–2.0 detik tergantung ketebalan selang (Φ3–Φ6 mm), sensor fotoelektrik penyegel otomatis saat selang diselipkan, serta sirkuit penstabil voltase otomatis yang bekerja stabil pada rentang fluktuasi listrik 190V hingga 250V."
@@ -41292,8 +39860,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mesin penyegel kantong sterilisasi medis kontinu otomatis (kecepatan 10 m/menit, lebar pola segel 12 mm) dengan pemanasan keramik pelat datar (ke 180°C dalam 40 detik), suhu 60–220°C, dan standar YY/T 0698.5.",
     description: [
       "Infitek TMS-A100 adalah mesin penyegel kantong sterilisasi medis kontinu otomatis berkinerja tinggi untuk instalasi pusat sterilisasi (CSSD), rumah sakit, dan klinik gigi.",
       "Menggunakan elemen pemanas keramik pelat datar canggih yang mencapai 180°C dalam waktu singkat hanya 40 detik, sistem penekan tekanan konstan terapung (floating constant pressure) yang dapat menyegel kantong kertas-plastik standar maupun kantong lipat 3D, kecepatan segel kontinu 10 m/menit dengan pengumpanan otomatis, lebar segel 12 mm sesuai standar medis YY/T 0698.5-2009, serta margin segel 0–35 mm yang dapat disesuaikan."
@@ -41347,8 +39913,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat pemisah plasma darah manual (plasma extractor) untuk kantong 100–400 mL dengan pelat penekan transparan, gaya klem pegas 20N, bodi stainless steel kokoh, dan bobot 2.5 kg.",
     description: [
       "Infitek PEX-II adalah alat pemeras plasma darah manual yang digunakan di bank darah dan rumah sakit untuk memisahkan lapisan plasma darah, buffy coat, dan konsentrat eritrosit dari kantong darah primer ke kantong transfer satelit setelah proses sentrifugasi.",
       "Dilengkapi pelat penjepit transparan yang memungkinkan analis mengamati batas antarmuka sel darah secara jelas, gaya tekan pegas konstan 20N untuk dorongan cairan yang halus tanpa merusak sel, kapasitas kantong 100 hingga 400 mL, serta bodi yang sangat kokoh dan mudah disinfeksi."
@@ -41399,8 +39963,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penyegel panas kantong sterilisasi manual dengan pisau pemotong terpasang (built-in cutter), lebar segel maksimum 300 mm, tampilan suhu tabung digital, dan bodi baja karbon kokoh.",
     description: [
       "Infitek TMS-1 adalah alat penyegel panas manual ekonomis yang dilengkapi pisau pemotong geser mandiri untuk memotong gulungan kantong sterilisasi kertas-plastik sesuai panjang yang diinginkan.",
       "Dilengkapi bilah pemanas batang dengan pemanasan cepat, lebar penyegelan maksimum hingga 300 mm, suhu pemanas yang dapat disesuaikan dengan tampilan tabung digital, bodi baja karbon lapis semprot yang kokoh, pengoperasian tuas tekan yang ringan, serta tingkat kerusakan yang sangat rendah."
@@ -41452,8 +40014,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin penyegel kantong sterilisasi medis kontinu dengan printer 24-pin terpasang (mencetak tanggal sterilisasi/kedaluwarsa/batch/operator), layar sentuh 7 inci, kecepatan 10 m/menit, dan proteksi deviasi suhu ±4°C.",
     description: [
       "Infitek TMS-AP105P adalah mesin penyegel kemasan sterilisasi medis kelas cerdas yang dilengkapi printer dot-matrix 24-pin bawaan untuk mencetak informasi ketertelusuran sterilisasi secara langsung pada tepi kantong kertas-plastik sesuai standar YY0466-2003.",
       "Mengusung layar sentuh LCD berwarna 7.0 inci grafis (dwibahasa Inggris dan Mandarin), kecepatan segel 10 m/menit (lebar segel 12 mm, suhu 60–220°C akurasi ≤±1%), penghitung otomatis 0–9999, sistem pemanas keramik datar dengan pemanasan cepat dan pendinginan berbantu, penekan tekanan konstan mengambang, serta proteksi penghentian otomatis saat deviasi suhu melebihi ±4°C."
@@ -41514,8 +40074,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat pencair plasma darah metode penangas air bersirkulasi (kapasitas 10–20 kantong dalam 10–15 menit, suhu 37°C presisi ±0.1°C) dengan pemanas PTC 3500W berisolasi air-listrik, pompa 30 L/min, dan layar sentuh IPS.",
     description: [
       "Infitek PTM-1WC adalah instrumen pencair plasma darah beku tipe sirkulasi air berkapasitas 10 hingga 20 kantong yang mempertahankan kualitas faktor pembekuan darah melalui pemanasan konstan 37°C (±0.1°C).",
       "Menggunakan pemanas PTC 3500W berefisiensi tinggi (mencapai 37°C dalam 10–12 menit) dengan desain pemisahan air dan listrik total anti-bocor, pompa sirkulasi berkapasitas 30 L/min, layar sentuh IPS dengan tampilan kurva suhu real-time, fungsi pengeringan otomatis kantong darah pasca-pencairan, fungsi pembersihan otomatis satu tombol, sekat pencairan yang dapat diatur, serta proteksi kata sandi dan ekspor USB."
@@ -41575,8 +40133,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Alat pencair plasma darah tipe kering (dry-type) tanpa kontak air langsung pada kantong plasma (kapasitas 5–10 kantong dalam 20–30 menit, suhu 37°C presisi ±0.1°C) dengan pemanas PTC 3500W dan layar IPS.",
     description: [
       "Infitek PTM-1DY mengadopsi metode pencairan kering (dry-type thawing method) di mana kantong plasma terlindung dari kontak langsung dengan air penangas untuk mencegah infeksi dan kontaminasi pada lubang port selang.",
       "Menyediakan kapasitas pencairan 5 hingga 10 kantong dalam durasi 20–30 menit pada suhu stabil 37°C (akurasi ±0.1°C), pemanas PTC 3500W bertenaga tinggi, layar sentuh IPS resolusi tinggi dengan proteksi kata sandi, pencatatan data suhu real-time via USB, serta sistem isolasi kelistrikan air penuh."
@@ -41629,8 +40185,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Alat pencair plasma darah tipe ayun (swing type) dengan osilasi bolak-balik 60 siklus/menit (amplitudo 50 mm) dan sirkulasi air 37°C (kapasitas 10–20 kantong dalam 10–15 menit), pemanas PTC 3500W, dan layar sentuh IPS.",
     description: [
       "Infitek PTM-1SK mengombinasikan sirkulasi air hangat 37°C bertenaga tinggi dan gerakan ayun mekanis bolak-balik (swing motion 60 siklus/menit, amplitudo 50±5 mm) untuk mempercepat pencairan plasma beku secara dramatis tanpa merusak protein pembeku darah.",
       "Mampu mencairkan 10 hingga 20 kantong plasma dalam 10–15 menit, pemanas PTC 3500W berisolasi air-listrik, sistem pengisian dan pengurasan air otomatis, layar sentuh IPS berwarna dengan tampilan kurva suhu dinamis, serta tangki air yang dapat dilepas untuk sanitasi rutin."
@@ -41683,8 +40237,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Inkubator pengocok trombosit portabel kapasitas 3 rak (suhu 22.0°C ± 0.1°C, osilasi 60 siklus/menit) dengan baterai cadangan internal tahan 30 menit untuk keamanan transportasi antar ruangan.",
     description: [
       "Infitek POI-3 adalah inkubator penyimpanan trombosit darah portabel dan ringan yang dirancang khusus untuk pengangkutan platelet konsentrat antar bangsal rumah sakit atau dari kendaraan donor darah.",
       "Dilengkapi baterai cadangan internal yang mempertahankan kerja pendinginan dan osilasi selama 30 menit saat kabel daya terputus selama transportasi, kontrol suhu presisi 22.0°C ± 0.1°C, motor konstan senyap, osilasi horizontal 60 siklus/menit (amplitudo 50 mm), insulasi busa poliuretan rapat, serta alarm suhu abnormal (<20°C atau >24°C)."
@@ -41737,8 +40289,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pusat penanaman jaringan parafin cerdas terintegrasi (tangki parafin 6L, 6 zona pemanas independen RT–85°C, dispenser parafin 0–400 mL/min) dan pelat pendingin frekuensi variabel EBD-CL4 (+5°C s.d. -28°C).",
     description: [
       "Infitek EBD-4 & EBD-CL4 menghadirkan integrasi stasiun penanaman jaringan (embedding center) dan pelat pembekuan kaset (cryo plate) dengan koordinasi kendali ganda otomatis online berlayar sentuh kapasitif 7.0 inci.",
       "Unit EBD-4 memiliki tangki parafin 6 Liter dengan fungsi pemanas kuat untuk mencairkan parafin lebih cepat, 6 zona pemanas independen (RT–85°C), 6 lubang pemanas pinset, dispenser parafin terkuantifikasi (0–400 mL/min, durasi 0.1–10 detik via sentuhan atau pedal kaki), kaca pembesar multi-sudut berlampu LED, pelat pendingin mikro semikonduktor (≤-5°C), serta unit pembeku EBD-CL4 (315×380 mm) berpendingin inverter hingga -28°C."
@@ -41792,8 +40342,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Stasiun perentang jaringan dengan 2 wadah penangas air kaca independen (RT–70°C) dan meja pemanggang slide berkapasitas 32 preparat (RT–100°C), kontrol PID 3-arah, serta pemutar audio.",
     description: [
       "Infitek TSBW-T3 adalah stasiun perentang pita jaringan parafin tingkat lanjut yang memiliki dua wadah penangas air kaca borosilikat independen dan satu meja pemanggang slide bergerigi.",
       "Dilengkapi kontrol suhu PID 3-arah mandiri (dua penangas RT–70°C dan meja pengering RT–100°C, presisi ±1°C), elemen pemanas konduktivitas tinggi, pencahayaan DC horizontal tanpa silau, tampilan modul digital hijau murni, pewaktu mingguan otomatis, bodi berpelapis anti-korosif, serta fitur unik pemutar audio dengan slot kartu TF, port USB, dan colokan headphone untuk kenyamanan kerja analis."
@@ -41847,8 +40395,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikrotom beku (cryostat) klinis dengan kompresor ganda impor (suhu chamber & chuck hingga -50°C, pendinginan cepat semikonduktor -60°C), 18 stasiun pembekuan, layar sentuh 10 inci, dan disinfeksi UV.",
     description: [
       "Infitek RMT-R300 adalah instrumen mikrotom beku (cryostat microtome) medis kelas atas untuk analisis irisan jaringan patologi cepat saat operasi bedah berlangsung (potong beku intraoperatif).",
       "Menggunakan dua unit kompresor pendingin impor yang mendinginkan 5 titik secara terpisah (chamber, freezing shelf, dudukan pisau, sample chuck, dan penekan jaringan), pendinginan semikonduktor tambahan hingga -60°C (18 stasiun pembekuan dengan 6 peltier), layar sentuh LCD 10 inci berwarna, fungsi hibernasi cerdas (suhu -1 s.d. -9°C dan pulih dalam 15 menit), chuck jaringan putar 360°/12°, pintu kaca berpemanas anti-embun, serta lampu sterilisasi UV."
@@ -41908,8 +40454,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikrotom putar manual presisi tinggi (ketebalan irisan 0.5–60 µm, trimming 15 & 35 µm) dengan rel pemandu cross-roller impor, pengunci handwheel di segala posisi, dan baki limbah magnetik.",
     description: [
       "Infitek RMT-M268 adalah mikrotom putar manual berpresisi tinggi dengan rumah bodi ramping yang dirancang untuk memudahkan pembersihan tanpa perlu membuka penutup instrumen.",
       "Menggunakan rel pemandu rol silang (cross-roller guide rails) impor dan mekanisme gerak sekrup mikro untuk kinerja pemotongan yang sangat mulus dan rata, rentang ketebalan irisan 0.5 hingga 60 µm, pemangkasan cepat 15 µm dan 35 µm, retraksi spesimen ≥20 µm, handwheel berpenyeimbang mekanis yang dapat dikunci di posisi mana pun, penyesuaian sumbu XY ±8° dan rotasi 360°, serta baki penampung limbah terfiksasi magnetik yang mudah dilepas."
@@ -41961,8 +40505,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mikrotom putar semi-otomatis berlayar OLED dengan mode penginderaan cerdas (pemangkasan setengah putaran & pemotongan satu putaran penuh satu tangan), rentang irisan 0.25–100 µm, dan rel pemandu bebas pelumasan.",
     description: [
       "Infitek RMT-SA500 adalah mikrotom putar semi-otomatis generasi canggih yang menghadirkan mode penginderaan cerdas (intelligence sensing mode) di mana pemangkasan dan pemotongan dapat dilakukan dengan satu tangan cukup melalui variasi putaran handwheel (setengah putaran untuk trimming dan satu putaran penuh untuk slicing).",
       "Menyediakan rentang ketebalan irisan 0.25–100 µm (inkremen minimum 0.25 µm), pemangkasan 1–600 µm, retraksi spesimen 0–100 µm, rentang span irisan penuh 10–6000 µm, layar OLED sudut pandang 360° tanpa titik buta, rel pemandu awet bebas pelumasan oli, memori posisi kepala sampel 2 titik, handwheel berkemampuan melayang (hovering) di segala posisi, serta wadah limbah magnetik berlapis anti-statis."
@@ -42019,8 +40561,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Lemari arsip blok jaringan parafin berkapasitas hingga 11.000 blok (18 laci dalam 3 modul tumpuk) berbahan baja canai dingin lapis cat anti-karat dengan slot label cetak cetakan logam.",
     description: [
       "Infitek SLDC-102 adalah lemari penyimpanan blok jaringan parafin histologi berkapasitas besar yang dirancang modular untuk efisiensi pengarsipan spesimen patologi jangka panjang.",
       "Terdiri dari 1 unit basis penyangga kuat dan 3 modul bertumpuk yang memuat total 18 laci tarik (6 laci per modul) yang mampu menampung hingga 11.000 blok jaringan parafin, dibuat dari lembaran baja canai dingin berkualitas tinggi dengan pegangan tersembunyi berbalut krom ABS, sekat pembagi yang dapat dipindahkan di dalam laci, serta slot kartu label cetak terintegrasi."
@@ -42072,8 +40612,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Lemari arsip kaca preparat mikroskop berkapasitas hingga 8.928 kaca objek (18 laci dalam 3 modul tumpuk) berbahan baja canai dingin dengan alur cetakan logam presisi dan label bernomor.",
     description: [
       "Infitek SLDC-103 adalah lemari pengarsipan kaca preparat mikroskop profesional yang dibangun untuk menyimpan ribuan kaca objek histopatologi secara aman dan teratur.",
       "Memiliki struktur modular yang terdiri dari 1 basis kokoh dan 3 unit modul atas yang memuat 18 laci tarik (6 laci per modul) dengan kapasitas total hingga 8.928 slide mikroskop, celah alur slide dibuat menggunakan cetakan logam presisi tinggi agar kaca tidak bergesekan atau pecah, dilengkapi label bernomor di dalam laci, pegangan ABS tersembunyi, serta bodi baja canai dingin tahan beban berat."
@@ -42125,8 +40663,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Lemari penyimpanan papan pengering kaca preparat 4 susun modul (kapasitas total 96 papan pengering / 24 per modul) berbahan baja canai dingin dengan label bernomor di setiap kompartemen.",
     description: [
       "Infitek SLDC-104 adalah lemari kabinet empat susun (four-stack modular cabinet) yang dirancang khusus untuk memuat baki atau papan pengering kaca preparat datar sebelum disimpan permanen.",
       "Struktur terdiri dari basis penyangga baja 1.2 mm dan empat modul bertumpuk baja 0.8 mm yang mampu menampung total 96 pelat pengering kaca preparat (masing-masing modul memuat 24 pelat, dengan 12 pelat per kompartemen), celah cetakan logam khusus dengan label bernomor pada setiap bagian, pegangan ABS tersembunyi, serta dimensi ramping hemat ruang."
@@ -42177,8 +40713,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis kimia klinik otomatis penuh (kecepatan konstan 200 tes/jam, reagen ganda) dengan 80 posisi reagen pendingin 24 jam (2–14°C), 40 posisi sampel, pencucian otomatis 3×4 tahap, dan piringan 44 kuvet.",
     description: [
       "Infitek BA-A-280 adalah penganalisis biokimia klinis otomatis penuh berkecepatan konstan 200 tes per jam (reagen tunggal maupun ganda) dengan sistem akses acak (random access) terbuka.",
       "Dilengkapi probe sampling multifungsi berpelindung tabrakan dan sensor level cairan sensitif, mikser berpelapis Teflon anti-tetesan air, baki reagen 80 posisi berpendingin non-stop Peltier 2–14°C, baki sampel 40 posisi, piringan 44 kuvet plastik optik amorf bervolume rendah (150–330 µL), sistem stasiun pencucian kuvet otomatis 3×4 tahap, serta perangkat lunak analitik Windows berstandar Westgard QC."
@@ -42240,8 +40774,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis kimia klinik otomatis penuh throughput tinggi (kecepatan konstan 400 tes/jam, reagen ganda) dengan 120 posisi sampel berpendingin, 90 posisi reagen, pencucian 2×6 tahap, dan piringan 90 kuvet.",
     description: [
       "Infitek BA-A-480 adalah penganalisis biokimia klinis otomatis penuh tipe berdiri lantai tugas berat yang dirancang untuk beban kerja intensif dengan kecepatan konstan 400 tes per jam.",
       "Dilengkapi baki sampel 120 posisi dan baki reagen 90 posisi yang keduanya didukung pendinginan Peltier non-stop 24 jam (2–14°C), piringan reaksi 90 kuvet optik amorf bervolume rendah (150–330 µL), sistem pencucian otomatis komprehensif 2×6 tahap, mixer dayung berlapis Teflon, probe presisi berpelindung tabrakan, sistem optik tertutup penuh 12 panjang gelombang, serta bobot kokoh 200 kg."
@@ -42301,8 +40833,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis kimia klinik otomatis penuh (kecepatan konstan 300 tes/jam, reagen ganda) dengan konfigurasi seimbang 70 posisi sampel & 70 posisi reagen berpendingin 2–14°C, pencucian 3×5 tahap, dan 90 kuvet.",
     description: [
       "Infitek BA-A-380 menyajikan perpaduan optimal antara kecepatan konstan 300 tes per jam dan konfigurasi baki yang seimbang (70 posisi sampel dan 70 posisi reagen).",
       "Dilengkapi pendinginan non-stop 24 jam (2–14°C) pada kompartemen reagen, piringan 90 kuvet plastik optik amorf bervolume rendah (150–330 µL), sistem pencucian kuvet otomatis 3×5 tahap berkecepatan tinggi, probe sampling presisi dengan deteksi ketinggian cairan, mikser dayung Teflon anti-carryover, optik multi-panjang gelombang simultan, serta bodi lantai kokoh berbobot 170 kg."
@@ -42357,8 +40887,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penganalisis kimia kering otomatis portabel (bobot 4.2 kg, waktu uji 12 menit/sampel) mengintegrasikan kimia konvensional, elektrolit, dan koagulasi dari sampel mikro 90–120 µL berbasis spektroskopi absorpsi.",
     description: [
       "Infitek BA-PA-120 adalah penganalisis kimia kering otomatis tipe Point-of-Care Testing (POCT) yang menggabungkan parameter kimia klinis, elektrolit, dan profil koagulasi (seperti PT/APTT/TT/FIB dan HbA1c) dalam satu instrumen jinjing seberat 4.2 kg.",
       "Menggunakan cakram reagen dengan kode barcode dua dimensi, hanya membutuhkan 90–120 µL darah utuh berantikoagulan, serum, atau plasma (1/10 hingga 1/20 dari kebutuhan analiser konvensional), hasil pengujian selesai dalam 12 menit, bebas pemeliharaan tanpa selang cairan internal, sistem operasi Android pada layar sentuh kapasitif 6.5 inci, printer termal internal, serta memori 500.000 data."
@@ -42419,8 +40947,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Penganalisis kimia klinik otomatis penuh (kecepatan konstan 150 tes/jam, reagen ganda) dengan 80 posisi reagen berpendingin non-stop 2–14°C, spuit keramik presisi 0.1 µL, dan piringan 44 kuvet amorf.",
     description: [
       "Infitek BA-A-160 adalah instrumen penganalisis kimia darah otomatis penuh berkecepatan konstan 150 tes per jam yang sangat efisien untuk laboratorium klinik tingkat menengah.",
       "Dilengkapi kompartemen pendingin Peltier 80 posisi reagen non-stop 24 jam (2–14°C), 40 posisi sampel, piston spuit keramik permanen berakurasi tinggi hingga 0.1 µL, mikser dayung berlapis Teflon anti-tetesan, piringan 44 kuvet reaksi plastik optik amorf (volume 150–330 µL), sistem optik tertutup penuh 8 panjang gelombang, serta perangkat lunak Windows berantarmuka ramah pengguna."
@@ -42475,8 +41001,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis biokimia semi-otomatis berlayar sentuh LCD 7 inci dengan 7 filter standar (340–630 nm), flow cell kaca kuarsa 32 µL, printer termal terintegrasi, dan memori 10.000 hasil sampel.",
     description: [
       "Infitek BA-SA-100D adalah fotometer kimia klinik semi-otomatis yang banyak digunakan di klinik dan laboratorium diagnostik untuk analisis kuantitatif fungsi hati, ginjal, lipid, dan enzim miokardium.",
       "Mendukung mode uji flow cell (kaca kuarsa 32 µL) maupun kuvet standar, 7 filter optik standar (340, 405, 492, 510, 546, 578, 630 nm + 1 posisi bebas), rentang serapan luas 0–4.500 Abs, inkubator suhu terpasang (25°C, 30°C, 37°C presisi ±0.1°C), lampu halogen Philips 6V 10W dengan fungsi hibernasi hemat daya, printer termal internal, serta memori 10.000 data sampel."
@@ -42531,8 +41055,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penganalisis biokimia semi-otomatis dengan fungsi koagulasi darah (PT, APTT, TT), inkubator multifungsi 22 posisi, layar sentuh warna sejati 7 inci, dan memori >300 program serta 200.000 hasil uji.",
     description: [
       "Infitek BA-SA-100C adalah penganalisis biokimia semi-otomatis serba guna yang mengintegrasikan pengujian biokimia umum, protein spesifik, pemantauan obat, serta fungsi uji koagulasi darah rutin (pengukuran waktu pembekuan PT, APTT, TT).",
       "Dilengkapi blok inkubator multifungsi 22 lubang dengan kontrol suhu presisi berbasis Peltier (25°C, 30°C, 37°C dan suhu ruang), layar sentuh TFT warna 7.0 inci (800×480 piksel) berbasis Windows Embedded Compact 7, prosesor ARM Cortex-A8 (720 MHz), printer termal 57 mm bawaan, 4 port USB host, port Ethernet untuk LIS, serta memori besar untuk lebih dari 300 program dan 200.000 hasil sampel."
@@ -42589,8 +41111,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penganalisis kimia darah hewan portabel (bobot 5 kg, waktu uji 12 menit/sampel) mengintegrasikan kimia klinik, elektrolit, inflamasi hewan, dan uji koagulasi dari sampel darah 90–120 µL berbasis spektroskopi absorpsi.",
     description: [
       "Infitek BA-VA-120 adalah penganalisis kimia veteriner otomatis penuh berbasis cakram mikrofluida yang menghasilkan mutu data laboratorium rujukan dalam perangkat portabel seberat 5 kg.",
       "Menggunakan prinsip spektroskopi serapan fotometrik dan transmisi turbidimetri (jauh lebih presisi dari metode refleksi cahaya), hanya membutuhkan 90–120 µL darah utuh hewan berantikoagulan, serum, atau plasma, hasil uji lengkap tercetak dalam 12 menit, menyediakan panel spesifik hewan (seperti inflamasi anjing c-CRP, inflamasi kucing f-SAA, panel reptil/eksotik, dan koagulasi), sistem Android layar sentuh 6.5 inci, memori >100.000 data, serta printer termal terintegrasi."
@@ -42650,8 +41170,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Mikrotom putar semi-otomatis presisi tinggi (ketebalan irisan mulai 0.25 µm, rentang trimming 0–900 µm) dengan rel pemandu cross-roller impor, penggerak umpan cerdas, dan layar LCD.",
     description: [
       "Infitek RMT-SA358 adalah mikrotom putar semi-otomatis berdesain aerodinamis yang mengadopsi sistem kendali umpan spesimen cerdas untuk pemotongan semi-ultrathin mulai dari ketebalan 0.25 µm.",
       "Menggunakan rel pemandu rol silang (cross-roller guide rails) impor dan mekanisme gerak sekrup mikro, rentang ketebalan irisan 0–60 µm, rentang pemangkasan (trimming) sangat luas 0–900 µm, layar LCD informasi pemotongan, mekanisme proteksi kelebihan beban motorik, klem blok parafin dan kaset yang dapat ditukar cepat, handwheel mekanis yang dapat dikunci di posisi mana pun, serta bilah pelindung pisau merah penuh."
@@ -42707,8 +41225,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pemroses jaringan otomatis sistem tertutup penuh (kapasitas 300 kaset, ruang proses 9L) dengan layar sentuh 15 inci, mode 'Sample Not Move, Reagent Move', penggantian lilin parafin otomatis, dan mode cepat 3 jam.",
     description: [
       "Infitek TSP-CV1 adalah prosesor jaringan histologi sistem tertutup (enclosed tissue treatment system) kelas industri medis yang mengeliminasi polusi kebocoran uap pelarut ke lingkungan laboratorium patologi.",
       "Menerapkan prinsip inovatif di mana sampel jaringan tetap diam di dalam ruang proses sementara cairan reagen yang dipompa bergantian (Sample Not Move, Reagent Move) untuk mencegah kerusakan mekanis, kapasitas masif hingga 300 kaset dehidrasi (ruang proses 9 Liter), 12 stasiun reagen 6L, 3 tangki parafin 6L dengan sistem transfer lilin otomatis, agitasi magnetik internal, layar sentuh LCD 15 inci, mode pemrosesan cepat 3 jam di siang hari, serta pemulihan program otomatis saat listrik padam."
@@ -42769,8 +41285,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Prosesor jaringan tipe carousel mini ekonomis (kapasitas 40 kaset, 12 beker 750 mL) dengan penutup plexiglass kedap gas, transmisi 2D tahan aus, pemanas kering presisi, dan daya 500W.",
     description: [
       "Infitek TSP-1 adalah pemroses jaringan otomatis tipe korsel model mini yang dirancang hemat biaya dan hemat konsumsi reagen untuk laboratorium patologi dengan volume sampel kecil.",
       "Dilengkapi 12 beker (9 reagen dan 3 cangkir parafin cair suhu RT–80°C) berkapasitas masing-masing 750 mL, keranjang dehidrasi berkapasitas 40 kaset jaringan, penutup plexiglass rapat dengan sistem pengeluaran gas anti-bau, sistem transmisi 2 dimensi yang halus dan tahan aus, pemanas kering internal presisi, 20 set program memori, serta kemampuan penyesuaian manual sewaktu-waktu selama proses otomatis berlangsung."
@@ -42825,8 +41339,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Pemroses jaringan otomatis tipe carousel kapasitas 60 kaset (12 beker 1000 mL) dengan sistem pemurnian udara sirkulasi internal hijau, layar LCD impor real-time, dan pemanas lilin tanpa air hemat energi.",
     description: [
       "Infitek TSP-3 adalah pemroses jaringan histopatologi tipe korsel berukuran standar untuk memproses hingga 60 kaset jaringan per siklus.",
       "Dilengkapi 12 beker (9 beker reagen kimia dan 3 beker parafin suhu RT–80°C) berkapasitas masing-masing 1000 mL, sistem pemurnian udara sirkulasi internal hijau (green inner-cycling air purification system) yang aktif menyerap dan menetralkan uap beracun, layar LCD informatif impor, pemanas lilin parafin tanpa air cerdas (waterless intelligent heating) berakurasi ±1°C, 20 set memori program, serta bodi ergonomis bersuara halus."
@@ -42881,8 +41393,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Pemroses jaringan otomatis tipe carousel kapasitas 100 kaset (12 beker bervolume besar 1500 mL) dengan animasi simulasi kerja pada layar LCD, sistem pemurni udara internal hijau, dan kontrol kipas/lampu otomatis.",
     description: [
       "Infitek TSP-3A menghadirkan kapasitas dehidrasi jaringan yang lebih besar berkat beker berukuran 1500 mL dan keranjang yang mampu menampung hingga 100 kaset jaringan.",
       "Dilengkapi rumah bodi berlapis APS tahan korosi dan mudah dibersihkan, layar LCD terpadu dengan animasi simulasi kerja tersinkronisasi grafis, sistem pemurnian udara sirkulasi internal hijau, penghitungan durasi kerja otomatis, kontrol kipas ventilasi otomatis saat keranjang berpindah antar-tangki, kontrol lampu penerang hemat daya, serta proteksi cerdas pemadaman listrik."
@@ -42937,8 +41447,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Pemroses jaringan otomatis dua mekanisme keranjang independen (kapasitas ganda 250 kaset, 14 beker 2000 mL) dengan mode pemrosesan bergulir kontinu (scrolling mode), layar sentuh 7 inci, dan pemanas lilin gradien.",
     description: [
       "Infitek TSP-3E adalah mesin pemroses jaringan tipe korsel paling canggih yang memiliki dua set mekanisme penggerak keranjang independen (Mekanisme A dan B) untuk melipatgandakan throughput hingga 250 kaset jaringan (125 kaset per keranjang).",
       "Menghadirkan mode pemrosesan bergulir (scrolling processing mode) di mana keranjang kedua dapat langsung masuk mengikuti keranjang pertama dalam siklus tanpa henti, 14 beker berkapasitas besar 2000 mL (10 reagen dan 4 cangkir parafin cair), layar sentuh warna LCD 7 inci, sistem pemurnian udara siklus hijau, stasiun proteksi daya terpisah (Stasiun 7 untuk keranjang A dan Stasiun 5 untuk keranjang B), serta keranjang 3-tingkat untuk kategorisasi jaringan biopsi."
@@ -42998,8 +41506,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Alat pewarna preparat otomatis linier 14 stasiun (12 beker reagen 1500 mL, 1 bilas, 1 pengering udara panas) dengan layar sentuh 7 inci, kapasitas rak 70 slide, dan katup solenoid impor untuk suplai air otomatis.",
     description: [
       "Infitek TSST-14 adalah mesin pewarna preparat jaringan model linier otomatis yang dilengkapi stasiun pengering udara panas cerdas dan sistem pembilasan air otomatis.",
       "Memiliki 14 stasiun kerja (12 beker reagen 1500 mL, stasiun bilas air mengalir di posisi ke-8, dan stasiun pengeringan udara panas di posisi ke-1), kapasitas rak pewarnaan 70 kaca preparat, layar sentuh LCD 7 inci beranimasi grafik sinkron, katup solenoid impor untuk kontrol otomatis suplai air masuk dan keluar, transmisi mekanis fleksibel tahan aus, serta 20 set program memori."
@@ -43054,8 +41560,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Alat pewarna preparat otomatis linier 18 stasiun (kapasitas 52 slide simultan, beker 750 mL) dengan stasiun pengering di posisi 1, stasiun bilas di posisi 10, sistem pemurni udara hijau, dan layar sentuh LCD lebar.",
     description: [
       "Infitek TSST-182 menyediakan 18 stasiun kerja linier untuk protokol pewarnaan histopatologi dan sitologi yang membutuhkan tahapan reagen lebih banyak dan bertingkat.",
       "Mampu mewarnai 52 kaca preparat secara simultan, stasiun 1 difungsikan untuk pengeringan dan stasiun 10 untuk pencucian air mengalir bertekanan terkontrol, kapasitas beker reagen 750 mL, layar sentuh LCD lebar dengan simulasi visual ikon real-time, sistem pemurnian udara sirkulasi internal hijau penyerap gas beracun, serta 20 memori program pewarnaan tersimpan."
@@ -43110,8 +41614,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat pewarna preparat meja mini kompak 15 stasiun (kapasitas 24 slide, beker hemat 350 mL) dengan stasiun pengeringan, stasiun pencucian air, layar sentuh cerdas, dan memori 9 akun pengguna.",
     description: [
       "Infitek TSST-15 adalah instrumen pewarna preparat otomatis berukuran mini meja (benchtop compact) yang dapat ditempatkan tepat di samping meja mikrotom untuk alur kerja pembuatan preparat yang efisien.",
       "Memiliki 15 stasiun (stasiun 1 pengeringan, stasiun 2 pencucian air otomatis, dan 13 stasiun reagen berkapasitas hemat ~350 mL), mampu mewarnai 24 kaca objek secara simultan, bodi tahan korosi berlapis APS, layar sentuh terpadu dengan antarmuka intuitif, sistem pengaman multi-pengguna (9 nama pengguna dengan kata sandi, masing-masing menyimpan 24 protokol pewarnaan), serta pilihan posisi henti rak di atas atau terendam di dalam beker."
@@ -43163,8 +41665,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penangas air perentang jaringan (tissue flotation bath) kapasitas 2.3L dengan wadah terpisah berdaya hantar panas tinggi (0–99°C, presisi ±1°C), sistem pencahayaan multi-sudut, dan partisi air fleksibel.",
     description: [
       "Infitek TSB-1 adalah penangas air khusus untuk perentangan pita irisan jaringan parafin (tissue flotation water bath) dengan desain wadah terpisah (separate pot design) berdaya konduksi termal tinggi yang memudahkan penggantian air dan pembersihan sisa parafin.",
       "Dilengkapi pengontrol suhu independen presisi tinggi langsung di dalam bak (rentang 0–99°C, akurasi ±1°C), partisi pemisah air fleksibel untuk membersihkan puing parafin, sistem proteksi suhu tiga tingkat, antarmuka layar sentuh, pencahayaan LED sudut universal dengan 5 tingkat kecerahan, daya 900W, serta bodi kompak berbobot 5 kg."
@@ -43217,8 +41717,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Meja pengering kaca preparat berkapasitas 100 slide (10 baris × 10 slide) dengan sudut kemiringan 60°, meja penyegel lilin terintegrasi (74×46×5 mm), pemanas PID presisi (0–99°C), dan desain modular terpisah.",
     description: [
       "Infitek TSW-1 adalah meja pemanggang dan pengering kaca objek mikroskop berkapasitas tinggi (mampu memuat 100 slide secara simultan) dengan sudut kemiringan ergonomis 60° yang memudahkan penataan dan pengambilan preparat.",
       "Dilengkapi meja penyegel lilin terintegrasi (wax sealing table) untuk penyegelan pelindung blok parafin pasca-pemotongan, kontroler suhu PID independen yang mendeteksi langsung suhu permukaan meja (rentang 0–99°C), tombol sentuh dengan tampilan digital LED, proteksi panas berlebih tiga tingkat, daya hemat 350W, serta desain modular yang dapat digabungkan langsung dengan unit TSB-1."
@@ -43272,8 +41770,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penangas air jaringan (tissue water bath) berkapasitas silinder 265×190×60 mm berbahan hitam anti-korosi dan anti-aus, rentang suhu kerja 30–70°C (pengaturan 30–90°C), tampilan suhu ganda, dan daya 250W.",
     description: [
       "Infitek TWB-1125 adalah penangas air perentang jaringan parafin meja yang menggunakan mangkuk silinder berbahan material hitam khusus tahan korosi dan aus untuk memberikan visibilitas kontras tinggi pada pita irisan parafin putih.",
       "Dilengkapi elemen pemanas hemat energi berumur panjang, tampilan digital terpisah untuk suhu terukur dan suhu setelan, fungsi memori otomatis penyimpan suhu terakhir, rentang penyesuaian suhu 30–90°C (rentang kerja optimal 30–70°C, akurasi ±2°C), daya hemat 250W, serta bobot ringan 4.7 kg."
@@ -43326,8 +41822,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis laju endap darah (LED/ESR) otomatis 40 kanal (throughput hingga 80 tes/jam) berbasis sensor inframerah Westergren, layar sentuh 7 inci, tampilan & cetak kurva ESR, kompensasi suhu 18°C otomatis, dan memori 4.000 data.",
     description: [
       "Infitek ESRA-40 adalah penganalisis laju endap darah otomatis berkapasitas 40 kanal baca acak (random loading) yang mengukur sedimentasi eritrosit secara inframerah non-kontak berdasarkan metode standar Westergren.",
       "Menghasilkan nilai ESR (mm/jam) dengan throughput hingga 80 sampel per jam, pilihan durasi pengukuran 30 atau 60 menit (interval baca 3 menit, rentang 1–140 mm/jam), kompensasi suhu otomatis ke 18°C, layar sentuh berwarna 7.0 inci yang menampilkan kurva sedimentasi dinamis, printer termal internal, penyimpanan 4.000 hasil uji, port RS-232, serta dukungan pembaca barcode dan LIS."
@@ -43384,8 +41878,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis laju endap darah otomatis 20 kanal (throughput hingga 40 sampel/jam) dengan sensor inframerah Westergren, layar sentuh warna, pencetak kurva ESR internal, dan memori 4.000 data.",
     description: [
       "Infitek ESRA-20 adalah penganalisis LED otomatis berkapasitas 20 kanal pembacaan yang cocok untuk laboratorium klinik dan rumah sakit tipe C.",
       "Menggunakan sensor inframerah berefisiensi tinggi untuk mengukur penurunan kolom eritrosit metode Westergren, kecepatan pengujian hingga 40 sampel per jam (metode 30 atau 60 menit), kompensasi suhu otomatis ke 18°C, layar sentuh LCD berwarna, printer termal internal yang dapat mencetak kurva ESR lengkap, serta penyimpanan 4.000 data hasil uji."
@@ -43442,8 +41934,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis laju endap darah otomatis ringkas 10 kanal (throughput hingga 20 sampel/jam) dengan sensor inframerah Westergren, layar sentuh warna, pencetak termal kurva internal, dan memori 4.000 hasil.",
     description: [
       "Infitek ESRA-10 adalah versi kompak dari seri ESRA yang menyediakan 10 kanal pembacaan laju endap darah otomatis untuk klinik pratama dan laboratorium beranggaran terbatas.",
       "Mengadopsi prinsip sensor inframerah non-invasif metode Westergren, kecepatan pengujian hingga 20 sampel per jam (pilihan mode 30 atau 60 menit), kompensasi suhu 18°C otomatis, layar sentuh LCD berwarna, printer termal internal pencetak kurva LED, kapasitas penyimpanan 4.000 hasil uji, serta port RS-232."
@@ -43498,8 +41988,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis biokimia semi-otomatis berbasis sistem cerdas Windows Embedded Compact 7 dengan layar sentuh 7 inci (800×480), 7 filter standar (340–630 nm), prosesor ARM Cortex-A8, dan memori 200.000 hasil uji.",
     description: [
       "Infitek BA-SA-100 adalah fotometer biokimia klinis semi-otomatis berkinerja tinggi yang dikendalikan prosesor ARM Cortex-A8 (720 MHz) dengan sistem operasi Windows Embedded Compact 7 terintegrasi.",
       "Mendukung pengujian mode flow cell kaca kuarsa 32 µL maupun kuvet standar, 7 filter optik standar (340, 405, 450, 505, 546, 578, 630 nm + 2 opsi), lampu halogen tungsten berfitur tidur otomatis, rentang fotometri 0.0000–4.0000 Abs, kontrol suhu termoelektrik Peltier (25°C, 30°C, 37°C dan suhu ruang), printer termal bawaan, 5 port USB + port Ethernet, serta memori besar untuk >300 program dan 200.000 hasil sampel."
@@ -43554,8 +42042,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat pengering kaca preparat histologi kapasitas 50 slide dengan badan pemanas konduksi cepat tahan korosi, rentang suhu 30–90°C (akurasi ±2°C), memori otomatis, dan daya 250W.",
     description: [
       "Infitek THP-1135 adalah meja pemanas dan pengering kaca objek histopatologi yang mampu menampung hingga 50 slide sekaligus untuk merekatkan irisan jaringan parafin secara kuat sebelum pewarnaan.",
       "Mengadopsi elemen pemanas konduksi termal cepat hemat energi, rentang penyesuaian suhu konstan 30–90°C (akurasi ±2°C), tampilan digital ganda untuk suhu prasetel dan suhu aktual, fungsi memori otomatis penyimpan suhu terakhir, serta permukaan berbahan material khusus tahan gores dan korosi bahan kimia."
@@ -43607,8 +42093,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Fotometer kimia klinik hewan semi-otomatis berlayar sentuh 7 inci dengan 10 posisi inkubator & 3 timer, 7 filter optik (340–630 nm), 90 parameter terprogram untuk berbagai spesies hewan, dan memori 10.000 data.",
     description: [
       "Infitek BA-SA-100Vet adalah penganalisis biokimia semi-otomatis yang dirancang khusus untuk praktik dokter hewan dan rumah sakit hewan berdasarkan hukum absorpsi Lambert-Beer.",
       "Dilengkapi profil spesies hewan bawaan (kucing, anjing, kuda, tikus, kelinci, babi, sapi, monyet, domba, dan spesies pengguna), 10 posisi inkubator tabung terintegrasi dengan 3 pengatur waktu mandiri, 7 filter standar (340–630 nm + 1 posisi bebas), 90 parameter uji terprogram (fungsi hati, ginjal, lipid, jantung, protein imun), kurva kinetika waktu-nyata, flow cell kuarsa 32 µL, lampu halogen Philips hemat energi, printer termal bawaan, serta memori 10.000 hasil uji."
@@ -43663,8 +42147,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis biokimia semi-otomatis berlayar sentuh LCD 7 inci dengan 7 filter optik standar (340–630 nm), lampu halogen Philips 6V/10W dengan fungsi hibernasi, dan memori 10.000 data sampel.",
     description: [
       "Infitek BA-SA-100B adalah instrumen penganalisis biokimiawi semi-otomatis yang andal untuk pemeriksaan kuantitatif serum, plasma, dan cairan tubuh di laboratorium medis.",
       "Dilengkapi 7 filter optik standar (340, 405, 492, 510, 546, 578, 630 nm + 1 posisi bebas), 80 parameter uji terprogram (kapasitas hingga 150 item), rentang absorbansi 0–4.500 Abs, flow cell kaca kuarsa 32 µL (kompatibel mode kuvet), kurva kinetika reaksi real-time, lampu halogen Philips berumur panjang dengan fungsi hibernasi otomatis, prosesor mikro ARM berkecepatan tinggi, serta printer termal bawaan."
@@ -43719,8 +42201,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mesin penyegel kantong sterilisasi medis kontinu dengan fungsi pencetakan parameter operasional (kecepatan 10 m/menit, lebar pola segel 12 mm, suhu 60–220°C), layar sentuh 5 inci, dan pemanas keramik pelat datar.",
     description: [
       "Infitek TMS-AP105 adalah mesin penyegel kemasan sterilisasi medis kontinu otomatis berfitur identifikasi operasional yang mencetak waktu uji, suhu segel, tekanan, kecepatan, dan nomor perangkat secara langsung pada kemasan.",
       "Dilengkapi layar sentuh LCD berwarna 5.0 inci grafis (dwibahasa Inggris dan Mandarin), kecepatan segel 10 m/menit (lebar segel 12 mm, suhu 60–220°C akurasi ≤±1%), 4 preset suhu cepat (60°C, 120°C, 180°C, 220°C), penghitung segel positif/mundur 0–9999, sistem pemanas keramik datar cepat panas dan pendinginan berbantu, penekan tekanan konstan mengambang, serta proteksi henti otomatis saat deviasi suhu melebihi ±4°C."
@@ -43775,8 +42255,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Mesin terintegrasi 4-in-1 (pengumpanan kertas otomatis, pemotongan mandiri, penyegelan panas, dan pencetakan dot-matrix) berbasis OS Android layar sentuh 7 inci dengan pemrosesan gulungan multi-roll.",
     description: [
       "Infitek TMSC-AP105 adalah stasiun kerja pengemasan sterilisasi medis terpadu yang menyelesaikan empat tahapan sekaligus secara otomatis: pengumpanan kertas, pemotongan gulungan, penyegelan panas, dan pencetakan parameter.",
       "Pengguna cukup mengatur panjang dan jumlah kantong yang diinginkan, mesin akan memotong dan menyegel secara mandiri (mendukung pemotongan beberapa gulungan dengan lebar berbeda sekaligus), dilengkapi printer dot-matrix bawaan, sistem operasi Android pada layar sentuh kapasitif 7.0 inci, pemanas berkecepatan tinggi (mencapai 180°C dalam 40 detik), sistem pendinginan berbantu, serta proteksi deviasi suhu ±4°C."
@@ -43836,8 +42314,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis gas darah dan elektrolit otomatis (8 parameter ukur: pH, pCO₂, pO₂, K⁺, Na⁺, Cl⁻, Ca⁺⁺, Hct + 15 parameter kalkulasi) dengan kartrid kalibran all-in-one sekali pakai, layar sentuh 10.4 inci, waktu analisis <90 detik, dan baterai cadangan.",
     description: [
       "Infitek BGA-95-8 adalah penganalisis gas darah dan elektrolit perawatan kritis modern yang menggunakan kartrid kalibran sekali pakai (disposable calibrants cartridge) terpadu yang berisi cairan bilas, gas kalibrasi, larutan kalibran, dan penampung limbah tertutup untuk mencegah bahaya biologis bagi operator.",
       "Mengukur 8 parameter langsung (pH, pCO2, pO2, K+, Na+, Cl-, Ca++, Hct) dan menurunkan 15 parameter kalkulasi klinis dalam waktu <90 detik dari volume sampel darah utuh 95 µL (atau kapiler 50 µL), elektroda buatan mandiri bebas perawatan berumur panjang, layar sentuh TFT 10.4 inci dengan sensor detektor manusia inframerah, kartrid Auto-QC 3 tingkat opsional, printer termal 70 mm internal, baterai Ni-MH cadangan 3.0Ah, serta koneksi LIS HL7."
@@ -43898,8 +42374,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Penganalisis gas darah otomatis (4 parameter ukur: pH, pCO₂, pO₂, Hct + 12 parameter kalkulasi) dengan kartrid kalibran all-in-one bebas biohazard, layar sentuh 10.4 inci, analisis <90s, dan baterai cadangan.",
     description: [
       "Infitek BGA-95-4 berfokus pada empat parameter utama analisis gas darah klinis (pH, pCO2, pO2, Hct) dengan kartrid reagen all-in-one sekali pakai yang praktis dan higienis.",
       "Menghasilkan pengukuran cepat dalam <90 detik dari 95 µL darah utuh (atau 50 µL darah kapiler), menurunkan 12 parameter kalkulasi asam-basa (termasuk TCO2, HCO3, Base Excess, SO2%, dan saturasi O2), dilengkapi layar sentuh 10.4 inci, elektroda mandiri bebas perawatan, printer termal 70 mm terintegrasi, serta baterai Ni-MH cadangan 3.0Ah."
@@ -43954,8 +42428,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penganalisis elektrolit berbasis elektroda selektif ion (ISE) presisi tinggi (analisis 25–40 detik, konsumsi sampel 60–300 µL) dengan sensor CO₂ Jerman berumur 10 tahun, pelacakan potensial otomatis, dan printer termal.",
     description: [
       "Infitek EA-7-25 Series (Model A: K/Na/Cl; Model B: K/Na/Cl/TCO2; Model C: K/Na/Cl/iCa/nCa/TCa/pH; Model D: K/Na/Cl/iCa/nCa/TCa/pH/TCO2/AG) adalah penganalisis elektrolit klinis berbiaya uji sangat ekonomis (≤$0.2 per uji).",
       "Menggunakan elektroda selektif ion (ISE) impor Amerika Serikat berdaya tahan lama dengan koreksi pelacakan potensial otomatis, sensor TCO2 buatan Jerman dengan masa pakai hingga 10 tahun, deteksi dan penyaringan gelembung udara mikro otomatis, analisis cepat 25–40 detik dari 60–300 µL sampel (darah utuh, serum, plasma, CSF, urine), memori 10.000 data, printer termal bawaan, serta opsi baki autosampler 39 posisi."
@@ -44011,8 +42483,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis elektrolit klinis beroperasi sederhana hanya dengan tombol YES/NO (parameter: K, Na, Cl, iCa, nCa, TCa, pH dalam 40 detik), elektroda ISE impor AS, sensor CO₂ Jerman, dan printer termal.",
     description: [
       "Infitek EA-5-40 dirancang untuk kemudahan operasional maksimal bagi staf laboratorium dengan antarmuka yang hanya memiliki dua tombol navigasi utama: tombol 'YES' dan 'NO'.",
       "Mengukur parameter ion penting K+, Na+, Cl-, iCa, nCa, TCa, dan pH dalam waktu 40 detik dari 150 µL sampel, elektroda selektif ion impor Amerika Serikat berumur panjang, teknologi pelacakan potensial otomatis, sensor CO2 Jerman 10 tahun, pembilasan otomatis pasca-analisis untuk menjaga elektroda selalu siap pakai, memori 10.000 data, serta koneksi LIS."
@@ -44067,8 +42537,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis elektrolit kecepatan tinggi (analisis 25–40 detik, konsumsi sampel 60–300 µL) dengan antarmuka 2 tombol YES/NO, elektroda presisi CV ≤1.0%, dan opsi autosampler 39 posisi.",
     description: [
       "Infitek EA-5-25 Series (Model A: K/Na/Cl; Model B: K/Na/Cl/TCO2/AG; Model D: K/Na/Cl/iCa/nCa/TCa/pH/TCO2/AG) menawarkan pengujian elektrolit cepat dengan durasi analisis hanya 25 hingga 40 detik.",
       "Menggabungkan antarmuka dua tombol YES/NO yang sederhana, elektroda selektif ion presisi tinggi (CV ≤1.0% untuk K, Na, Cl, Ca), konsumsi sampel hemat 60–300 µL, alarm luapan cairan limbah, memori 10.000 data dengan proteksi mati daya, printer termal internal, serta opsi baki pemuat sampel otomatis (autosampler) 39 posisi."
@@ -44124,8 +42592,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penganalisis imunofluoresensi kuantitatif POCT (kecepatan 240 tes/jam, hasil dalam ≤15 detik) dengan sistem manajemen kode QR cerdas, layar sentuh LCD besar, sumber cahaya LED 740 nm, dan bobot ringan 2.0 kg.",
     description: [
       "Infitek IFA-S1000 adalah penganalisis imunofluoresensi kuantitatif tipe POCT berkepekaan ultra-tinggi yang membaca intensitas fluoresensi strip uji secara semikuantitatif dan kuantitatif.",
       "Menyediakan menu pengujian biomarker sangat luas (Kardiovaskular: cTnI, Myo, CK-MB, NT-proBNP, D-Dimer, ST2; Inflamasi: hs-CRP, SAA, PCT, IL-6, Calprotectin; Tiroid: TSH, FT3, FT4; Tumor Marker: AFP, CEA, PSA, CA125, CA19-9, HCG), kecepatan pengujian 240 tes/jam (waktu baca kartu uji ≤15 detik), sistem manajemen parameter via kartu informasi kode QR cerdas, kompatibilitas LIS/HIS, penyimpanan 10.000 data, serta bodi ringkas berbobot hanya 2.0 kg."
@@ -44184,8 +42650,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penganalisis imunofluoresensi kering (dry immunofluorescence) kanal tunggal POCT dengan kecepatan hingga 180 tes/jam, layar sentuh LCD 7 inci, pembuangan kartu otomatis, dan memori >30.000 data.",
     description: [
       "Infitek IFA-J1000D adalah platform POCT imunofluoresensi kering kanal tunggal untuk deteksi kuantitatif in vitro berbagai penanda biologis dalam serum, plasma, darah utuh, dan urine.",
       "Mendukung uji biomarker sepsis (PCT, IL-6, CRP), kardiologi (hs-cTnI, NT-proBNP, CK-MB, MYO, H-FABP), tromboemboli (D-Dimer), dan cedera ginjal akut (NGAL), waktu deteksi 13–18 menit per sampel (throughput hingga 180 tes/jam), pembuangan kartu uji bekas otomatis, printer termal internal, kalibrasi kontrol kualitas internal, serta koneksi data LIS dan HIS rumah sakit."
@@ -44240,8 +42704,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis koagulasi darah otomatis penuh berkecepatan 200 tes/jam berbasis metode manik magnetik (bebas interferensi ikterus/hemolisis), imunoturbidimetri, dan substrat kromogenik dengan 4 kanal uji simultan.",
     description: [
       "Infitek BCA-A-4-20 adalah penganalisis hemostasis otomatis penuh berthroughput 200 tes per jam yang menggabungkan metode manik magnetik mekanis, imunoturbidimetri, dan substrat kromogenik.",
       "Metode manik magnetik mengeliminasi sepenuhnya bias interferensi sampel ikterik, hemolitik, dan lipemik (chyle), dilengkapi 4 kanal uji simultan, 35 posisi sampel, 21 posisi reagen berpendingin 4-arah, 20 kanal pra-pemanasan, pemuatan kuvet sistem laci hingga 1000 kuvet magnetik, lengan sampling terintegrasi pompa mikro dengan sensor level cairan, pembaca barcode internal, serta konektivitas LIS."
@@ -44301,8 +42763,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Penganalisis koagulasi darah otomatis kompak (100 tes/jam, 4 kanal uji optik) dengan baki reagen berpendingin, pemanasan suhu konstan probe sampling, dan fitur interupsi sampel darurat (emergency priority).",
     description: [
       "Infitek BCA-A-4-6 adalah penganalisis koagulasi otomatis berukuran ringkas meja (bobot 30 kg) yang memangkas hingga 20 prosedur manual instrumen semi-otomatis.",
       "Menggunakan metode optik dan imunoturbidimetri dengan pemindaian latar belakang untuk mengoreksi ikterus dan lipid, kecepatan 100 tes/jam, 4 kanal uji, 5 posisi sampel, 6 posisi reagen berpendingin, probe sampling berpemanas suhu konstan dan sensor level cairan, kurva pembekuan dinamis real-time, pengujian darurat prioritas, pengulangan tes otomatis pada hasil abnormal, serta koneksi LIS."
@@ -44356,8 +42816,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis koagulasi semi-otomatis 4 kanal (4 pengujian simultan) dengan blok termostatik 37°C (24 posisi sampel + 6 reagen), 4 sistem pengaduk magnetik, layar sentuh 7 inci, dan metode hamburan cahaya.",
     description: [
       "Infitek BCA-SA-4-24S adalah penganalisis hemostasis semi-otomatis 4 kanal berbasis prinsip hamburan cahaya (scattered light) dan analisis persentase untuk hasil koagulasi yang presisi.",
       "Dilengkapi blok termostatik 37°C ±0.3°C berkapasitas 24 posisi pra-pemanasan sampel dan 6 posisi reagen dengan 4 pengaduk magnetik independen, panjang gelombang ganda 405/660 nm, metode kalkulasi PT-Derived untuk penentuan fibrinogen hemat reagen, layar sentuh LCD 7 inci berwarna, printer termal internal, memori 10.000 data, serta opsi sistem reagen terbuka."
@@ -44413,8 +42871,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis koagulasi semi-otomatis (panjang gelombang 405/660 nm) dengan 4 timer software mandiri, blok pemanas 37°C (24 posisi sampel + 6 reagen), 4 sistem pengaduk, layar sentuh 7 inci, dan dukungan 6 bahasa.",
     description: [
       "Infitek BCA-SA-2-16S adalah instrumen hemostasis semi-otomatis berlayar sentuh 7 inci yang dirancang untuk pengujian parameter koagulasi darah rutin berbasis metode cahaya hambur (scattered light).",
       "Dilengkapi blok termostatik 37°C ±0.3°C berkapasitas 24 posisi sampel dan 6 reagen, 4 pengaduk magnetik, 4 timer perangkat lunak independen, panjang gelombang 405/660 nm, metode PT-Derived untuk penentuan konsentrasi fibrinogen, printer termal internal, memori 10.000 data hasil uji, serta dukungan multi-bahasa termasuk bahasa Indonesia."
@@ -44469,8 +42925,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis koagulasi semi-otomatis 1 kanal ekonomis dengan konsumsi reagen ultra-hemat (<20 µL), panjang gelombang 470 nm, blok pemanas (6 sampel + 2 reagen), layar LCD 240×128, dan printer termal.",
     description: [
       "Infitek BCA-SA-1-6S adalah penganalisis hemostasis kanal tunggal yang dirancang khusus untuk efisiensi biaya reagen dengan volume konsumsi reagen dan sampel sangat hemat (hanya 20–40 µL).",
       "Menggunakan prinsip cahaya hambur (scattered light) pada panjang gelombang 470 nm dengan sistem pencocokan optik canggih, 6 posisi pra-pemanasan sampel dan 2 posisi reagen pada suhu 37±0.3°C, layar LCD 240×128, printer termal bawaan, memori 10.000 data, dukungan pipet elektronik terkoneksi opsional, serta port komunikasi RS-232."
@@ -44525,8 +42979,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sistem penanaman jaringan parafin modular (tangki parafin 3L, 5 zona pemanas independen 55–70°C, meja kerja granit lebar) dan modul pendingin terpisah EBD-CL1 yang mampu mencapai suhu hingga -30°C.",
     description: [
       "Infitek EBD-1 & EBD-CL1 adalah sistem penanaman jaringan histologi modular klasik yang memisahkan unit dispenser parafin dan modul pelat pendingin pembeku jaringan.",
       "Modul EBD-1 memiliki tangki parafin 3 Liter, 5 zona pemanas independen (55–70°C akurasi ±1%) dengan mikroprosesor buatan AS dan indikator LED perubahan warna, kontrol aliran parafin via sentuhan jari atau pedal kaki, sistem penerangan tegangan rendah yang aman, serta area kerja berbahan granit alami yang memudahkan pembersihan lilin berlebih. Modul EBD-CL1 mendinginkan kaset jaringan secara cepat hingga suhu ≤-20°C (bahkan mencapai -30°C)."
@@ -44579,8 +43031,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Pemroses jaringan otomatis tipe carousel kapasitas 125 kaset (12 beker kapasitas 2000 mL) dengan pengadukan otomatis sepanjang proses, penirisan simulasi goyangan manual, dan layar sentuh warna 7 inci.",
     description: [
       "Infitek TSP-3C adalah pemroses jaringan histopatologi tipe korsel berkapasitas besar (125 kaset dehidrasi per siklus) yang dilengkapi mekanisme penirisan tiruan goyangan manual (drainage mimics manual shaking) untuk mencegah pencampuran reagen antar-beker.",
       "Menggunakan 12 beker berkapasitas besar 2000 mL (9 stasiun reagen dan 3 cangkir parafin cair suhu RT–80°C), pengadukan otomatis penuh sepanjang proses (0–6 kali/menit) untuk memastikan perendaman jaringan sempurna, layar sentuh LCD berwarna 7.0 inci beranimasi grafik sinkron, sistem pemurni udara internal hijau, serta stasiun proteksi jaringan saat listrik padam."
@@ -44635,8 +43085,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat pencair plasma darah tugas berat metode osilasi air (kapasitas 30 kantong @200 mL dalam waktu ≤30 menit beban penuh) dengan pemanas film tebal pemisah air-listrik 4000W, pompa 60 L/min, dan sterilisasi UV-C.",
     description: [
       "Infitek PTM-2P-WS adalah stasiun pencair plasma darah beku skala besar yang menggabungkan pompa sirkulasi air bertenaga 60 L/min dan pengocokan osilasi mekanis (60 rpm, amplitudo 50±5 mm) untuk mencairkan hingga 30 kantong plasma (200 mL) secara simultan dalam waktu ≤30 menit.",
       "Menggunakan sistem pemanas film tebal dengan pemisahan hidroelektrik mutlak anti-kebocoran listrik berdaya 4000W, rentang suhu RT hingga 42°C (akurasi ≤±1°C), sistem disinfeksi UV-C internal, fungsi pencucian otomatis, kompartemen pencairan fleksibel, perekaman data kualitas suhu real-time dengan memori 4–64 GB (2.000–32.000 grup data), serta opsi pemindai barcode kantong darah dan transmisi cloud nirkabel."
@@ -44697,8 +43145,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Penganalisis biokimia klinis otomatis penuh model berdiri lantai (kecepatan konstan 200 tes/jam, reagen ganda) dengan 80 posisi reagen berpendingin 2–14°C, pencucian 3×4 tahap, dan piringan 44 kuvet.",
     description: [
       "Infitek BA-A-220 adalah penganalisis kimia klinik otomatis penuh model berdiri lantai (floor model berbobot 140 kg) berkecepatan konstan 200 tes per jam.",
       "Dilengkapi probe sampling multifungsi berpelindung benturan dan pendeteksi cairan sensitif, mikser dayung berlapis Teflon anti-tetesan, 80 posisi reagen dengan pendinginan Peltier 24 jam non-stop (2–14°C), 40 posisi sampel, piringan 44 kuvet plastik optik amorf bervolume rendah (150–330 µL), sistem pencucian otomatis 3×4 tahap, sistem optik tertutup penuh 8 panjang gelombang, serta perangkat lunak Windows berstandar kontrol kualitas Westgard."
@@ -44753,8 +43199,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat hitung jenis sel darah (differential cell counter) mikrokomputer 10 kelompok tombol membran dengan tampilan total hitungan (0–990) dan konversi persentase bilangan bulat/desimal satu sentuhan.",
     description: [
       "Infitek DBC-10I adalah instrumen penghitung diferensial sel darah (diff count counter) 10 kelompok berbasis mikrokomputer yang mengintegrasikan fungsi penghitungan, kalkulasi statistik, dan tampilan digital.",
       "Dilengkapi 10 tombol sakelar membran untuk klasifikasi jenis leukosit (rentang 0–99 per kelompok, total kapasitas 0–990), tombol '%' untuk menampilkan persentase bilangan bulat maupun desimal dari setiap kelompok sel, akurasi tinggi yang selaras dengan pemeriksaan darah rutin klinis untuk membedakan infeksi bakteri dan virus, konsumsi daya hemat 4W, serta bodi ringan hanya 600 gram."
@@ -44807,8 +43251,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Mikrotom putar manual ekonomis (ketebalan irisan kontinu 1–25 µm, trimming 0–500 µm) dengan layar LCD penghitung potongan, pengunci handwheel posisi tertinggi, dan pergeseran dudukan pisau 2 arah.",
     description: [
       "Infitek RMT-202A adalah mikrotom putar seri 202 yang hemat biaya dan berdesain aerodinamis untuk pemotongan spesimen biologi, organ dalam, dan jaringan tulang.",
       "Dilengkapi rentang ketebalan irisan kontinu 1–25 µm (inkremen minimum 1 µm; dapat disetel bebas >25 µm), rentang pemangkasan 0–500 µm, handwheel mekanis yang dapat dikunci di posisi teratas untuk keamanan penggantian blok, layar LCD yang menampilkan jumlah irisan dan pemangkasan dengan sistem alarm keselamatan, dudukan pisau yang dapat digeser maju-mundur (0–50 mm) dan kiri-kanan (0–20 mm), serta orientasi spesimen XY ±8°."
@@ -44862,8 +43304,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Meja perentang dan pengering jaringan parafin berdimensi luas (penangas air kaca 350×220×45 mm suhu RT–75°C & meja pengering slide 330×90 mm suhu RT–99°C) dengan kontrol PID independen 2 arah dan daya 500W.",
     description: [
       "Infitek TSBW-1 adalah stasiun kerja perentang dan pengering preparat jaringan histologi berkapasitas besar dengan wadah kaca borosilikat transparan berukuran ekstra lebar 350 × 220 × 45 mm.",
       "Dilengkapi pengontrol PID independen dua arah untuk mengatur suhu penangas air (RT–75°C) dan stasiun pengering slide (RT–99°C, akurasi ±1°C), sistem pencahayaan DC horizontal bebas silau untuk inspeksi lipatan pita irisan, modul tampilan digital hijau murni, meja pemanggang preparat dari material hitam khusus tahan korosi dan aus, proteksi panas berlebih tiga tingkat, serta memori parameter otomatis."
@@ -44917,8 +43357,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penyegel selang PVC medis medan listrik frekuensi tinggi (kecepatan ≥18 kali/menit, selang OD 3–7 mm tebal ≤0.85 mm) dengan mikrosakelar otomatis, indikator lampu, dan hasil segel mudah disobek tanpa gunting.",
     description: [
       "Infitek SLM-TII mempolarisasi dan memanaskan selang medis berbahan PVC dalam medan listrik frekuensi tinggi di antara kepala segel sehingga merekat kuat dan steril di bawah tekanan mekanis otomatis.",
       "Dilengkapi mikrosakelar di sisi kanan kepala segel yang langsung memulai prosedur pemanasan saat selang ditekan, kontrol otomatis waktu segel (kepala otomatis kembali ke posisi awal setelah selesai), kecepatan segel tinggi ≥18 kali per menit, sambungan segel bergaris tengah yang dapat dipisahkan tanpa bantuan gunting, daya 200W, serta bodi meja ringkas berbobot 7.1 kg."
@@ -44971,8 +43409,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat ekstraksi lemak Soxhlet kapasitas 6 sampel simultan (rentang kadar minyak 0.5%–60%) dengan kontrol suhu digital RT–100°C, pemanasan cepat <10 menit, pemulihan pelarut ≥80%, dan botol ekstraksi kaca 100 mL.",
     description: [
       "Infitek SE-06C adalah instrumen penentu kadar lemak klasik berbasis prinsip ekstraksi Soxhlet yang mengintegrasikan fungsi pemanasan ekstraksi, pemulihan pelarut organik, dan sirkulasi pendingin.",
       "Mampu mengekstraksi 6 sampel secara bersamaan pada rentang kadar lemak 0.5% hingga 60% dalam makanan dan pakan ternak, laju pemanasan cepat dalam 10 menit (suhu RT–100°C kontrol digital), tingkat pemulihan pelarut kembali ≥80% untuk efisiensi bahan kimia, peralatan dan botol ekstraksi 100 mL terbuat dari kaca borosilikat anti-bocor, serta daya 1000W."
@@ -45026,8 +43462,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Unit penetral dan penyaring kabut asam (acid mist scrubber) tiga tahap untuk tungku digesti Kjeldahl dengan pompa tekanan negatif berdebit 18 L/min, botol alkali 1.8L, botol air suling 1.8L, dan daya 120W.",
     description: [
       "Infitek KJD-SCB-A adalah sistem pembuangan dan penyaring kabut asam (acid scrubber) yang dirancang khusus untuk mengumpulkan dan menetralkan uap asam pekat yang dihasilkan selama proses destruksi basah Kjeldahl.",
       "Menggunakan mekanisme penyaringan tiga tahap: tahap 1 netralisasi uap asam oleh larutan alkali lye (15%–30%), tahap 2 penyaringan gas sisa menggunakan air suling, dan tahap 3 peredaman gas pada botol buffer sebelum dibuang bebas polusi, dilengkapi pompa hisap tekanan negatif berdebit 18 L/min yang tahan lama, port hisap udara φ8–10 mm, serta botol reagen 1.8L yang mudah diisi ulang."
@@ -45080,8 +43514,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Tungku destruksi Kjeldahl 8 lubang (diameter lubang Φ43.5 mm) berbahan blok paduan aluminium 6061 berlapis coating kedirgantaraan (suhu hingga 450°C, akurasi ±1°C) dengan kontroler PID LCD dan daya 2.1 kW.",
     description: [
       "Infitek KJD-8E adalah blok pemanas destruksi basah (wet digestion) 8 lubang yang dikembangkan sebagai instrumen pendukung prapengolahan sampel untuk penganalisis nitrogen Kjeldahl.",
       "Menggunakan modul pemanas paduan aluminium 6061 berlapis pelindung standar industri kedirgantaraan yang tahan lama pada suhu desain 450°C (laju pemanasan 8–15°C/menit, akurasi ±1°C), kontroler suhu LCD berbasis PID cerdas dengan timer pemadaman otomatis 1–999 menit, serta meja kerja dan rak tabung berbahan baja tahan karat sikat yang tahan terhadap asam sulfat pekat."
@@ -45135,8 +43567,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis nitrogen Kjeldahl otomatis penuh (rentang 0.1–240 mgN, pemulihan ≥99.5%, waktu analisis 5–10 min/sampel) dengan sistem titrasi presisi 2.0 µL/langkah, cangkir titrasi eksternal, dan printer terintegrasi.",
     description: [
       "Infitek KJA-9860 adalah penganalisis nitrogen dan protein Kjeldahl otomatis penuh yang dirancang untuk industri pangan, pakan, pertanian, dan pengawasan mutu.",
       "Menyediakan rentang pengukuran 0.1–240 mgN (RSD ≤0.5%, pemulihan ≥99.5%), sistem titrasi presisi tinggi hingga 2.0 µL/langkah dengan cangkir titrasi eksternal transparan agar operator dapat mengawasi proses secara langsung, sensor pemantau suhu cairan distilasi real-time (otomatis berhenti jika suhu distilat abnormal), fungsi pembersihan otomatis pipa alkali dan asam borat terprogram, printer bawaan, serta memori 1000 data."
@@ -45192,8 +43622,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Alat distilasi uap nitrogen Kjeldahl otomatis (rentang 0.1–240 mgN, pemulihan ≥99.5%, waktu 3–8 min/sampel) dengan pompa bellows PTFE tahan partikel korosif, generator uap stabil, dan layar sentuh LCD berwarna.",
     description: [
       "Infitek KJA-S1305 adalah unit distilasi uap Kjeldahl semi-otomatis yang mengotomatisasi penambahan air pengencer, larutan alkali, dan asam borat penjerap dengan perangkat lunak kalkulasi hasil langsung.",
       "Menggunakan pompa bellows PTFE anti-korosi yang kebal terhadap penyumbatan partikel dan hisapan balik tekanan negatif, generator uap stabil bertekanan terkontrol otomatis dengan proteksi anti-kering, pemantauan aliran air pendingin hemat air (≥1.5 L/min), pintu pengaman akrilik transparan ber-sensor posisi, serta layar sentuh LCD berwarna untuk pengaturan parameter distilasi."
@@ -45249,8 +43677,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis nitrogen Kjeldahl otomatis penuh (distilasi, titrasi, pembuangan limbah, dan pembersihan otomatis dalam 3–8 menit) dengan sensor warna digital 16-bit RGB, presisi titrasi 1.0 µL, dan pompa bellows PTFE.",
     description: [
       "Infitek KJA-S1306 menyelesaikan seluruh tahapan analisis Kjeldahl secara otomatis tanpa campur tangan teknisi: penambahan alkali/asam, distilasi uap, titrasi warna presisi, pengurasan limbah titrasi, pembersihan cangkir, kalibrasi, hingga pencetakan laporan pengujian.",
       "Menggunakan sensor warna digital tiga warna primer (RGB) 16-bit presisi tinggi untuk mendeteksi titik akhir perubahan warna indikator titrasi secara objektif, sistem pendorong presisi terintegrasi 1.0 µL, pompa bellows PTFE anti-korosi, generator uap bertekanan stabil multi-proteksi, layar sentuh LCD berwarna, serta penyimpanan 1000 set data pengujian lengkap."
@@ -45307,8 +43733,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis nitrogen Kjeldahl otomatis unggulan (akurasi ultra-trace 10 ppm, presisi titrasi 0.1 µL/langkah) dengan teknologi titrasi dinamis simultan (memangkas waktu 40%), OS ARM layar sentuh 10 inci, dan memori 100.000 data.",
     description: [
       "Infitek KJA-S06 adalah model unggulan tertinggi penganalisis Kjeldahl otomatis penuh yang menerapkan teknologi titrasi dinamis (dynamic titration technology) di mana proses distilasi uap, titrasi, dan kalkulasi berjalan secara simultan sehingga mempersingkat total waktu uji hingga 40% (hanya 3–7 menit/sampel).",
       "Mampu mengukur kadar nitrogen runut hingga 10 ppm, buret titrasi ultra-presisi 0.1 µL/langkah, sensor warna digital 16-bit RGB, sistem operasi ARM multi-core pada layar sentuh warna 10.0 inci, ruang reaksi distilasi stainless steel 304 berpintu Teflon, pompa bellows PTFE, penyimpanan 100.000 data dengan 12 format keluaran berkas (termasuk Word dan Excel), serta opsi modul uji nitrogen nitrat."
@@ -45369,8 +43793,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Tungku destruksi Kjeldahl 20 lubang (diameter lubang φ43.5 mm) berbahan blok paduan aluminium berlapis coating industri penerbangan (suhu hingga 450°C, akurasi ±1°C) dengan kontrol PID LCD dan daya 2.8 kW.",
     description: [
       "Infitek KJD-P20L adalah blok pemanas destruksi sampel berkapasitas besar 20 lubang untuk pemrosesan paralel sampel tanaman, pakan ternak, dan tanah dalam jumlah banyak sebelum analisis nitrogen.",
       "Menggunakan modul pemanas paduan aluminium berlapis teknologi industri penerbangan yang tahan aus dan panas hingga 450°C (laju 8–15°C/menit), pengontrol suhu cerdas LCD PID dengan pemadaman berwaktu 1–999 menit, meja dan rak tabung stainless steel sikat tahan karat, serta kompatibel dengan sistem penghisap kabut asam SO2 pembuangan sewer."
@@ -45424,8 +43846,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penguji kualitas minyak goreng genggam (rentang TPM 0–50%, suhu minyak 0–200°C dalam <3 detik) berstandar tahan air IP67 dengan probe stainless steel 316 food-grade bentuk shuttle anti-gantung, layar OLED, dan baterai Li-ion USB-C.",
     description: [
       "Infitek COA-H200 adalah alat uji cepat kualitas minyak goreng genggam untuk mengukur degradasi minyak goreng melalui persentase senyawa polar total (Total Polar Materials / TPM) langsung pada minyak bersuhu tinggi.",
       "Hasil pembacaan diperoleh dalam waktu <3 detik dengan sensor kapasitif presisi (rentang TPM 0–50% akurasi ±1.5%) dan sensor suhu PTC (0–200°C), probe stainless steel 316 food-grade berbentuk shuttle aerodinamis yang mencegah tetesan minyak menempel, peringkat proteksi tahan air penuh IP67, layar OLED terang dengan alarm kedipan frekuensi mutu minyak, baterai Li-ion isi ulang Type-C tahan >30 jam, serta memori 10.000 data."
@@ -45486,8 +43906,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Tudung pengumpul gas kabut asam (acid gas collection hood) untuk tungku destruksi Kjeldahl (pilihan 8, 10, 15, dan 20 lubang) berbahan cangkang stainless steel 316 dengan tutup kerucut segel gravitasi PTFE.",
     description: [
       "Infitek KJD-WGH Series adalah perangkat tudung manifold pengumpul uap asam yang dipasang tepat di atas mulut tabung destruksi tungku Kjeldahl untuk menangkap gas asam pekat (SO2/SO3) secara efisien.",
       "Cangkang utama dilas dari pelat stainless steel 316 anti-korosi tinggi, tutup penyegel kerucut berbahan PTFE tahan suhu tinggi dan asam pekat (bobot 35g per tutup mengandalkan segel gravitasi alami tanpa perlu penjepit rumit), pipa hisap masuk ke dalam tabung untuk daya sedot terfokus, serta tersedia dalam varian 8, 10, 15, dan 20 lubang."
@@ -45538,8 +43956,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Tungku destruksi Kjeldahl terprogram layar sentuh warna 5.5 inci (pilihan 10, 15, 20 lubang) dengan blok paduan aluminium 6061 berlapis coating penerbangan (hingga 450°C), pemrograman 40 segmen, dan relai solid-state.",
     description: [
       "Infitek KJD-S Series (10, 15, dan 20 lubang diameter φ43.5 mm) adalah tungku destruksi Kjeldahl canggih yang menampilkan sistem kendali suhu layar sentuh berwarna 5.5 inci dengan metode masukan tabel resep cepat berlogika jelas.",
       "Mendukung pemrograman kurva suhu 0–40 segmen dengan pilihan mode pemanasan titik tunggal atau pemanasan kurva bertahap (PID cerdas akurasi ±1°C), blok aluminium 6061 berlapis coating industri penerbangan tahan 450°C, relai padat solid-state yang senyap dan anti-interferensi, desain isolasi cangkang depan-belakang dengan sensor proteksi suhu berlebih permukaan, serta tabung digesti kaca borosilikat 2 mm berkualitas tinggi."
@@ -45594,8 +44010,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat distilasi nitrogen Kjeldahl mikrokomputer (rentang 0.1–200 mgN, pemulihan ≥99%, durasi distilasi 5–15 menit) dengan layar LCD array besar, penambahan air otomatis, dan panel kerja ABS anti-kimia.",
     description: [
       "Infitek KJA-T200E adalah penganalisis distilasi Kjeldahl berbasis mikrokomputer yang dapat dioperasikan dalam mode manual maupun otomatis penuh untuk penyulingan amonia sampel makanan, pakan ternak, produk susu, tanah, dan air.",
       "Dilengkapi rentang pengukuran 0.1–200 mgN (kadar nitrogen 0.1%–99%, recovery ≥99%), kontrol penambahan air otomatis dan penghentian air cerdas, proteksi keselamatan sistem pencernaan dan alarm kekurangan air generator uap, panel kerja ABS anti-korosi asam dan alkali, konsumsi air pendingin 3 L/min, serta memori 250 prosedur operasional."
@@ -45650,8 +44064,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis lemak otomatis penuh kapasitas 6 sampel per batch (suhu RT+5 s.d. 300°C, pemulihan pelarut ≥85%) dengan sensor deteksi kebocoran eter terpasang, layar sentuh 7 inci, dan kompatibilitas pelarut organik luas.",
     description: [
       "Infitek FTA606 adalah instrumen penentu kadar lemak otomatis terprogram yang kompatibel dengan seluruh pelarut organik (eter, benzena, fenol, dll.) dengan suhu pemanasan tinggi hingga 300°C.",
       "Dilengkapi sensor pendeteksi kebocoran eter terpasang (in-built ether leak detection device) untuk keselamatan kerja mutlak dari bahaya ledakan uap pelarut, pemulihan pelarut otomatis ≥85%, kapasitas ekstraksi 6 sampel per batch (volume cangkir 150 mL, sampel 0.5–15 g), layar sentuh warna 7.0 inci dengan kontroler eksternal berkabel, serta kontrol suhu dan aliran air kondensor cerdas."
@@ -45711,8 +44123,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis lemak otomatis penuh satu tombol (5 mode ekstraksi: Soxhlet, termal, kontinu, dll.) kapasitas 6 sampel dengan sistem pengangkat keranjang motorik otomatis, pemanas integral 300°C (40 segmen), dan alarm kebocoran petroleum eter.",
     description: [
       "Infitek FTA206 adalah instrumen penentu kadar lemak otomatis penuh berdasarkan prinsip ekstraksi Soxhlet dan metode gravimetri yang menyelesaikan seluruh alur kerja melalui operasi satu tombol (one-button automatic completion).",
       "Menyediakan 5 mode ekstraksi otomatis (Soxhlet klasik, ekstraksi termal, Soxhlet termal, aliran kontinu, dan termal standar), sistem pengangkatan keranjang dan kompresi cangkir pelarut motorik otomatis, blok pemanas integral hingga 300°C (program hingga 40 segmen dan 99 formula), katup solenoid refluks elektromagnetik, layar sentuh warna 7 inci, pemulihan pelarut ≥85%, serta sensor alarm kebocoran petroleum eter."
@@ -45766,8 +44176,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis lemak semi-otomatis kapasitas 6 sampel/batch (rentang 0–100%, suhu RT+5 s.d. 280°C) dengan pemanas logam integral, pemulihan pelarut ≥80%, dan layar LCD 4.3 inci.",
     description: [
       "Infitek FTA406 adalah instrumen penentu kadar lemak semi-otomatis berbasis pemanas logam integral dengan presisi kontrol suhu tinggi untuk ekstraksi lemak pangan, pakan, dan minyak nabati.",
       "Dilengkapi ruang sirkuit listrik yang terisolasi aman dari area uap pelarut kimia, layar LCD 4.3 inci berantarmuka mikrokomputer cerdas, mekanisme pengangkat berbasis konduksi bearing linier yang halus, sistem alarm tiga tingkat (suara, lampu indikator, dan teks layar), pemulihan pelarut kembali ≥80%, serta pemangkasan durasi waktu ekstraksi 20% hingga 80% dibanding metode konvensional."
@@ -45822,8 +44230,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Alat ekstraksi Soxhlet 6 sampel simultan (suhu RT+5 s.d. 250°C, rentang minyak 0.5%–60%) dengan kontrol layar sentuh LCD 7 inci, modul pemanas aluminium independen, dan pemulihan pelarut otomatis.",
     description: [
       "Infitek SE-6P adalah sistem ekstraksi Soxhlet modern yang dikendalikan melalui layar sentuh LCD 7.0 inci untuk penentuan kadar lemak dan minyak pada biji-bijian, pakan ternak, jamur, serta bahan kimia tekstil.",
       "Menggunakan modul pemanas paduan aluminium untuk kenaikan suhu cepat (pemanasan awal ~10 menit ke 250°C) dan laju refluks tinggi, sistem pemulihan pelarut otomatis berkatup, pemipaan air sirkulasi pendingin terintegrasi, kontrol suhu independen untuk tiap stasiun uji, serta sistem proteksi multi-tingkat (tegangan lebih, panas berlebih, dan kebocoran arus)."
@@ -45878,8 +44284,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis nitrogen Kjeldahl otomatis penuh (rentang 0.1–240 mgN, presisi titrasi RSD ≤0.01 µL/langkah, pemulihan ≥99.5%) dengan sensor warna RGB kurva real-time, distilasi uap konstan tanpa putus, dan printer pita permanen.",
     description: [
       "Infitek KJA-P2800 adalah instrumen penganalisis nitrogen dan protein Kjeldahl otomatis penuh yang memadukan distilasi uap tanpa henti dan titrasi simultan untuk analisis fisikokimia bahan pangan, pakan, pupuk, dan produk kimia.",
       "Dilengkapi sensor warna digital 3 warna primer (RGB) dengan penayangan 3 kurva reaksi secara langsung, penambahan alkali bertahap (intermittent alkali addition) untuk mencegah lonjakan uap reaksi yang liar, buret titrasi berpresisi tinggi RSD ≤0.01 µL/langkah, printer pita (ribbon printer) bebas luntur untuk arsip permanen, bodi plastik rekayasa ABS anti-karat asam pekat, serta memori internal 10.000 grup data."
@@ -45940,8 +44344,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Unit distilasi Kjeldahl otomatis (rentang 0.1–240 mgN, laju 15–30 mL/min) dengan bodi cetak plastik rekayasa ABS tahan asam pekat, memori 999 program, daya distilasi 1500W, dan desain anti-hisap balik.",
     description: [
       "Infitek KJA-P500 adalah instrumen distilasi Kjeldahl otomatis mandiri dengan layar sentuh LCD untuk proses penyulingan amonia yang aman, cepat, dan presisi.",
       "Dilengkapi penambahan alkali bertahap untuk mencegah percikan eksotermik, desain tekanan konstan guna mencegah cairan tersedot balik ke dalam botol penampung, kontrol level cairan ganda anti-kering pada pemanas uap (1500W), kapasitas distilasi 15–30 mL/menit, bodi cetakan injeksi plastik ABS tahan asam-basa kuat, serta memori 999 program kerja."
@@ -45997,8 +44399,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Tungku destruksi paduan aluminium berlapis teflon (pilihan 8 atau 20 lubang tabung 300 mL, suhu RT–450°C) dengan layar sentuh LCD berwarna, memori 510 skema (21 tahap pemanasan per skema), dan insulasi serat keramik.",
     description: [
       "Infitek KJD-E Series (KJD-E08 kapasitas 8 tabung dan KJD-E20 kapasitas 20 tabung 300 mL) adalah blok pemanas destruksi berkinerja tinggi untuk persiapan uji Kjeldahl, COD, dan analisis logam berat.",
       "Cangkang instrumen disemprot Teflon anti-korosi asam pekat dengan alur pemandu cairan pencegah tumpahan, layar sentuh LCD berwarna, kapasitas memori hingga 510 kelompok skema pengguna (masing-masing hingga 21 tahap pemanasan bertingkat dengan durasi 0–999 menit), insulasi termal ganda serat keramik dan saluran udara, serta opsi rak pengangkat otomatis (automatic lifting frame)."
@@ -46053,8 +44453,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Sistem digesti Kjeldahl radiasi pipa inframerah kuarsa 8 lubang (suhu hingga 500°C, akurasi ±1°C, durasi 60–90 min/batch) dengan cangkang insulasi ganda (silikat aluminium & udara) dan daya 1.5 kW.",
     description: [
       "Infitek KJD-T8E mengadopsi teknologi pemanasan pipa inframerah kuarsa (quartz infrared heating pipe) yang mengandalkan radiasi termal langsung dan konduksi untuk mempersingkat waktu destruksi sampel hingga 60–90 menit per batch.",
       "Mampu mencapai temperatur tinggi hingga 500°C (rentang ukur 0.1–200 mgN), kapasitas 8 lubang tabung 300 mL, desain cangkang ganda dengan lapisan insulasi udara dan aluminium silikat tahan panas, area kerja stainless steel anti-korosif, kontrol digital, serta proteksi multi-tingkat (tegangan lebih, arus lebih, dan suhu berlebih)."
@@ -46107,8 +44505,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Unit scrubber pembuangan kabut asam sistem filtrasi ternari (kondensasi air, netralisasi alkali, dan adsorpsi karbon aktif) dengan pompa vakum anti-korosi berdaya 320W, pipa PTFE, dan area serapan translusen.",
     description: [
       "Infitek KJD-SCB adalah sistem pengolahan dan pembuangan gas buang asam laboratorium yang menerapkan sistem filtrasi ternari (ternary filtration system) untuk menjamin pembuangan udara yang sepenuhnya ramah lingkungan.",
       "Menggabungkan tahap pendinginan kondensasi air, netralisasi kimiawi alkali, dan penjerapan akhir uap asam oleh filter karbon aktif, dilengkapi pompa vakum anti-korosi bertenaga hisap besar dan senyap, pipa saluran berbahan PTFE tahan asam pekat, area penyerapan berdesain tembus pandang (translucent) untuk kemudahan inspeksi larutan, serta pengaturan intensitas hisap tekanan negatif secara waktu-nyata."
@@ -46160,8 +44556,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Tudung pengumpul gas buang destruksi dengan penutup segel PFA model klip (clip-on), baki penampung tetesan asam, dan kompatibilitas pompa vakum pancaran air (water-jet vacuum pump) tanpa listrik.",
     description: [
       "Infitek KJD-WGH (PFA Version) dirancang untuk mengumpulkan gas asam pekat hasil destruksi menggunakan penutup segel berbahan PFA berkualitas tinggi yang menawarkan umur pakai lebih panjang dan kerapatan segel superior.",
       "Dilengkapi penutup model klip (clip-on sealing cover) yang mempermudah penggantian dan pembersihan, baki penampung tetesan (drip tray) untuk melindungi meja laboratorium dari korosi asam, serta kompatibilitas dengan pompa vakum jet air khusus tanpa memerlukan sumber daya listrik tambahan."
@@ -46211,8 +44605,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penganalisis distilasi nitrogen Kjeldahl semi-otomatis (rentang 0.1–240 mgN, pemulihan ≥99.5%, waktu 3–6 menit) dengan layar warna 4.3 inci, pencucian pipa alkali otomatis, dan fungsi kalibrasi larutan mandiri.",
     description: [
       "Infitek KJA-9840 adalah instrumen distilasi Kjeldahl semi-otomatis berkecepatan 3–6 menit per sampel untuk analisis kadar nitrogen, protein kasar, dan asam lemak volatil pada sampel padat (≤6 g) maupun cair (≤16 mL).",
       "Dilengkapi sistem pendistribusian larutan alkali dan asam borat otomatis presisi, fungsi pencucian pipa alkali otomatis untuk mencegah kristalisasi, layar LCD berwarna 4.3 inci dengan tombol sentuh, fungsi kalibrasi mandiri (air pengencer, larutan alkali, asam borat, dan laju alir cuci), kontrol air pendingin cerdas (1.5 L/min), serta pemantauan status pintu pengaman dan posisi tabung secara real-time."
@@ -46268,8 +44660,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Tudung pengumpul gas buang destruksi 8 port berbahan penutup segel PFA tahan korosi dan suhu tinggi dengan desain baki penampung tetesan asam (drip tray) dan 1 saluran ekstraksi.",
     description: [
       "Infitek KJD-WGH-E08 adalah tudung penghisap gas asam 8 lubang yang dipasangkan khusus pada tungku digesti KJD-E08 untuk menangkap uap asam pekat yang keluar selama proses destruksi.",
       "Menggunakan penutup segel berbahan PFA tahan panas dan asam pekat, desain baki penampung tetesan (drip tray) terintegrasi untuk mencegah sisa asam menetes ke meja laboratorium setelah digesti selesai, pipa penghubung berbahan material impor tahan asam dan suhu tinggi, serta 1 saluran ekstraksi pipa pembuangan utama."
@@ -46320,8 +44710,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Tudung pengumpul gas buang destruksi 20 port berbahan segel PFA tahan korosi dengan 2 saluran pipa ekstraksi seimbang dan baki penampung tetesan asam bawaan.",
     description: [
       "Infitek KJD-WGH-E20 adalah tudung penghisap gas asam berkapasitas besar 20 lubang yang dirancang sebagai pasangan wajib untuk tungku digesti 20 lubang KJD-E20.",
       "Menggunakan penutup segel PFA tahan korosi dan temperatur tinggi, 2 saluran buang ekstraksi pipa utama untuk mendistribusikan daya hisap secara seimbang ke seluruh 20 tabung tanpa kebocoran uap asam di baris terluar, baki penampung tetesan (drip tray) terintegrasi, serta pipa saluran impor tahan asam pekat."
@@ -46372,8 +44760,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Penganalisis serat otomatis (serat kasar, NDF, ADF, ADL, hemiselulosa) berlayar sentuh warna 7 inci dengan pemanas inframerah terintegrasi (mendidih dalam 13–15 menit), fungsi rekoil krusibel anti-kerak, dan daya 2.2 kW.",
     description: [
       "Infitek FBA800 adalah instrumen penganalisis serat otomatis berkapasitas 6 sampel per batch untuk pengujian serat kasar, Neutral Detergent Fiber (NDF), Acid Detergent Fiber (ADF), hemiselulosa, dan Acid Detergent Lignin (ADL).",
       "Menggunakan teknologi pemanasan inframerah terpadu untuk pemanasan krusibel yang cepat dan seragam (pemanasan awal 10–12 menit, mendidih dalam 13–15 menit), struktur penarik barel larutan tersembunyi berproteksi anti-luap reagen korosif, cairan korosif tidak bersentuhan langsung dengan pompa pembuangan, fungsi rekoil tiup krusibel (crucible recoil) untuk mencegah penyumbatan filtrasi akibat sampel menggumpal, layar sentuh warna 7 inci, serta 5 spesifikasi krusibel standar."
@@ -46434,8 +44820,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penentu kadar serat kasar metode perebusan asam dan basa klasik kapasitas 6 sampel simultan (durasi uji ~100 menit) dengan pemanas bertenaga 2800W dan akurasi kesalahan absolut ≤0.4%.",
     description: [
       "Infitek FBA6 adalah penganalisis serat kasar (raw/coarse fiber analyzer) yang menguji kadar serat berdasarkan metode resmi perebusan asam dan basa encer secara berurutan.",
       "Sampel direbus dalam larutan asam dan alkali berkonsentrasi tepat pada kondisi terkontrol, kemudian zat terlarut dilarutkan dengan eter dan sisa mineral diperhitungkan melalui pengabuan suhu tinggi, mampu menguji 6 sampel sekaligus dalam durasi sekitar 100 menit (asam 40 min, alkali 40 min, filtrasi dan cuci 20 min), daya pemanas 2800W, serta bodi kokoh 30 kg."
@@ -46489,8 +44873,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Alat pengukur kadar air dan berat jenis curah biji-bijian digital portabel (rentang 3%–35%, waktu uji ≤10 detik) dengan kalibrasi 20 komoditas pramuat, sel sampel 230 mL, dan daya ganda baterai/adaptor 9V DC.",
     description: [
       "Infitek BMCA-1G adalah instrumen pengukur kadar air dan berat jenis curah (bulk density) digital portabel untuk material butiran non-logam seperti beras, gandum, jagung, kedelai, kacang tanah, dan pakan ternak.",
       "Menampilkan konversi densitas curah, bobot sampel, suhu, dan kalkulasi kadar air rata-rata dalam waktu ≤10 detik (rentang 3%–35%, akurasi ≤±0.5%), telah dikalibrasi awal untuk 20 varietas komoditas pangan (P1–P20), sel sampel 230 mL, layar LCD dengan lampu latar terang, pemadaman otomatis jika tidak digunakan selama 3 menit, serta suplai daya fleksibel (4 baterai AA atau adaptor 9V DC)."
@@ -46550,8 +44932,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penghitung benih biji otomatis (ukuran partikel 0.7–12 mm, akurasi ±2‰) dengan mode Free & Bulk count (1–99.999), kecepatan dapat diatur dengan perlambatan otomatis saat mendekati target, dan layar LCD.",
     description: [
       "Infitek ASC-TCP adalah instrumen penghitung benih dan partikel butiran otomatis berbasis mikroprosesor untuk laboratorium pemuliaan tanaman, agroteknologi, dan industri benih.",
       "Menyediakan dua mode kerja (Free count dan Bulk count hingga 99.999 butir), rentang ukuran butiran 0.7–12 mm (akurasi tinggi ±2‰, kecepatan ≥1000 butir/3 menit pada biji wijen), sistem perlambatan kecepatan otomatis saat jumlah mendekati target prasetel agar tidak meleset, proteksi motor otomatis mati jika pelat kosong selama 60 detik, serta kompatibel untuk benih tanaman, pakan, butiran berlian, dan tablet."
@@ -46606,8 +44986,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat penghitung benih putar kecepatan tinggi (1000–2000 butir/menit, ukuran Φ0.7–23 mm) dengan layar sentuh berwarna 7 inci, pengumpan elektromagnetik stepless, dan sistem pemisah sampel otomatis ke 10 wadah cangkir.",
     description: [
       "Infitek BSCT-1 adalah instrumen penghitung benih otomatis berkecepatan tinggi yang dilengkapi sistem pemisahan sampel putar (rotary turntable sample separation) ke dalam 10 wadah cangkir penampung.",
       "Menggunakan pengumpan getar elektromagnetik dengan regulasi kecepatan tanpa tingkat (stepless), kecepatan hitung sangat cepat 1000 hingga 2000 butir per menit (rentang ukuran Φ0.7–23 mm, akurasi ±2‰), layar sentuh warna 7.0 inci yang memandu langkah operasi, 3 mode operasional (otomatis, jog, dan manual), serta wadah penampung 10 cangkir (ukuran cangkir 6.5 × 11 cm)."
@@ -46666,8 +45044,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Alat pengukur klorofil daun (0.0–99.9 SPAD) dan suhu permukaan daun (10–99.9°C) non-destruktif portabel dalam 2 detik dengan luas sensor 2×2 mm, memori 1000 data pada unit, dan sinkronisasi aplikasi ponsel nirkabel.",
     description: [
       "Infitek BCHL-B adalah penganalisis klorofil genggam non-destruktif yang mengukur kandungan klorofil relatif daun (nilai SPAD) dan suhu permukaan daun secara simultan tanpa merusak jaringan daun tanaman.",
       "Hasil pengukuran instan diperoleh dalam 2 detik pada area daun 2 × 2 mm, rentang klorofil 0.0–99.9 SPAD (akurasi ±1.0 SPAD) dan suhu daun 10–99.9°C (akurasi ±0.5°C), memori 1000 data pada unit utama, dukungan aplikasi ponsel pintar untuk penyimpanan tak terbatas dengan pencatatan foto spesimen dan lokasi uji, ekspor tabel Excel satu klik, serta daya baterai tahan hingga 5000 kali pengukuran."
@@ -46725,8 +45101,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat pengukur luas daun portabel (panjang daun ≤1000 mm, lebar ≤160 mm, tebal ≤8 mm, presisi ±2%) yang mengukur luas, panjang, lebar, dan rasio aspek dengan memori 2000 grup data dan opsi koneksi USB PC.",
     description: [
       "Infitek BLAM Series (BLAM-1 standar mandiri dan BLAM-2 dilengkapi antarmuka PC USB) adalah instrumen pengukur morfometri daun portabel untuk mengukur parameter luas daun secara cepat dan akurat.",
       "Mengukur luas daun, luas rata-rata, panjang (hingga 1000 mm), lebar (hingga 160 mm), ketebalan hingga 8 mm, serta rasio panjang terhadap lebar dengan presisi ±2% (resolusi 0.01 cm²), memori internal 2000 grup data, serta model BLAM-2 yang dapat dihubungkan ke komputer untuk konversi data ke format Excel dan pencetakan grafik."
@@ -46779,8 +45153,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penganalisis nutrisi tanaman 4-in-1 non-destruktif (mengukur klorofil SPAD, kadar nitrogen 0–99.9 mg/g, suhu daun, dan kelembapan daun sekaligus dalam 2 detik) dengan layar OLED cerah dan Bluetooth nirkabel.",
     description: [
       "Infitek BPNA-4 adalah penganalisis nutrisi tanaman multi-parameter terpadu yang mampu mengukur empat indikator vital kesehatan tanaman sekaligus dalam satu jepitan daun tanpa mengganggu pertumbuhan tanaman.",
       "Mengukur kandungan klorofil (0.0–99.9 SPAD), kadar nitrogen daun (0.0–99.9 mg/g akurasi ±5%), suhu permukaan daun (10–99.9°C), dan kelembapan daun (0.0–99.9% RH) dalam waktu hanya 2 detik, bilik daun berdesain perisai anti-interferensi cahaya, layar OLED berdefinisi tinggi, konektivitas nirkabel Bluetooth ke aplikasi seluler untuk ekspor Excel dan foto sampel, serta memori 2000 data pada unit."
@@ -46841,8 +45213,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Aparatus uji disolusi farmasi 12 bejana dan 12 poros pengaduk berlayar sentuh 7 inci dengan pengangkat elektrik kepala mesin, sensor Pt1000 Kelas 1/3B, sistem pemberian dosis otomatis, pencahayaan LED putih/merah anti-fotodegradasi, dan jejak audit.",
     description: [
       "Infitek DIST-1208 adalah aparatus uji disolusi farmasi 12 bejana dan 12 poros pengaduk berkinerja tinggi yang memenuhi seluruh spesifikasi Farmakope Indonesia, Farmakope Tiongkok (ChP), dan USP (Metode 1 hingga 5).",
       "Dilengkapi pengangkat elektrik teleskopik kolom tunggal, kopling pemosisian ketinggian otomatis, dudukan bejana dan poros yang dapat disetel omnidireksional (paddle wobble ≤0.3 mm, basket wobble ≤0.5 mm), sensor suhu Pt1000 Kelas 1/3B berakurasi 0.1°C, sistem pemberian dosis otomatis multi-kanal independen (mode sinkron dan sekuensial dengan metode drop-flap anti-kehilangan tablet kecil), sistem peredupan PWM lampu putih/merah untuk obat fotosensitif, layar sentuh LCD 7 inci, serta manajemen hak akses 3 tingkat dan jejak audit 128 entri × 366 hari."
@@ -46903,8 +45273,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi tablet 6 bejana dan 6 poros pengaduk (kecepatan 25–250 rpm, akurasi ≤0.5%) dengan pengangkat elektrik kepala mesin, sensor suhu Pt1000 Kelas 1/3B, layar sentuh 7 inci, dan jejak audit 366 hari.",
     description: [
       "Infitek DIST-606 adalah aparatus uji disolusi tablet berkonfigurasi 6 bejana dan 6 poros pengaduk standar farmakope untuk laboratorium kontrol kualitas (QC) dan penelitian formulasi obat.",
       "Dilengkapi pengangkat elektrik kolom tunggal teleskopik, kopling pemosisian tinggi otomatis, goyangan dayung (paddle wobble) sangat rendah ≤0.3 mm, sensor suhu Pt1000 berakurasi 0.1°C, dukungan mode dosis sinkron dan sekuensial manual, penangas air berpenguras mandiri, layar sentuh LCD berwarna 7.0 inci, sistem manajemen izin 3 tingkat, serta jejak audit komprehensif 128 entri × 366 hari."
@@ -46959,8 +45327,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Aparatus uji disolusi farmasi 8 bejana dan 8 poros pengaduk (kecepatan 25–250 rpm) dengan sistem pemberian dosis otomatis multi-kanal drop-flap, sensor Pt1000 Kelas 1/3B, pencahayaan LED putih/merah PWM, dan jejak audit.",
     description: [
       "Infitek DIST-808 adalah instrumen uji disolusi farmasi 8 bejana dan 8 poros yang sangat populer di industri obat karena memungkinkan pengujian 6 sampel formulasi bersamaan dengan 1 bejana blanko dan 1 bejana baku standar.",
       "Dilengkapi sistem pelepasan dosis otomatis multi-kanal elektrik (mode sinkron/sekuensial drop-flap untuk tablet dan granul), sistem pemantauan kecepatan putar real-time, pencahayaan LED putih dan merah dengan peredupan PWM 3 tingkat tanpa pergeseran warna untuk zat aktif fotosensitif, sensor suhu Pt1000 Kelas 1/3B akurasi 0.1°C, pengangkat kepala elektrik, layar sentuh LCD 7.0 inci, serta kepatuhan jejak audit 366 hari."
@@ -47016,8 +45382,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kamar uji stabilitas obat komprehensif 4-fungsi (suhu 15–65°C, kelembapan 20–95% RH, cahaya tampak 100–8000 Lux, dan UVA 0.84–1.0 W/m²) kapasitas 150L–500L berstandar ICH Q1B dan kepatuhan FDA 21 CFR Part 11.",
     description: [
       "Infitek ICB-MS-HLL Series (150L, 250L, 400L, 500L) adalah ruang uji stabilitas farmasi empat fungsi (suhu, kelembapan, cahaya tampak, dan radiasi dekat-ultraviolet UVA) yang sepenuhnya memenuhi pedoman uji fotostabilitas ICH Q1B.",
       "Dilengkapi sensor cahaya tampak (100–8.000 Lux, total paparan ≥1.2×10⁶ Lux·jam) dan sensor UVA terintegrasi (0.84–1.0 W/m², total energi ≥200 W·jam/m²) dengan kontrol pencahayaan otomatis per rak, kompresor tertutup impor berefisiensi tinggi, kontroler layar sentuh warna 7 inci dengan jejak audit dan izin 3 tingkat, printer mikro dot-matrix, penyimpanan data internal 5 tahun via ekspor USB, serta kepatuhan perangkat lunak terhadap FDA 21 CFR Part 11."
@@ -47077,8 +45441,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Kamar uji fotostabilitas obat (suhu 15–50°C, cahaya tampak 100–8000 Lux, dan spektral UVA 320–400 nm) kapasitas 150L hingga 1000L dengan kontrol pencahayaan independen per rak dan kepatuhan FDA 21 CFR Part 11.",
     description: [
       "Infitek ICB-MS-LL Series (150L 1 lapisan lampu; 500L dan 1000L dengan 3 lapisan lampu berpenyinaran Cahaya Tampak + UVA) dirancang khusus untuk memenuhi persyaratan uji fotostabilitas obat kompendial.",
       "Mengintegrasikan kontrol suhu presisi 15–50°C (fluktuasi ±1°C), penyinaran cahaya tampak (100–8.000 Lux, total ≥1.2×10⁶ Lux·jam), iradiansi UVA spektrum 320–400 nm (0.84–5 W/m², total ≥200 W·jam/m²), pengontrol layar sentuh warna 7 inci dengan jejak audit dan proteksi kata sandi multi-level, printer mikro dot-matrix, serta memori penyimpanan internal 5 tahun."
@@ -47133,8 +45495,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Kamar uji stabilitas obat suhu dan kelembapan berteknologi kompresor inverter (penghematan daya >50%, suhu 10–65°C, kelembapan 15–95% RH) kapasitas 150L hingga 1000L berstandar pedoman stabilitas ICH.",
     description: [
       "Infitek ICB-MS-HL Series (150L, 250L, 400L, 500L tipe pintu tunggal, dan 1000L tipe pintu ganda) adalah ruang uji stabilitas farmasi jangka panjang yang ditenagai oleh kompresor frekuensi variabel inverter canggih.",
       "Mengurangi konsumsi listrik hingga lebih dari 50% dibanding generasi sebelumnya dengan kestabilan suhu luar biasa (fluktuasi ±0.5°C, keseragaman ±1.0°C), rentang kelembapan 15–95% RH (fluktuasi ±2.0% RH) berbasis sensor kapasitif presisi tinggi dan humidifier PTC, sistem sirkulasi air otomatis, pintu dalam kaca tempered berpemanas anti-kondensasi, layar sentuh warna 7 inci dengan jejak audit, printer dot-matrix, memori internal >5 tahun, serta kepatuhan FDA 21 CFR Part 11."
@@ -47190,8 +45550,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Penguji kekerasan tablet pintar 4-in-1 (mengukur kekerasan 10–500 N, diameter 2–25 mm, ketebalan 0.5–15 mm, dan bobot 1–20.000 mg) dengan layar sentuh 7 inci, printer termal terpasang, dan mode kontinu hingga 100 tablet.",
     description: [
       "Infitek THDT-5E adalah instrumen pengujian fisik tablet farmasi terpadu 4-in-1 yang dirancang untuk mengukur empat parameter kritis mutu tablet: bobot, kekerasan, diameter, dan ketebalan secara presisi dalam satu alat.",
       "Dilengkapi sensor tekanan berpresisi tinggi untuk pengukuran kekerasan 10–500 N (resolusi 0.01 N, satuan N/kg/kPa dapat dipilih), pengukuran diameter (2–25 mm) dan ketebalan (0.5–15 mm) beresolusi 0.01 mm, penimbangan bobot tablet 1–20.000 mg (resolusi 1 mg), mode uji manual tablet tunggal atau kontinu otomatis hingga 100 tablet per siklus, analisis statistik data otomatis, kalender dan jam waktu-nyata, printer termal bawaan, serta layar sentuh 7.0 inci intuitif."
@@ -47250,8 +45608,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Sistem pengambilan sampel uji disolusi otomatis (pilihan 8 atau 12 kanal) berbasis pompa spuit presisi 26 mL (akurasi 0.5%), filtrasi ganda primer & terminal, pengisian media pengganti sama-volume, dan jejak audit 366 hari.",
     description: [
       "Infitek DISS-Y Series (DISS-Y8 dengan 8 kanal dan DISS-Y12 dengan 12 kanal) adalah sistem autosampler disolusi otomatis presisi tinggi yang kompatibel dengan aparatus uji disolusi dari berbagai produsen.",
       "Menggunakan pompa spuit 26 mL presisi tinggi (akurasi 0.5%, kecepatan pompa <25 mL/min, proses sampling selesai <30 detik), filtrasi primer ujung kolumnar 10 µm dan filtrasi terminal membran 0.45/0.8 µm, pembuangan filtrat awal (0–10 mL) otomatis, pengisian media cair pengganti volume sama, jarum sampling berpenembus septum dan penolak vial otomatis, tabung pengumpul 15 mL atau vial 2/10 mL, serta manajemen hak akses 3 level (7 pengguna) dan jejak audit 128 entri × 366 hari."
@@ -47307,8 +45663,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat penghilang gas (degasser) media disolusi membran inline berkecepatan 1.6 L/min dengan pemanas prapemanasan inline (35–42°C), akurasi dispensi volume ±1%, kinerja degas 3.0–5.0 mg/L, dan daya 1700W.",
     description: [
       "Infitek DIMD-10KM adalah instrumen degasifikasi membran dan pendispensian media disolusi otomatis yang menghilangkan gelembung udara terlarut secara cepat dan kontinyu tanpa batas volume cairan (dapat menangani volume mulai 100 mL).",
       "Kompatibel dengan air suling, air deionisasi, dan larutan dapar media disolusi bebas surfaktan pada rentang pH 1–14, pemanas inline terintegrasi (35°C–42°C, akurasi ±2°C) untuk mempercepat efisiensi pelepasan gas sekaligus memangkas waktu tunggu pemanasan di dalam bejana disolusi, laju pemrosesan 1.6 L/menit, akurasi dispensi volume ±1% (untuk volume ≥2L), kinerja deoksigenasi mencapai 3.0–5.0 mg/L (dapat ditingkatkan hingga ≤2.8 mg/L), serta layar sentuh LCD beresolusi tinggi."
@@ -47363,8 +45717,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi farmasi 12 bejana dan 12 poros pengaduk dengan pengangkatan kepala otomatis, rentang putar 20–200 rpm, sensor suhu water bath terintegrasi (suhu ruang s.d. 45°C), dan memori 300 metode farmakope.",
     description: [
       "Infitek DIST-12 adalah aparatus uji disolusi obat berkonfigurasi 12 bejana dan 12 poros (pilihan dayung atau keranjang) dengan sistem pengangkatan kepala mesin otomatis naik-turun yang halus.",
       "Kompatibel dengan bejana standar setinggi 185 mm maupun bejana gelap (shading cups) untuk zat aktif fotosensitif, goyangan dayung sangat rendah (≤0.3 mm pada paddle dan ≤0.8 mm pada basket), rentang kecepatan 20–200 rpm (akurasi stabil), penangas air termostatik bersensor suhu terpadu (suhu ruang hingga 45°C, akurasi ≤±0.3°C), 9 periode sampling terprogram independen, komponen kontak cairan berbahan stainless steel SUS316L, serta memori 300 metode pengujian standar farmakope."
@@ -47419,8 +45771,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat uji batas waktu pelelehan supositoria mekatronik 3 beker (3 jalur sinkron) dengan pembalikan rak otomatis, kepala angkat elektrik, sirkulasi pompa magnetik (20–45°C, akurasi ±0.5°C), dan 3 mode pintas program.",
     description: [
       "Infitek SMTP-4B dirancang khusus sesuai ketentuan resmi Farmakope untuk menguji batas waktu pelelehan, pelunakan, atau pelarutan sediaan padat supositoria dan tablet vagina dalam kondisi terkontrol.",
       "Menggunakan konfigurasi 3 beker kaca 5L dengan 3 jalur sinkron dan pembalikan rak logam otomatis (automatic overturn 180° setiap 10 menit), kepala fungsi ganda yang dapat dinaik-turunkan secara elektrik dan dibalik manual, selongsong transparan (tinggi 60 mm, diameter dalam 52 mm) dengan rak jaring stainless steel impor 39 lubang (diameter 4 mm), sistem sirkulasi air pompa magnetik untuk suhu seragam 20–45°C (akurasi ±0.5°C), serta 3 mode pintas program (P1: 30 min auto-turn, P2: 60 min auto-turn, P3: 30 min tanpa turn)."
@@ -47478,8 +45828,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Instrumen pengujian fisik tablet terpadu 4-in-1 (kekerasan 2–199 N, kerapuhan drum 100 putaran, disintegrasi 2 keranjang, dan disolusi 3 bejana SUS316L) dengan kontrol mikroprosesor cerdas dan pompa sirkulasi magnetik.",
     description: [
       "Infitek TABT-4 adalah instrumen pengujian fisik sediaan tablet multi-fungsi terpadu 4-in-1 yang menggabungkan empat parameter evaluasi tablet dalam satu unit meja kompak: uji kekerasan (hardness), uji kerapuhan (friability), batas waktu hancur (disintegration), dan laju disolusi (dissolution).",
       "Dilengkapi stasiun disolusi 3 bejana satu baris dengan keranjang dan dayung stainless steel SUS316L (20–200 rpm), stasiun disintegrasi 2 keranjang independen (30–32 kali/menit, langkah 55±2 mm), drum kerapuhan akrilik presisi (25 rpm, 100 putaran), sensor tekanan digital untuk kekerasan tablet (2–199 N, diameter 3–40 mm), sirkulasi air pompa magnetik seragam (20–40°C ±0.3°C), serta sistem diagnosis dan alarm otomatis."
@@ -47534,8 +45882,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi 8 bejana dan 8 poros dengan kepala angkat elektrik dan mekanisme pembalikan kepala (overturn head), rentang putar 20–200 rpm, penangas air termostatik, dan 300 metode farmakope.",
     description: [
       "Infitek DIST-8P adalah instrumen uji disolusi 8 bejana berdesain fungsi ganda di mana kepala mesin dapat diangkat secara elektrik dan kemudian dibalikkan (overturn) untuk mempermudah pemasangan serta penggantian poros dayung atau keranjang.",
       "Mendukung pemasangan 8 bejana standar 185 mm maupun bejana pelindung cahaya, goyangan dayung sangat rendah (≤0.3 mm pada paddle dan ≤0.8 mm pada basket), kecepatan putar 20–200 rpm (akurasi stabil), sensor suhu elektronik terintegrasi (suhu ruang s.d. 45°C, akurasi ≤±0.3°C), 9 periode sampling terprogram dengan hitung mundur bertahap, komponen kontak cairan berbahan SUS316L, serta memori 300 parameter farmakope."
@@ -47590,8 +45936,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penguji kekerasan tablet otomatis (rentang 2–350 N, opsi 500 N, akurasi ±0.5%) dengan sensor tekanan presisi tinggi, kalkulasi jarak kembali otomatis penekan, konversi N-kgf, dan printer termal depan.",
     description: [
       "Infitek THDT-3 adalah instrumen pengukur kekerasan pecah tablet berbasis sensor tekanan presisi tinggi yang menjamin akurasi dan reproduksibilitas pengujian sediaan farmasi padat.",
       "Dilengkapi penekanan tablet motorik otomatis dengan kalkulasi jarak kembali otomatis untuk memangkas waktu siklus uji, layar LCD definisi tinggi dengan panduan operasional interaktif, pilihan mode uji manual tablet tunggal atau otomatis kontinu (hingga 100 tablet per kelompok), pengukuran diameter tablet (2–40 mm), konversi satuan satu sentuhan (Newton ke Kilogram force), analisis statistik lengkap (maks, min, rata-rata, standar deviasi), serta printer mini dengan penggantian kertas dari sisi depan."
@@ -47646,8 +45990,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat pengukur ketebalan dinding dan puncak cangkang kapsul (rentang 0–5 mm, akurasi ±0.01 mm) dengan dial indicator presisi tinggi untuk kapsul tipe 00, 0, 1, 2, 3, dan 4 sesuai standar Q/12XQ0194-2010.",
     description: [
       "Infitek THKT-1 adalah instrumen pengukur ketebalan fisik cangkang kapsul farmasi yang dirancang untuk mengukur ketebalan dinding samping (wall thickness) dan ketebalan bagian kubah atas (top thickness) cangkang kapsul keras.",
       "Menggunakan dial indikator mekanis presisi tinggi berakurasi ±0.01 mm (rentang pengukuran 0–5 mm), kompatibel dengan berbagai ukuran kapsul standar industri farmasi (tipe 00, 0, 1, 2, 3, dan 4), memenuhi standar industri Q/12XQ0194-2010, serta berdimensi saku kompak 200 × 80 × 50 mm."
@@ -47699,8 +46041,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penguji kerapuhan tablet (friabilator) dua drum akrilik sinkron (kecepatan tetap 25 rpm, akurasi ±1 rpm) dengan penghitung mundur terprogram 5–900 putaran, layar LCD, dan henti otomatis.",
     description: [
       "Infitek FRAT-3 adalah instrumen penguji kerapuhan (friability tester) dua silinder/drum putar yang digunakan untuk mengevaluasi stabilitas mekanis, ketahanan abrasi, dan ketahanan benturan tablet tanpa salut selama proses produksi dan pengemasan.",
       "Mengadopsi dua drum akrilik bening (diameter dalam 286 mm, kedalaman 39 mm, tinggi jatuh 156 mm) yang berputar sinkron pada kecepatan konstan 25 rpm (akurasi ±1 rpm), mode penghitungan mundur yang dapat disetel bebas dari 5 hingga 900 putaran, layar LCD yang menampilkan nilai setelan dan hitungan real-time, fungsi henti putar otomatis saat target tercapai, daya hemat 20W, serta struktur meja yang stabil."
@@ -47753,8 +46093,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat uji waktu hancur tablet 3 keranjang gantung (3 jalur kendali independen) dengan frekuensi naik-turun 30–32 kali/menit (jarak 55±1 mm), kontrol suhu otomatis 37.0°C (akurasi ±0.3°C), dan timer hingga 999 menit.",
     description: [
       "Infitek DITT-3 adalah instrumen penguji batas waktu hancur (disintegration time limit tester) sediaan farmasi padat yang mengusung 3 set keranjang gantung independen yang dapat dikontrol secara terpisah.",
       "Menggunakan sensor elektronik digital presisi tinggi yang mempertahankan suhu penangas air pada 37.0°C otomatis sesuai ketetapan farmakope (akurasi ±0.3°C tanpa perlu kalibrasi ulang), frekuensi angkat 30–32 kali per menit dengan jarak tempuh 55±1 mm, jarak kasa ke dasar beker 25±2 mm, kawat kasa standar 2 mm (opsi 0.425 mm dan 1 mm), waktu angkat otomatis 15 menit bawaan (dapat disetel 1–999 menit), serta alarm batas suhu berlebih."
@@ -47809,8 +46147,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi 8 bejana dan 6 poros (6 bejana depan, 2 bejana belakang) dengan pembalikan kepala manual fleksibel, poros dayung/keranjang SUS316L, rentang putar 20–200 rpm, dan sirkulasi air pompa magnetik.",
     description: [
       "Infitek DIST-8E adalah aparatus uji disolusi obat berkonfigurasi 8 bejana dan 6 poros pengaduk (susunan 6 bejana/poros di baris depan dan 2 bejana cadangan/kontrol di baris belakang).",
       "Bagian kepala instrumen dapat dibalikkan secara manual dengan lancar untuk memudahkan pembersihan dan penggantian poros, unit dayung dan keranjang terbuat dari stainless steel SUS316L impor, sirkulasi air pompa magnetik menghasilkan panas water bath yang sangat homogen (suhu ambien hingga +45.0°C, stabilitas ±0.3°C), mikrokontroler MPU otomatis, tampilan LCD bergantian antara data target dan aktual, serta penyimpanan parameter disolusi standar farmakope."
@@ -47865,8 +46201,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi 8 bejana dan 8 poros (susunan simetris 4 depan, 4 belakang) dengan pengangkatan kepala elektrik otomatis, komponen baja SUS316L, rentang putar 20–200 rpm, dan sirkulasi pompa magnetik.",
     description: [
       "Infitek DIST-8S adalah instrumen uji disolusi farmasi yang memiliki 8 bejana dan 8 poros pengaduk dengan tata letak simetris (4 bejana/poros di baris depan dan 4 di baris belakang).",
       "Kepala mesin bergerak naik dan turun secara elektrik otomatis untuk memudahkan pengoperasian, unit dayung dan keranjang berbahan stainless steel SUS316L, penangas air bersirkulasi pompa magnetik untuk distribusi panas merata (suhu ambien hingga +45.0°C, stabilitas ±0.3°C), pengontrol MPU otomatis, tampilan data LCD, serta 9 periode pengambilan sampel terprogram dengan alarm peringatan suara."
@@ -47921,8 +46255,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi 8 bejana dan 6 poros dengan pengangkatan kepala elektrik otomatis, komponen kontak baja tahan karat SUS316L, rentang putar 20–200 rpm, dan sirkulasi air pompa magnetik.",
     description: [
       "Infitek DIST-8 mengusung konfigurasi 8 bejana dan 6 poros pengaduk (6 bejana dan poros di baris depan, serta 2 bejana di baris belakang) dengan mekanisme pengangkatan dan penurunan kepala mesin secara elektrik.",
       "Memastikan kemudahan operasional dan fleksibilitas saat pengambilan sampel, komponen keranjang dan dayung berbahan SUS316L, sirkulasi air pompa magnetik untuk pemanasan merata (suhu ambien hingga +45.0°C, stabilitas ±0.3°C), kontrol MPU otomatis dengan layar LCD, 9 titik waktu prasetel ber-alarm suara, serta mematuhi standar industri farmasi JB/T 20105-2007."
@@ -47977,8 +46309,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi 6 bejana dan 6 poros sejajar dengan kepala angkat elektrik dan mekanisme pembalikan kepala (overturn head), rentang putar 20–200 rpm, penangas air termostatik, dan 300 parameter farmakope.",
     description: [
       "Infitek DIST-6P adalah instrumen uji disolusi obat berkapasitas 6 bejana dan 6 poros pengaduk sejajar yang mengintegrasikan sistem pengangkatan kepala elektrik dan mekanisme pembalikan (overturn) kepala instrumen.",
       "Memudahkan teknisi mengganti poros dayung atau keranjang tanpa hambatan ruang sempit, mendukung bejana standar 185 mm dan bejana pelindung cahaya (shading cups), goyangan dayung sangat rendah (≤0.3 mm pada paddle dan ≤0.8 mm pada basket), kecepatan putar 20–200 rpm, sensor suhu terintegrasi (suhu ruang s.d. 45°C, akurasi ≤±0.3°C), 9 periode sampling terprogram bertahap, komponen cairan SUS316L, serta memori 300 metode farmakope."
@@ -48034,8 +46364,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi 6 bejana dan 6 dayung tersusun dalam satu baris (in-line) dengan pembalikan kepala manual halus, komponen baja tahan karat SUS316L, kecepatan 20–200 rpm, dan sirkulasi air pompa magnetik.",
     description: [
       "Infitek DIST-6E adalah instrumen uji disolusi 6 bejana dan 6 poros pengaduk yang tersusun rapi dalam satu baris lurus (in-line arrangement) untuk memudahkan pemantauan visual proses pelepasan zat aktif obat.",
       "Bagian kepala instrumen dapat dibalikkan secara manual dengan lancar, komponen dayung dan keranjang terbuat dari baja tahan karat SUS316L impor, pemanasan merata dengan sirkulasi pompa magnetik (suhu ambien hingga +45.0°C, stabilitas ±0.3°C), kontrol mikroprosesor MPU otomatis, layar LCD bergantian antara data target dan aktual, serta penyimpanan parameter disolusi standar farmakope."
@@ -48090,8 +46418,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat uji batas waktu pelelehan supositoria 3 beker kaca 5L (tiga jalur sinkron, pembalikan manual) dengan sirkulasi air pompa magnetik (20–45°C, akurasi ±0.5°C), selongsong transparan, dan timer hingga 900 menit.",
     description: [
       "Infitek SMTP-1 adalah instrumen penguji batas waktu pelelehan dan pelunakan supositoria (thawing time limit tester) metode konvensional berbasis tiga jalur beker sinkron dengan pembalikan rak secara manual.",
       "Menggunakan 3 beker kaca berkapasitas masing-masing 5 Liter, 3 set selongsong transparan (tinggi 60 mm, diameter dalam 52 mm) dengan rak jaring stainless steel impor 39 lubang (diameter 4 mm), sistem sirkulasi air pompa magnetik untuk keseragaman suhu penangas 20–45°C (akurasi ±0.5°C), pengatur waktu otomatis 10–900 menit (akurasi ±0.5 menit), serta daya 1000W."
@@ -48144,8 +46470,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat uji waktu hancur tablet 4 keranjang gantung dengan sistem kontroler ganda (dua kontroler independen, masing-masing mengendalikan 2 keranjang), frekuensi 30–32 kali/menit, dan kontrol suhu otomatis 37.0°C.",
     description: [
       "Infitek DITT-4 adalah aparatus penguji batas waktu hancur sediaan farmasi berkapasitas 4 set keranjang gantung yang dibagi ke dalam dua sistem kontrol independen (masing-masing kontroler mengatur 2 keranjang).",
       "Memungkinkan dua pengujian disintegrasi dengan durasi berbeda berjalan bersamaan tanpa saling mengganggu, kontrol suhu otomatis pada 37.0°C presisi tinggi (±0.3°C tanpa kalibrasi), frekuensi angkat 30–32 kali/menit dengan langkah 55±1 mm, jarak kasa ke dasar beker 25±2 mm, kawat kasa standar 2 mm, timer prasetel 15 menit bawaan (dapat diatur 1–900 menit), serta alarm batas suhu berlebih."
@@ -48199,8 +46523,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi 6 bejana dan 6 poros tersusun dalam satu baris dengan pengangkatan kepala elektrik otomatis, komponen baja tahan karat SUS316L, rentang putar 20–200 rpm, dan sirkulasi air pompa magnetik.",
     description: [
       "Infitek DIST-6 adalah aparatus uji disolusi tablet dan kapsul 6 bejana sebaris yang dilengkapi sistem pengangkatan dan penurunan kepala mesin secara elektrik otomatis untuk kemudahan operasional.",
       "Susunan 6 bejana dan poros dalam satu baris lurus memudahkan observasi visual langsung, unit dayung dan keranjang terbuat dari stainless steel SUS316L, penangas air sirkulasi pompa magnetik merata (suhu ambien hingga +45.0°C, stabilitas ±0.3°C), kontrol MPU otomatis dengan layar LCD, 9 titik waktu prasetel ber-alarm suara, serta mematuhi standar farmakope resmi."
@@ -48255,8 +46577,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi 3 bejana dan 3 poros kompak dengan kepala angkat elektrik dan pembalikan kepala (overturn), rentang putar 20–200 rpm, penangas air termostatik, dan 300 metode farmakope.",
     description: [
       "Infitek DIST-3P adalah aparatus uji disolusi 3 bejana berukuran kompak yang dilengkapi sistem fungsi ganda pengangkatan kepala secara elektrik dan pembalikan (overturn) kepala instrumen untuk kemudahan penggantian poros.",
       "Mendukung pemasangan 3 bejana standar 185 mm atau bejana pelindung cahaya, goyangan dayung sangat rendah (≤0.3 mm pada paddle dan ≤0.8 mm pada basket), kecepatan putar 20–200 rpm, penangas air termostatik bersensor terintegrasi (suhu ruang s.d. 45°C, akurasi ≤±0.3°C), 9 periode sampling terprogram bertahap, komponen kontak cairan berbahan SUS316L, serta memori 300 metode farmakope."
@@ -48312,8 +46632,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penguji kekerasan tablet digital (rentang 2–200 N, opsi 500 N / 50 kgf, akurasi ±0.5%) dengan sensor tekanan presisi tinggi, pengukuran diameter tablet 2–40 mm, dan kalkulasi jarak kembali otomatis.",
     description: [
       "Infitek THDT-2 adalah alat uji kekerasan tablet digital berpresisi tinggi yang mengukur gaya hancur tablet menggunakan sensor tekanan berkepekaan tinggi dengan tingkat kesalahan berulang hanya ±1%.",
       "Dilengkapi penekanan motorik otomatis dengan kalkulasi jarak kembali otomatis penekan untuk menghemat waktu kerja, layar LCD resolusi tinggi, pilihan mode uji manual tablet tunggal atau kontinu otomatis (hingga 100 tablet per kelompok), pengukuran diameter tablet 2–40 mm, konversi satuan satu sentuhan (Newton, Kilogram, Kilogram force), analisis statistik hasil pengujian, serta bodi meja ringkas berdaya hemat 40W."
@@ -48368,8 +46686,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: true,
-    shortDescription:
-      "Instrumen pengujian fisik tablet dwifungsi 2-in-1 (uji kekerasan 2–489.9 N dan kerapuhan 2 silinder 1–900 putaran) sesuai Farmakope 2020 dengan kontrol otomatis cerdas dan daya 40W.",
     description: [
       "Infitek TABT-2 adalah instrumen pengujian obat dwifungsi pintar yang menggabungkan modul uji kekerasan tablet dan modul uji kerapuhan tablet dalam satu unit terintegrasi sesuai ketentuan Farmakope 2020.",
       "Modul kerapuhan dilengkapi 2 silinder akrilik bening (kecepatan 25±1 rpm, putaran 1–900 putaran), modul kekerasan menggunakan sensor tekanan digital berpresisi tinggi (rentang 2–489.9 N, diameter tablet 3–40 mm) dengan penekanan motorik otomatis, fungsi kunci otomatis, reset otomatis, uji siklis otomatis, serta konsumsi daya sangat hemat 40W."
@@ -48422,8 +46738,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penguji kerapuhan tablet dua drum dengan kecepatan putar variabel (20–100 rpm, akurasi ±1 rpm), penghitung mundur 5–900 putaran, layar LCD, dan henti otomatis.",
     description: [
       "Infitek FRAT-1 adalah penguji kerapuhan tablet dua silinder putar yang memberikan fleksibilitas pengaturan kecepatan rotasi drum secara variabel dari 20 hingga 100 rpm untuk eksperimen riset formulasi lanjutan.",
       "Dilengkapi dua silinder akrilik bening (diameter dalam 286 mm, kedalaman 39 mm, tinggi jatuh 156 mm) yang beroperasi serempak, kontrol cerdas mikroprosesor untuk kecepatan putar dan jumlah putaran (5–900 putaran hitung mundur), layar LCD informatif yang menampilkan data prasetel dan aktual, serta daya hemat 40W."
@@ -48476,8 +46790,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penguji kerapuhan tablet dua drum standar baku farmakope (kecepatan tetap 25 rpm, hitung mundur tetap 100 putaran) dengan pengoperasian langsung satu tombol dan layar LCD.",
     description: [
       "Infitek FRAT-2 dirancang khusus mengacu langsung pada ketentuan standar Farmakope (Indonesian Pharmacopoeia / USP / BP / ChP) dengan parameter putaran terkunci pada 100 putaran dan kecepatan konstan 25 rpm.",
       "Menghilangkan kebutuhan penyetelan parameter yang rumit sehingga operasi sangat mudah dan bebas salah setel oleh staf laboratorium QC, dua drum akrilik bening (diameter dalam 286 mm, kedalaman 39 mm, tinggi jatuh 156 mm) yang beroperasi serempak, layar LCD penampil status hitung mundur, daya hemat 20W, serta bodi meja kompak."
@@ -48530,8 +46842,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat uji waktu hancur tablet 2 keranjang gantung (2 jalur kendali independen) dengan frekuensi angkat 30–32 kali/menit (langkah 55±1 mm), kontrol suhu otomatis 37.0°C (akurasi ±0.3°C), dan sensor digital presisi.",
     description: [
       "Infitek DITT-2 adalah instrumen penguji batas waktu hancur tablet dan kapsul farmasi yang dilengkapi 2 set keranjang gantung independen untuk pengujian dua kelompok sediaan secara terpisah.",
       "Menggunakan sensor suhu digital presisi tinggi yang menjaga suhu penangas air pada 37.0°C otomatis sesuai regulasi farmakope (akurasi ±0.3°C), frekuensi angkat keranjang 30–32 kali per menit dengan jarak langkah 55±1 mm, jarak kasa ke dasar beker 25±2 mm, kawat kasa standar 2 mm, timer prasetel 15 menit bawaan (dapat diatur 1–900 menit), teknologi mikrokontroler SCM cerdas, serta alarm panas berlebih."
@@ -48585,8 +46895,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat pengukur ketebalan dan diameter tablet/kapsul rentang 0–30 mm (akurasi ±0.01 mm) dengan dial indikator presisi tinggi untuk kapsul tipe 00, 0, 1, 2, 3, 4 dan berbagai ukuran tablet.",
     description: [
       "Infitek THKT-2 adalah instrumen pengukur dimensi fisik sediaan farmasi padat yang dirancang untuk mengukur ketebalan dinding/puncak cangkang kapsul sekaligus diameter dan ketebalan tablet atau pil.",
       "Menggunakan dial indikator presisi tinggi berakurasi ±0.01 mm dengan rentang pengukuran luas 0 hingga 30 mm, kompatibel dengan kapsul tipe 00, 0, 1, 2, 3, dan 4 serta tablet berdiameter hingga 30 mm, memenuhi standar korporasi Q/12XQ0194-2010, serta berdimensi saku 200 × 80 × 50 mm."
@@ -48638,8 +46946,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat pengukur ketebalan dan diameter tablet/kapsul model saku kompak berdimensi 160×60×50 mm (rentang 0–30 mm, akurasi ±0.01 mm) dengan dial indikator presisi untuk kapsul tipe 00–4 dan tablet.",
     description: [
       "Infitek THKT-4 adalah varian saku berdimensi lebih kecil (160 × 60 × 50 mm) untuk pengukuran cepat ketebalan dan diameter tablet, pil, serta cangkang kapsul di lini produksi farmasi.",
       "Dilengkapi dial indikator presisi berakurasi ±0.01 mm dengan rentang uji 0–30 mm, kompatibel dengan kapsul tipe 00, 0, 1, 2, 3, dan 4 serta tablet padat, mematuhi standar korporasi Q/12XQ0194-2010, serta konstruksi logam yang kokoh dan tahan banting."
@@ -48691,8 +46997,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penguji kerapuhan tablet satu drum akrilik transparan (kecepatan 25 rpm, putaran 5–900 putaran) dengan sistem otomasi penuh (auto-test, auto-diagnose, auto-alarm) dan layar LCD.",
     description: [
       "Infitek FRAT-4 adalah instrumen penguji kerapuhan tablet drum tunggal (single path single cylinder) yang dirancang untuk laboratorium farmasi dengan kebutuhan pengujian sampel berkapasitas sedang.",
       "Menggunakan satu drum silinder berbahan kaca organik (akrilik) transparan tanpa warna berkualitas tinggi (diameter Φ286 mm, kedalaman 39 mm, tinggi jatuh 156 mm), kecepatan putar 25 rpm (akurasi ±1 rpm), penghitungan putaran 5–900 putaran (akurasi ±1 putaran), layar LCD penampil data prasetel dan aktual, sistem otomasi diagnosis dan alarm mandiri, serta daya hemat 50W."
@@ -48746,8 +47050,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat pengukur ketebalan dinding dan puncak cangkang kapsul model kompak 160 mm (rentang 0–5 mm, akurasi ±0.01 mm) dengan dial indikator presisi tinggi untuk kapsul tipe 00, 0, 1, 2, 3, dan 4.",
     description: [
       "Infitek THKT-3 adalah instrumen pengukur ketebalan cangkang kapsul berukuran kompak (160 × 60 × 50 mm) yang secara khusus dikonfigurasikan untuk mengukur ketebalan dinding samping dan bagian kubah atas kapsul gelatin keras.",
       "Menggunakan dial indikator presisi berakurasi tinggi ±0.01 mm dengan rentang pengukuran 0–5 mm, kompatibel dengan kapsul tipe 00, 0, 1, 2, 3, dan 4, memenuhi standar industri farmasi Q/12XQ0194-2010, serta konstruksi logam kokoh yang tahan lama."
@@ -48799,8 +47101,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat uji waktu hancur tablet 1 keranjang gantung (frekuensi 30–32 kali/menit, jarak 55±1 mm) dengan kontrol suhu otomatis 37.0°C (akurasi ±0.3°C), timer prasetel 15 menit bawaan, dan sensor digital.",
     description: [
       "Infitek DITT-1 adalah instrumen penguji batas waktu hancur sediaan farmasi model 1 keranjang gantung yang ringkas dan ekonomis untuk laboratorium berkapasitas uji terbatas.",
       "Menggunakan sensor elektronik digital presisi tinggi yang secara otomatis menjaga suhu penangas air pada 37.0°C sesuai regulasi farmakope (akurasi ±0.3°C tanpa kalibrasi ulang), frekuensi angkat keranjang 30–32 kali per menit dengan jarak langkah 55±1 mm, jarak kasa ke dasar beker 25±2 mm, kawat kasa standar 2 mm, timer bawaan 15 menit (dapat diatur 1–900 menit), teknologi mikrokontroler SCM cerdas, serta alarm batas suhu berlebih."
@@ -48854,8 +47154,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penguji kejernihan larutan injeksi dan cairan obat botol fungsi deteksi dua sisi (double-sided detection, setara dua unit kerja) dengan lampu fluoresen tiga warna primer bebas kedip (1000–6000 Lux) dan pewaktu otomatis.",
     description: [
       "Infitek CLRT-2 adalah instrumen penguji kejernihan (clarification tester) sediaan cairan injeksi dan obat botol yang memiliki fungsi deteksi dua sisi simultan (setara dengan dua unit alat uji yang bekerja bersamaan).",
       "Menggunakan lampu fluoresen tiga warna primer (three-primary-color fluorescent lamp) yang dikontrol sensor pencahayaan dan induktor elektronik untuk mengeliminasi kedipan (flash eliminated), iluminasi dapat disesuaikan pada rentang 1000 hingga 6000 Lux, pengatur waktu otomatis 1–99 detik dengan alarm audio, serta latar belakang kontras hitam-putih standar farmakope."
@@ -48908,8 +47206,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penguji kejernihan larutan injeksi dan cairan obat botol satu sisi dengan lampu fluoresen tiga warna primer bebas kedip (iluminasi 1000–6000 Lux), pewaktu 1–99 detik dengan alarm, dan daya 30W.",
     description: [
       "Infitek CLRT-1 adalah instrumen penguji kejernihan larutan obat injeksi ampul, vial, dan botol infus satu sisi yang dirancang sesuai pedoman pemeriksaan partikel terlihat standar Farmakope.",
       "Dilengkapi lampu fluoresen tiga warna primer beriluminasi 1000 hingga 6000 Lux yang dapat disesuaikan tanpa kedip untuk kenyamanan penglihatan mata pemeriksa, sensor cahaya dan induktor elektronik presisi, timer otomatis 1–99 detik dengan alarm audio, serta bodi meja ramping dengan kedalaman hanya 17.5 cm."
@@ -48962,8 +47258,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi 3 bejana dan 3 poros pengaduk tersusun dalam satu baris dengan pembalikan kepala manual fleksibel, komponen baja tahan karat SUS316L, kecepatan 20–200 rpm, dan sirkulasi air pompa magnetik.",
     description: [
       "Infitek DIST-3E adalah aparatus uji disolusi obat berkonfigurasi 3 bejana dan 3 poros pengaduk sejajar dalam satu baris lurus untuk kemudahan pengamatan visual sediaan tablet saat melarut.",
       "Bagian kepala instrumen dapat dibalikkan secara manual dengan lancar, komponen dayung dan keranjang terbuat dari baja tahan karat SUS316L impor, pemanasan merata dengan sirkulasi pompa magnetik (suhu ambien hingga +45.0°C, stabilitas ±0.3°C), kontrol MPU otomatis berlayar LCD, 9 titik waktu prasetel ber-alarm suara, serta daya hemat 600W."
@@ -49018,8 +47312,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Aparatus uji disolusi bejana tunggal (1 bejana dan 1 poros) dengan pembalikan kepala manual fleksibel, komponen baja tahan karat SUS316L, kecepatan 20–200 rpm, dan sirkulasi air pompa magnetik.",
     description: [
       "Infitek DIST-1E adalah instrumen uji disolusi bejana tunggal (1 vessel, 1 pole) yang dirancang untuk kebutuhan praktikum pendidikan farmasi, pengujian demonstratif, atau skrining awal satu sampel formulasi.",
       "Dilengkapi kepala instrumen yang dapat dibalik manual, poros dayung dan keranjang berbahan stainless steel SUS316L impor, penangas air bersirkulasi pompa magnetik untuk pemanasan merata (suhu ambien hingga +45.0°C, stabilitas ±0.3°C), kontroler MPU dengan layar LCD, 9 titik waktu prasetel dengan alarm suara, serta bodi ringkas berlebar hanya 26 cm."
@@ -49074,8 +47366,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penguji batas waktu hancur khusus tablet cepat hancur oral (orally disintegrating tablet / ODT) dengan keranjang tabung baja stainless (panjang 30 mm, diameter ayak 710 µm), langkah pendek 10±1 mm, dan suhu RT–45°C.",
     description: [
       "Infitek DITT-K1 dirancang secara spesifik mengacu pada metode inspeksi tablet cepat hancur oral (orally disintegrating tablets / ODT) yang baru diperkenalkan dalam Farmakope edisi 2020.",
       "Mengadopsi struktur bejana khusus satu cangkir dan satu keranjang stainless steel (panjang tabung 30 mm, diameter dalam 13 mm, diameter lubang ayakan 710 µm) dengan jarak langkah naik-turun pendek 10±1 mm pada frekuensi 30–32 kali/menit untuk mensimulasikan lingkungan rongga mulut, penangas air kontrol suhu presisi (suhu ruang hingga 45°C, akurasi ≤±0.3°C), serta dudukan bejana khusus yang memudahkan fiksasi posisi pengamatan."
@@ -49127,8 +47417,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Pre-Order",
     featured: true,
-    shortDescription:
-      "Alat penguji waktu hancur multifungsi desain 2+1 (2 keranjang tablet biasa langkah 55 mm kasa 2 mm + 1 keranjang khusus ODT langkah 10 mm kasa 710 µm) dengan 3 jalur kendali mandiri, kontrol suhu otomatis 37.0°C, dan layar LCD.",
     description: [
       "Infitek DITT-M3 mengadopsi metode desain inovatif 2+1 untuk mengakomodasi pengujian tablet/kapsul konvensional sekaligus tablet cepat hancur oral (orally disintegrating tablets) dalam satu instrumen sesuai Farmakope edisi 2020.",
       "Dilengkapi 3 set keranjang gantung dengan 3 jalur operasi mandiri yang dapat dikontrol terpisah (2 set keranjang biasa langkah 55±1 mm kasa 2 mm dan 1 set keranjang khusus ODT langkah 10±1 mm kasa 710 µm), sensor suhu digital presisi tinggi otomatis terkontrol pada 37.0°C (akurasi ±0.3°C), waktu angkat otomatis 15 menit (dapat disetel 1–999 menit), modul layar LCD terbaru, serta proteksi panas berlebih."
@@ -49183,8 +47471,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Penguji kekerasan tablet digital manual (rentang 2–198 N, diameter tablet 2–20 mm, akurasi ±0.5%) dengan sensor tekanan presisi tinggi, pemuatan dan penekanan manual, dan konsumsi daya hemat 10W.",
     description: [
       "Infitek THDT-1 adalah instrumen pengukur kekerasan tablet digital kompak dengan mekanisme penekanan manual yang mudah digunakan di laboratorium formulasi farmasi dan ruang pendidikan.",
       "Menggunakan sensor tekanan berpresisi tinggi untuk mengukur gaya hancur tablet dari 2 hingga 198 N (0.2–20 kgf, akurasi ±0.5%), diameter tablet 2–20 mm, fungsi konversi satuan Newton dan Kilogram, kalibrasi akurasi mandiri yang mudah menggunakan anak timbang standar, serta konsumsi daya sangat rendah hanya 10W."
@@ -49238,8 +47524,6 @@ const productSeeds: ProductSeed[] = [
     price: DEFAULT_PRICE,
     availability: "Tersedia",
     featured: false,
-    shortDescription:
-      "Alat penguji transparansi gelatin (rentang 20–500 mm, presisi ±5 mm) dengan sistem sumber cahaya tertutup anti-interferensi lingkungan, tabung gelas uji 400 mL, dan daya 100W.",
     description: [
       "Infitek TRNT-2 adalah instrumen khusus yang dirancang untuk mengukur nilai transparansi dan kejernihan optik larutan gelatin yang digunakan dalam industri farmasi dan kapsul obat.",
       "Mengadopsi sistem sumber cahaya tertutup yang sepenuhnya mengeliminasi pengaruh pencahayaan lingkungan sekitar pada hasil pengujian, rentang uji transparansi 20 hingga 500 mm (presisi ±5 mm), tabung kaca pengujian standar 400 mL yang memudahkan pengambilan dan penyimpanan spesimen, serta konstruksi kokoh berbobot 11 kg."

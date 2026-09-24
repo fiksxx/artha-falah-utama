@@ -185,12 +185,11 @@ Semua produk ada di **satu file**: `src/lib/data/products.ts`, di dalam array be
 | `brandId` | Ya | teks | Harus cocok dengan `id` di `brands.ts` |
 | `category` | Ya | pilihan | `"Reagen"`, `"Alat Lab"`, atau `"Alat Kesehatan"` |
 | `model` | Ya | teks | **Ini kolom SKU/kode produk Anda.** Ikut dicari oleh pencarian |
-| `shortDescription` | Ya | teks | 1–2 baris untuk kartu katalog dan header detail |
 | `image` | Ya | path | Mis. `"/images/products/product-10.png"` |
 | `imageAlt` | Ya | teks | Deskripsi gambar untuk aksesibilitas & SEO |
 | `description` | Tidak | daftar teks | Paragraf deskripsi lengkap (tab Detail Produk) |
 | `highlights` | Tidak | daftar teks | Poin penting, tampil sebagai kartu bercentang |
-| `specifications` | Tidak | daftar label/nilai | Tabel di tab Spesifikasi Produk |
+| `specifications` | Tidak | daftar label/nilai | Tabel di tab Detail Produk, di bawah deskripsi |
 | `packaging` | Tidak | daftar label/nilai | Tabel di tab Informasi Tambahan |
 | `additionalInformation` | Tidak | daftar grup | Features, warranty, sertifikasi, dll |
 | `brochureUrl` | Tidak | path | Mis. `"/brochures/nama.pdf"`. Kosong = tombol disembunyikan |
@@ -233,8 +232,6 @@ belum ada, tambahkan dulu (lihat Bagian 4).
     brandId: "brand-shimadzu",
     category: "Alat Lab",
     model: "UV-1900i",
-    shortDescription:
-      "Spektrofotometer double beam dengan kecepatan scan 29.000 nm/menit untuk analisis rutin dan penelitian.",
     description: [
       "UV-1900i adalah spektrofotometer UV-Vis double beam yang dirancang untuk laboratorium dengan volume pengujian tinggi.",
       "Dilengkapi layar sentuh dan mode pengukuran yang dapat disimpan sehingga operator dapat mengulang metode yang sama secara konsisten.",
@@ -309,7 +306,6 @@ Kalau data teknis belum lengkap, ini sudah cukup:
     brandId: "brand-olympus",
     category: "Alat Lab",
     model: "CX23",
-    shortDescription: "Mikroskop binokuler untuk pemeriksaan rutin di laboratorium klinik dan pendidikan.",
     image: "/images/products/mikroskop-cx23.jpg",
     imageAlt: "Mikroskop binokuler CX23",
   },
@@ -491,7 +487,7 @@ kategori yang masih punya produk.
 kombinasi *pencarian + filter brand + filter kategori* sudah lebih efektif daripada subkategori
 berjenjang. Pertimbangkan subkategori hanya bila produk sudah lewat 100 item.
 
-Alternatif tanpa mengubah kode: manfaatkan field `model` dan `shortDescription`. Keduanya ikut
+Alternatif tanpa mengubah kode: manfaatkan field `model` dan `description`. Keduanya ikut
 dicari oleh pencarian, jadi mengetik "centrifuge" akan menemukan semua produk yang menyebut kata
 itu, lintas kategori.
 
@@ -639,8 +635,8 @@ tidak berbiaya. Pertimbangkan cloud storage (Cloudinary/Vercel Blob) hanya bila 
 | **Alamat, email, telepon, WhatsApp, jam kerja** | `src/lib/site.ts` → `siteConfig.contact` |
 | Link media sosial | `src/lib/site.ts` → `socialLinks` |
 | Label & urutan menu navbar | `src/lib/site.ts` → `navItems` |
-| Visi, misi | `src/lib/data/about.ts` → `vision`, `missions` |
-| Nilai perusahaan (Values) | `src/lib/data/about.ts` → `companyValues` |
+| Blok lini bisnis (About) | `src/lib/data/about.ts` → `businessBlocks` |
+| Testimoni pelanggan (dummy) | `src/lib/data/testimonials.ts` |
 | Kartu navigasi cepat di halaman About | `src/lib/data/about.ts` → `quickNavCards` |
 | Produk | `src/lib/data/products.ts` |
 | Brand | `src/lib/data/brands.ts` |
@@ -875,18 +871,19 @@ Langkah selanjutnya: `docs/PANDUAN-DEPLOYMENT.md`.
 
 ---
 
-## 10. Halaman About versi baru
+## 10. Halaman About
 
-Susunan halaman About sekarang, dari atas ke bawah:
+Susunan halaman About sekarang, dari atas ke bawah. Header (hero) tidak berubah;
+semua section di bawahnya dibuat compact (`spacing="sm"`).
 
 ```
-1. Hero            -> foto gedung full-width      HomeHero.tsx
-2. Visi & Misi     -> teks dari about.ts          page.tsx
-3. Values          -> 4 kartu nilai perusahaan    page.tsx
-4. Statistik       -> 4 kartu angka + counter     CompanyStats.tsx
-5. Marquee brand   -> logo berjalan horizontal    BrandMarquee.tsx
-6. Kartu navigasi  -> 3 kartu ke halaman lain     QuickNavCards.tsx
-7. Footer          -> global dari layout.tsx      Footer.tsx
+1. Hero            -> foto gedung full-width                  HomeHero.tsx
+2. Marquee brand   -> logo berjalan horizontal                BrandMarquee.tsx
+3. Kartu navigasi  -> 3 kartu ke halaman lain                 QuickNavCards.tsx
+4. Lini bisnis     -> blok editorial selang-seling            BusinessScope.tsx
+5. Testimoni       -> 3 kartu, bergeser 1 kartu tiap 4 detik  TestimonialCarousel.tsx
+6. Activity        -> 3 kartu, bergeser 1 kartu tiap 3 detik  ActivityCarousel.tsx
+7. Footer          -> global dari layout.tsx                  Footer.tsx
 ```
 
 ### 10.1 Mengganti foto gedung pada hero
@@ -904,44 +901,23 @@ Catatan penting:
 - Hindari foto yang sisi kirinya sangat ramai, karena teks hero berada di sisi kiri.
 - Jangan mengubah nama file. Bila namanya berbeda, ubah juga baris `src="/images/about/building.png"` di `src/components/sections/HomeHero.tsx`.
 
-### 10.2 Memperbarui angka statistik
+### 10.2 Lini bisnis, testimoni, dan Activity
 
-File: `src/lib/data/about.ts`, array `companyStats`.
+- **Lini bisnis** (`BusinessScope.tsx`): lima blok editorial yang panjang ke bawah; di tiap blok gambar berada di satu sisi dan teks di sisi lainnya, bergantian kiri/kanan. Isinya di `src/lib/data/about.ts` -> `businessBlocks` (label, judul, paragraf, butir informasi, gambar). Fokus isinya kebutuhan laboratorium (reagen, bahan habis pakai, alat, instrumen, alat kesehatan yang relevan; untuk penelitian, pendidikan, pengujian, operasional) - jangan diarahkan ke sektor industri lain. Hindari klaim yang tidak dapat dibuktikan ("terbaik", "terlengkap"). Gambar memakai foto produk dari katalog dan `public/images/artha-labs-hero.png` (semuanya file lokal). Menambah blok = menambah satu objek di array.
+- **Testimoni** (`TestimonialCarousel.tsx`): data di `src/lib/data/testimonials.ts`, urutan array = urutan tampil. Yang ditampilkan: rating (bintang + angka, mis. 4.9), kutipan, nama, dan instansi - tanpa jabatan. Tiga kartu terlihat sekaligus (1 di ponsel); setiap 4 detik (`INTERVAL_MS`) carousel bergeser satu kartu ke kiri, terus maju sesuai urutan data, lalu kembali ke awal. Tidak ada tombol jeda. Isinya saat ini DUMMY (`placeholder: true`); ganti dengan testimoni asli sebelum website dibuka untuk publik.
+- **Activity** (`ActivityCarousel.tsx`): 3 kartu terlihat (1 di ponsel), bergeser satu kartu setiap 3 detik dengan gerak bolak-balik (ke kiri sampai kartu terakhir terlihat, lalu ke kanan sampai kartu pertama terlihat). Tidak ada tombol jeda. Isinya 6 tulisan terbaru berkategori Insight atau Panduan; tiap kartu menuju halaman detail tulisannya.
+- Kedua carousel memakai komponen generik `LoopCarousel.tsx` (prop `mode`: `"loop"` untuk Testimoni, `"bounce"` untuk Activity), tetapi masing-masing adalah instance terpisah (index, timer, dan data sendiri). Carousel berhenti sementara saat kursor di atasnya; pengguna yang mematikan animasi di perangkatnya mendapat deretan yang bisa digulir manual.
 
-| Kartu | Sumber angka | Perlu diubah manual? |
-| --- | --- | --- |
-| Klien Terlayani | ditulis manual | YA |
-| Produk Tersedia | otomatis dari jumlah produk | tidak |
-| Brand Mitra | otomatis dari jumlah brand | tidak |
-| Kepuasan Pelanggan | ditulis manual | YA |
+**Mengganti gambar Activity:** kartu Activity ke-N memakai `public/images/activities/activity-0N.png` (kartu pertama -> `activity-01.png`, kedua -> `activity-02.png`, dst.). Timpa file itu dengan gambar Anda (nama sama, rasio sekitar 3:2, mis. 1200 x 800 px) - tidak ada kode yang perlu diubah. Bila suatu file tidak ada, kartu memakai sampul bergaya brand. Aturan pemetaannya ada di `src/lib/activity-images.ts`; jumlah kartu diatur konstanta `CAROUSEL_SIZE` di `ActivityCarousel.tsx` (sediakan file gambarnya sejumlah itu).
 
-Setiap kali Anda menambah produk di `products.ts` atau brand di `brands.ts`, angka di halaman About ikut bertambah sendiri. Tidak ada yang perlu diedit dua kali.
-
-Contoh mengubah jumlah klien menjadi 250, cukup ubah satu angka:
-
-```ts
-{
-  id: "stat-clients",
-  label: "Klien Terlayani",
-  value: 250,
-  suffix: "+",
-  description: "Institusi pendidikan, industri, dan fasilitas kesehatan.",
-  icon: "handshake",
-},
-```
-
-Arti tiap kolom:
-
-- `label` tulisan di bawah angka.
-- `value` angka tujuan animasi. Harus angka, bukan teks. Tulis 250, bukan "250" atau "250+".
-- `suffix` tambahan di belakang angka, misalnya "+" atau "%". Kosongkan bila tidak perlu.
-- `prefix` tambahan di depan angka. Jarang dipakai.
-- `description` satu baris keterangan. Boleh dihapus.
-- `icon` pilih salah satu: handshake, box, tools, check, shield, spark.
-
-Menambah atau mengurangi kartu cukup menambah atau menghapus satu objek di array. Tata letak menyesuaikan sendiri: 4 kartu satu baris di desktop, 2 per baris di tablet, 1 per baris di ponsel.
-
-PENTING soal kredibilitas: angka Klien Terlayani dan Kepuasan Pelanggan saat ini masih contoh. Isi dengan angka yang benar-benar bisa dipertanggungjawabkan. Klaim yang tidak terbukti justru menurunkan kepercayaan calon klien, terutama pada tender atau pengadaan institusi.
+**Gambar di halaman /activity (daftar, detail, tulisan terkait):** memakai penomoran
+serupa tetapi TERPISAH dari carousel About - dihitung dari posisi entri pada seluruh
+daftar `activities` (bukan hanya 6 teratas). Entri ke-1 pada daftar penuh memakai
+`activity-01.png`, entri ke-2 memakai `activity-02.png`, dan seterusnya
+(`src/lib/activity-images.ts` -> `withActivityImages`). Karena angkanya dihitung dari
+daftar yang berbeda, nomor file yang sama bisa menampilkan artikel yang berbeda di
+carousel About dibanding di halaman /activity - ini disengaja, bukan bug. Entri yang
+sudah punya foto sendiri (`image` diisi manual) tidak ikut ditimpa.
 
 ### 10.3 Marquee brand di halaman About
 
@@ -1030,7 +1006,6 @@ ubah isinya. Contoh produk nyata:
     price: 1250000,
     availability: "Tersedia",
     featured: false,
-    shortDescription: "Mikropipet variabel dengan akurasi tinggi untuk pekerjaan rutin laboratorium.",
     description: [
       "Paragraf pertama penjelasan produk.",
       "Paragraf kedua, misalnya keunggulan atau catatan pemakaian.",
@@ -1053,11 +1028,10 @@ Arti setiap kolom:
 | `applications` | Tidak | Teks bebas. Otomatis jadi opsi filter "Aplikasi" |
 | `model` | Ya | Kode model, ikut dicari pencarian |
 | `keywords` | Tidak | Sinonim / istilah Inggris agar tetap ditemukan |
-| `price` | Tidak | Angka murni. Hapus kolomnya bila harga on-request |
+| `price` | Ya | Angka murni. Default `DEFAULT_PRICE` = 1 (tampil "Rp1") |
 | `availability` | Ya | `Tersedia`, `Pre-Order`, atau `Indent` |
 | `featured` | Tidak | `true` untuk produk andalan (lihat 11.5) |
-| `shortDescription` | Ya | 1-2 baris, tampil di kartu produk |
-| `description` | Tidak | Array paragraf untuk halaman detail |
+| `description` | Tidak | Array paragraf di tab "Detail Produk", tampil di atas tabel spesifikasi |
 | `image` | Ya | Path file di `public/images/products/` |
 | `imageAlt` | Ya | Deskripsi gambar untuk pembaca layar |
 
@@ -1074,9 +1048,9 @@ Aturan menulis harga:
 
 - Tulis ANGKA MURNI: `1250000`. Jangan `"Rp1.250.000"`, jangan pakai titik.
 - Website yang mengurus formatnya: `1250000` tampil sebagai `Rp1.250.000`.
-- Untuk produk yang harganya hanya diberikan atas permintaan, HAPUS baris
-  `price` pada produk itu. Website otomatis menulis "Harga atas permintaan" -
-  jauh lebih baik daripada memasang angka yang tidak benar.
+- Field `price` wajib ada di setiap produk. Produk yang belum punya harga asli
+  memakai `DEFAULT_PRICE` (bernilai `1`) sehingga tampil sebagai "Rp1". Tidak
+  ada lagi teks "Harga atas permintaan" di website.
 
 **Catatan penting soal format `Rp1.00`:** dalam penulisan angka Indonesia, titik
 adalah pemisah ribuan dan koma adalah pemisah desimal. Jadi `Rp1.00` bukan
@@ -1187,33 +1161,19 @@ Urutan section halaman About sekarang:
 1. Hero / perkenalan perusahaan (foto gedung full-width)
 2. Brand Mitra Artha Labs (marquee logo berjalan)
 3. Navigation Cards (Artha Labs, Aktivitas, Hubungi Kami)
-4. Artha Labs dalam Angka (statistik dengan counter)
-5. Visi & Misi
-6. Values
+4. Lini bisnis (Jual Reagen, Alat Laboratorium, dan Alat Kesehatan)
+5. Testimoni Pelanggan (3 kartu, bergeser 1 kartu tiap 4 detik)
+6. Activity (3 kartu, bergeser 1 kartu tiap 3 detik)
 
 Seluruh urutan itu ditentukan oleh satu file: `src/app/page.tsx`. Di dalamnya
 setiap section ditulis berurutan dari atas ke bawah dan sudah diberi nomor pada
-komentarnya, misalnya `{/* 3. Navigation Cards */}`.
+komentarnya. Untuk menukar posisi, pindahkan barisnya; untuk menyembunyikan,
+hapus barisnya.
 
-**Menukar posisi dua section:** potong satu blok section (dari komentar
-nomornya sampai penutup `</Section>`) lalu tempel di posisi yang Anda inginkan.
-Tidak ada pengaturan lain yang perlu diubah.
+Teks tidak ditulis di `page.tsx`, melainkan di file data:
 
-**Menyembunyikan sebuah section:** hapus blok section tersebut, atau bungkus
-dengan tanda komentar. Sebaiknya jangan menghapus section Visi & Misi atau
-Values bila isinya masih ingin dipakai nanti.
-
-**Mengubah isi teksnya:** teks TIDAK ditulis di `page.tsx`, melainkan di
-`src/lib/data/about.ts`:
-
-| Yang ingin diubah | Ubah di `about.ts` |
-| --- | --- |
-| Kalimat visi | `vision` |
-| Daftar misi | `missions` |
-| Judul & deskripsi navigation cards | `quickNavCards` |
-| Angka statistik | `companyStats` |
-| Nilai perusahaan | `companyValues` |
-
-Ingat: angka "Produk Tersedia" dan "Brand Mitra" dihitung otomatis dan tidak
-perlu disentuh, sedangkan "Klien Terlayani" dan "Kepuasan Pelanggan" masih
-angka contoh yang wajib Anda ganti sebelum website online.
+| Yang ingin diubah | File | Nama |
+| --- | --- | --- |
+| Judul & deskripsi navigation cards | `about.ts` | `quickNavCards` |
+| Blok lini bisnis (label, judul, paragraf, butir, gambar) | `about.ts` | `businessBlocks` |
+| Testimoni | `testimonials.ts` | `testimonials` |

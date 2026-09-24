@@ -54,6 +54,22 @@
     --color-line: 226 233 228;
     --color-line-strong: 201 213 205;
 
+    /* Feedback - SATU-SATUNYA merah di website, dipakai untuk state error form.
+       Sengaja dijadikan token (bukan `red-500` bawaan Tailwind) supaya nuansa
+       error bisa disesuaikan sekali di sini bila branding berubah.
+       Kontras di atas putih: danger-600 5.3:1, danger-700 7.4:1 (WCAG AA). */
+    --color-danger-50: 254 242 242;
+    --color-danger-100: 254 226 226;
+    --color-danger-200: 250 205 205;
+    --color-danger-400: 224 122 122;
+    --color-danger-600: 205 43 43;
+    --color-danger-700: 166 32 32;
+    --color-danger-900: 110 24 24;
+
+    /* Warna dasar bayangan: hijau sangat gelap, bukan abu-abu kebiruan.
+       Membuat shadow kartu menyatu dengan palet, tidak terasa "dingin". */
+    --color-shadow: 7 40 29;
+
     /* Tinggi navbar sticky (dipakai scroll-padding & offset section) */
     --nav-height: 4.5rem;
   }
@@ -156,6 +172,18 @@
       rgb(var(--color-brand-900)) 45%,
       rgb(var(--color-brand-800)) 100%
     );
+  }
+
+  /* Pola titik halus untuk sampul artikel tanpa foto (ActivityCover).
+     Memudar ke arah kanan-bawah supaya ikon watermark tetap jadi fokus. */
+  .cover-dots {
+    background-image: radial-gradient(
+      rgb(var(--color-brand-300) / 0.2) 1px,
+      transparent 1.25px
+    );
+    background-size: 18px 18px;
+    -webkit-mask-image: linear-gradient(135deg, #000 0%, transparent 72%);
+    mask-image: linear-gradient(135deg, #000 0%, transparent 72%);
   }
 
   /* Fade halus di kiri-kanan marquee agar logo tidak terpotong kasar */

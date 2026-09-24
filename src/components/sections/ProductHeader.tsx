@@ -92,17 +92,7 @@ export function ProductHeader({ product }: { product: Product }) {
             </p>
 
             {/* HARGA - bersumber dari field `price` di data produk, bukan ditulis di sini */}
-            <p className="mt-4 text-3xl font-bold text-white">
-              {typeof product.price === "number" ? (
-                formatRupiah(product.price)
-              ) : (
-                <span className="text-xl font-semibold text-white/80">Harga atas permintaan</span>
-              )}
-            </p>
-
-            <p className="mt-4 max-w-content text-base leading-relaxed text-white/75">
-              {product.shortDescription}
-            </p>
+            <p className="mt-4 text-3xl font-bold text-white">{formatRupiah(product.price)}</p>
 
             <dl className="mt-7 grid gap-4 border-t border-white/15 pt-6 sm:grid-cols-3">
               {meta.map((item) => (

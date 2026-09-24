@@ -28,7 +28,7 @@ const navIconMap: Record<QuickNavCard["icon"], typeof ToolsIcon> = {
 export function QuickNavCards() {
   return (
     <nav aria-label="Navigasi cepat">
-      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {quickNavCards.map((card) => {
           const Icon = navIconMap[card.icon];
           return (
@@ -36,7 +36,7 @@ export function QuickNavCards() {
               {/* TODO: ganti dengan konten asli */}
               <Link
                 href={card.href}
-                className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface p-6 shadow-card transition-all duration-300 ease-smooth hover:-translate-y-1 hover:border-brand-800 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-800 motion-reduce:transform-none"
+                className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface p-5 shadow-card transition-all duration-300 ease-smooth hover:-translate-y-1 hover:border-brand-800 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-800 motion-reduce:transform-none"
               >
                 {/* Latar dark green yang muncul halus saat hover */}
                 <span
@@ -51,20 +51,20 @@ export function QuickNavCards() {
 
                 <span
                   aria-hidden="true"
-                  className="relative grid h-12 w-12 place-items-center rounded-lg bg-brand-50 text-brand-700 transition-all duration-300 ease-smooth group-hover:scale-105 group-hover:bg-accent-400 group-hover:text-brand-950 group-focus-visible:bg-accent-400 group-focus-visible:text-brand-950 motion-reduce:transform-none"
+                  className="relative grid h-10 w-10 place-items-center rounded-lg bg-brand-50 text-brand-700 transition-all duration-300 ease-smooth group-hover:scale-105 group-hover:bg-accent-400 group-hover:text-brand-950 group-focus-visible:bg-accent-400 group-focus-visible:text-brand-950 motion-reduce:transform-none"
                 >
-                  <Icon />
+                  <Icon width={20} height={20} />
                 </span>
 
-                <h3 className="relative mt-5 text-lg font-semibold text-ink transition-colors duration-300 group-hover:text-white group-focus-visible:text-white">
+                <h3 className="relative mt-4 text-base font-semibold text-ink transition-colors duration-300 group-hover:text-white group-focus-visible:text-white">
                   {card.title}
                 </h3>
-                <p className="relative mt-2 text-sm leading-relaxed text-ink-muted transition-colors duration-300 group-hover:text-white/75 group-focus-visible:text-white/75">
+                <p className="relative mt-1.5 text-sm leading-relaxed text-ink-muted transition-colors duration-300 group-hover:text-white/75 group-focus-visible:text-white/75">
                   {card.description}
                 </p>
 
                 {/* Indikator arah - panah bergeser saat hover */}
-                <span className="relative mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 transition-colors duration-300 group-hover:text-accent-300 group-focus-visible:text-accent-300">
+                <span className="relative mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 transition-colors duration-300 group-hover:text-accent-300 group-focus-visible:text-accent-300">
                   Selengkapnya
                   <ArrowRightIcon
                     aria-hidden="true"

@@ -5,6 +5,7 @@ import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { AlertIcon, CheckIcon } from "@/components/ui/icons";
+import { trackEvent } from "@/lib/analytics";
 import { QUOTE_PARAMS, resolveQuoteRequest } from "@/lib/quote";
 import { contactFormSchema, toFieldErrors } from "@/lib/validation/contact";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,7 @@ type Status = "idle" | "submitting" | "success" | "error";
 const initialValues: ContactFormValues = {
   name: "",
   email: "",
+  phone: "",
   subject: "",
   message: "",
   company: "",
@@ -26,10 +28,6 @@ const fieldClasses =
 export function ContactForm() {
   const searchParams = useSearchParams();
 
-  /**
-   * Alur Request for Quotation: /contact?product=<slug>&category=<kategori>.
-   * Tanpa parameter, hasilnya null sehingga form tetap kosong seperti biasa.
-   */
   const quote = useMemo(
     () =>
       resolveQuoteRequest(
@@ -48,7 +46,6 @@ export function ContactForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const appliedQuoteRef = useRef<string | null>(null);
 
-  // Isi ulang subjek & pesan bila user pindah ke produk lain tanpa reload halaman
   useEffect(() => {
     if (!quote) return;
     const key = `${quote.productName}|${quote.category ?? ""}`;
@@ -59,15 +56,20 @@ export function ContactForm() {
       subject: quote.subject,
       message: quote.message,
     }));
-  }, [quote]);
+
+    // Dicatat sekali per produk: memperlihatkan produk mana yang paling sering
+    // dibawa ke form penawaran, termasuk yang akhirnya tidak jadi dikirim.
+    trackEvent("quote_request_start", {
+      product_slug: searchParams.get(QUOTE_PARAMS.product) ?? "",
+      category: quote.category,
+    });
+  }, [quote, searchParams]);
 
   const setField = (field: keyof ContactFormValues, value: string) => {
     setValues((current) => ({ ...current, [field]: value }));
-    // Hapus error field saat user mulai memperbaiki
     setErrors((current) => (current[field] ? { ...current, [field]: undefined } : current));
   };
 
-  /** Validasi per field saat blur - feedback lebih cepat tanpa mengganggu saat mengetik. */
   const validateField = (field: keyof ContactFormValues) => {
     const result = contactFormSchema.safeParse(values);
     if (result.success) return;
@@ -81,14 +83,12 @@ export function ContactForm() {
     event.preventDefault();
     setFeedback("");
 
-    // 1. Validasi sisi client
     const result = contactFormSchema.safeParse(values);
     if (!result.success) {
       const fieldErrors = toFieldErrors(result.error);
       setErrors(fieldErrors);
       setStatus("error");
       setFeedback("Mohon periksa kembali isian yang ditandai.");
-      // Fokuskan field pertama yang error (aksesibilitas keyboard)
       const firstField = Object.keys(fieldErrors)[0];
       if (firstField) {
         formRef.current?.querySelector<HTMLElement>(`[name="${firstField}"]`)?.focus();
@@ -99,7 +99,6 @@ export function ContactForm() {
     setErrors({});
     setStatus("submitting");
 
-    // 2. Kirim ke API route (validasi ulang + kirim email di server)
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -118,6 +117,7 @@ export function ContactForm() {
       setStatus("success");
       setFeedback(data.message);
       setValues(initialValues);
+      trackEvent("contact_form_submit", { is_quote_request: Boolean(quote) });
     } catch {
       setStatus("error");
       setFeedback("Tidak dapat terhubung ke server. Periksa koneksi internet Anda.");
@@ -128,7 +128,6 @@ export function ContactForm() {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-      {/* Konfirmasi produk yang dimintakan penawaran (visual indication setelah redirect) */}
       {quote ? (
         <div className="rounded-xl border border-accent-200 bg-accent-50 p-4 sm:p-5">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-700">
@@ -144,7 +143,7 @@ export function ContactForm() {
         </div>
       ) : null}
 
-      {/* Honeypot anti-spam: tersembunyi dari user & screen reader, hanya bot yang mengisinya */}
+      {/* Honeypot */}
       <div aria-hidden="true" className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label htmlFor="company">Perusahaan (jangan diisi)</label>
         <input
@@ -158,18 +157,19 @@ export function ContactForm() {
         />
       </div>
 
+      <Field
+        id="name"
+        label="Nama lengkap"
+        placeholder="Nama Anda"
+        autoComplete="name"
+        value={values.name}
+        error={errors.name}
+        disabled={isSubmitting}
+        onChange={(value) => setField("name", value)}
+        onBlur={() => validateField("name")}
+      />
+
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field
-          id="name"
-          label="Nama lengkap"
-          placeholder="Nama Anda"
-          autoComplete="name"
-          value={values.name}
-          error={errors.name}
-          disabled={isSubmitting}
-          onChange={(value) => setField("name", value)}
-          onBlur={() => validateField("name")}
-        />
         <Field
           id="email"
           type="email"
@@ -182,6 +182,19 @@ export function ContactForm() {
           disabled={isSubmitting}
           onChange={(value) => setField("email", value)}
           onBlur={() => validateField("email")}
+        />
+        <Field
+          id="phone"
+          type="tel"
+          label="Nomor Telepon / WhatsApp"
+          placeholder="081234567890"
+          autoComplete="tel"
+          inputMode="tel"
+          value={values.phone}
+          error={errors.phone}
+          disabled={isSubmitting}
+          onChange={(value) => setField("phone", value)}
+          onBlur={() => validateField("phone")}
         />
       </div>
 
@@ -218,7 +231,6 @@ export function ContactForm() {
         </p>
       </div>
 
-      {/* Pesan sukses / error - diumumkan ke screen reader */}
       {feedback ? (
         <p
           role={status === "error" ? "alert" : "status"}
@@ -227,7 +239,7 @@ export function ContactForm() {
             "flex items-start gap-2.5 rounded-lg border p-4 text-sm",
             status === "success"
               ? "border-brand-200 bg-brand-50 text-brand-900"
-              : "border-red-200 bg-red-50 text-red-900",
+              : "border-danger-200 bg-danger-50 text-danger-900",
           )}
         >
           <span className="mt-0.5 shrink-0" aria-hidden="true">
@@ -287,7 +299,7 @@ function Field({
     onBlur,
     className: cn(
       fieldClasses,
-      error ? "border-red-400" : "border-line-strong",
+      error ? "border-danger-400" : "border-line-strong",
       disabled && "opacity-60",
     ),
   };
@@ -296,7 +308,7 @@ function Field({
     <div className={cn(multiline && "sm:col-span-2")}>
       <label htmlFor={id} className="mb-1.5 block text-sm font-semibold text-ink">
         {label}
-        <span className="ml-1 text-red-600" aria-hidden="true">
+        <span className="ml-1 text-danger-600" aria-hidden="true">
           *
         </span>
       </label>
@@ -323,7 +335,7 @@ function Field({
         </p>
       ) : null}
       {error ? (
-        <p id={`${id}-error`} className="mt-1.5 text-sm font-medium text-red-700">
+        <p id={`${id}-error`} className="mt-1.5 text-sm font-medium text-danger-700">
           {error}
         </p>
       ) : null}

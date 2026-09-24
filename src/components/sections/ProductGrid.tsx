@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 
 import { ProductCard } from "@/components/sections/ProductCard";
 import { Button } from "@/components/ui/Button";
@@ -17,6 +17,7 @@ import {
   products,
   subcategoriesInCategories,
 } from "@/lib/data/products";
+import { trackEvent } from "@/lib/analytics";
 import { cn, compactText, normalizeText } from "@/lib/utils";
 import type { Product } from "@/types";
 
@@ -54,8 +55,28 @@ const haystackOf = (product: Product) =>
     product.productType,
     ...(product.applications ?? []),
     ...(product.keywords ?? []),
-    product.shortDescription,
+    // Deskripsi lengkap menggantikan ringkasan pendek yang sudah dihapus,
+    // sehingga istilah teknis di dalam deskripsi tetap bisa dicari.
+    ...(product.description ?? []),
   ].join(" ");
+
+/**
+ * Indeks pencarian, dibangun SEKALI saat modul dimuat.
+ *
+ * Sebelumnya teks pencarian setiap produk dirangkai dan dinormalisasi ulang
+ * pada setiap ketikan. Dengan katalog yang kini berisi ratusan produk, itu
+ * berarti ribuan operasi string per huruf yang diketik. Sekarang hasilnya
+ * dihitung di muka dan pencarian tinggal membaca dari sini.
+ */
+const searchIndex: ReadonlyMap<string, { normalized: string; compact: string }> = new Map(
+  products.map((product) => {
+    const haystack = haystackOf(product);
+    return [product.id, { normalized: normalizeText(haystack), compact: compactText(haystack) }];
+  }),
+);
+
+/** Jeda sebelum kata kunci pencarian dicatat ke analytics (menunggu user berhenti mengetik). */
+const SEARCH_TRACK_DELAY_MS = 800;
 
 export function ProductGrid() {
   const [query, setQuery] = useState("");
@@ -71,28 +92,6 @@ export function ProductGrid() {
   const [seed, setSeed] = useState(SSR_SEED);
   const [seedReady, setSeedReady] = useState(false);
   const prefersReducedMotion = useReducedMotion();
-
-  // Memindai data produk untuk mencari image yang tidak valid
-  useEffect(() => {
-    products.forEach((item) => {
-      const src = item.image?.trim();
-      const isValid =
-        src &&
-        (src.startsWith("/") ||
-          src.startsWith("http://") ||
-          src.startsWith("https://") ||
-          src.startsWith("data:"));
-
-      if (!isValid) {
-        console.error("🚨 DITEMUKAN PRODUK DENGAN IMAGE INVALID:", {
-          id: item.id,
-          name: item.name,
-          model: item.model,
-          image: item.image,
-        });
-      }
-    });
-  }, []);
 
   useEffect(() => {
     let next = SSR_SEED;
@@ -124,9 +123,17 @@ export function ProductGrid() {
 
   const keyword = query.trim();
 
+  /**
+   * Penyaringan memakai nilai yang "tertunda", bukan nilai input langsung.
+   * Kolom pencarian tetap merespons seketika saat diketik, sementara React
+   * boleh menunda perhitungan daftar produk yang berat - ketikan tidak lagi
+   * terasa tersendat pada katalog besar.
+   */
+  const deferredQuery = useDeferredValue(query);
+
   const filtered = useMemo(() => {
-    const needle = normalizeText(query);
-    const needleCompact = compactText(query);
+    const needle = normalizeText(deferredQuery);
+    const needleCompact = compactText(deferredQuery);
 
     const result = catalog.filter((product) => {
       if (categories.length > 0 && !categories.includes(product.category)) return false;
@@ -143,10 +150,11 @@ export function ProductGrid() {
 
       if (needle === "") return true;
 
-      const haystack = haystackOf(product);
+      const indexed = searchIndex.get(product.id);
+      if (!indexed) return false;
+
       return (
-        normalizeText(haystack).includes(needle) ||
-        compactText(haystack).includes(needleCompact)
+        indexed.normalized.includes(needle) || indexed.compact.includes(needleCompact)
       );
     });
 
@@ -157,12 +165,7 @@ export function ProductGrid() {
       if (sort === "nama-asc") return a.name.localeCompare(b.name, "id");
       if (sort === "nama-desc") return b.name.localeCompare(a.name, "id");
 
-      const priceA = a.price;
-      const priceB = b.price;
-      if (typeof priceA !== "number" && typeof priceB !== "number") return 0;
-      if (typeof priceA !== "number") return 1;
-      if (typeof priceB !== "number") return -1;
-      return sort === "harga-asc" ? priceA - priceB : priceB - priceA;
+      return sort === "harga-asc" ? a.price - b.price : b.price - a.price;
     });
 
     return sorted;
@@ -172,11 +175,31 @@ export function ProductGrid() {
     brandNames,
     catalog,
     categories,
-    query,
+    deferredQuery,
     sort,
     subcategories,
     types,
   ]);
+
+  /**
+   * Catat kata kunci pencarian ke analytics setelah pengunjung berhenti
+   * mengetik. Yang paling berguna dari laporan ini adalah pencarian yang
+   * menghasilkan nol produk - itu petunjuk langsung produk apa yang dicari
+   * orang tetapi belum ada di katalog.
+   */
+  useEffect(() => {
+    const term = deferredQuery.trim();
+    if (term.length < 3) return;
+
+    const timer = setTimeout(() => {
+      trackEvent("catalog_search", {
+        search_term: term.toLowerCase(),
+        result_count: filtered.length,
+      });
+    }, SEARCH_TRACK_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, [deferredQuery, filtered.length]);
 
   useEffect(() => {
     setSubcategories((current) => {
@@ -188,7 +211,7 @@ export function ProductGrid() {
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [applications, availabilities, brandNames, categories, query, sort, subcategories, types]);
+  }, [applications, availabilities, brandNames, categories, deferredQuery, sort, subcategories, types]);
 
   const paged = filtered.slice(0, visibleCount);
   const remainingCount = filtered.length - paged.length;

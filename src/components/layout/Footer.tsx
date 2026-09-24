@@ -51,8 +51,13 @@ export function Footer() {
           {/* Kolom 1 - Company */}
           <div className="sm:col-span-2 lg:col-span-5">
             <Logo tone="dark" />
-            <p className="mt-3 text-sm font-semibold text-white">{siteConfig.legalName}</p>
-            <ul className="mt-5 flex flex-wrap gap-2">
+            <p className="mt-4 text-sm font-semibold text-white">{siteConfig.legalName}</p>
+            {/* Satu kalimat konteks: pengunjung yang mendarat langsung di footer
+                tetap tahu perusahaan ini bergerak di bidang apa. */}
+            <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/65">
+              {siteConfig.tagline}
+            </p>
+            <ul className="mt-6 flex flex-wrap gap-2">
               {socialLinks.map((social) => {
                 const Icon = socialIconMap[social.icon];
                 return (

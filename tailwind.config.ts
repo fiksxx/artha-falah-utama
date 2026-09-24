@@ -57,6 +57,16 @@ const config: Config = {
           DEFAULT: withOpacity("--color-line"),
           strong: withOpacity("--color-line-strong"),
         },
+        /** State error form. Satu-satunya merah di website - jangan pakai `red-*` bawaan. */
+        danger: {
+          50: withOpacity("--color-danger-50"),
+          100: withOpacity("--color-danger-100"),
+          200: withOpacity("--color-danger-200"),
+          400: withOpacity("--color-danger-400"),
+          600: withOpacity("--color-danger-600"),
+          700: withOpacity("--color-danger-700"),
+          900: withOpacity("--color-danger-900"),
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
@@ -76,9 +86,12 @@ const config: Config = {
         xl: "1rem",
       },
       boxShadow: {
-        card: "0 1px 2px rgb(15 23 42 / 0.05), 0 4px 12px rgb(15 23 42 / 0.04)",
-        "card-hover": "0 2px 4px rgb(15 23 42 / 0.06), 0 12px 28px rgb(15 23 42 / 0.10)",
-        nav: "0 1px 0 rgb(15 23 42 / 0.06)",
+        // Bayangan memakai token --color-shadow (hijau sangat gelap) agar
+        // menyatu dengan palet, bukan abu-abu kebiruan bawaan.
+        card: "0 1px 2px rgb(var(--color-shadow) / 0.05), 0 4px 12px rgb(var(--color-shadow) / 0.05)",
+        "card-hover":
+          "0 2px 4px rgb(var(--color-shadow) / 0.07), 0 12px 28px rgb(var(--color-shadow) / 0.10)",
+        nav: "0 1px 0 rgb(var(--color-shadow) / 0.06), 0 6px 20px rgb(var(--color-shadow) / 0.05)",
       },
       keyframes: {
         marquee: {

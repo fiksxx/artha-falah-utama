@@ -84,10 +84,10 @@ export type Product = {
   /**
    * Harga dalam rupiah sebagai ANGKA, mis. 1250000 (tanpa titik, tanpa "Rp").
    * Format tampilan diurus otomatis oleh formatRupiah() di lib/utils.ts.
-   * Biarkan kosong bila harga hanya diberikan atas permintaan - kartu produk
-   * otomatis menampilkan "Harga atas permintaan", bukan angka palsu.
+   * WAJIB diisi: setiap produk selalu menampilkan harga (saat ini Rp1 untuk
+   * semua produk lewat `DEFAULT_PRICE` di lib/data/products.ts).
    */
-  price?: number;
+  price: number;
   /** Status stok. Dipakai filter ketersediaan dan badge di kartu produk. */
   availability: ProductAvailability;
   /**
@@ -95,15 +95,16 @@ export type Product = {
    * teratas katalog - bukan sebagai badge visual.
    */
   featured?: boolean;
-  /** Ringkasan 1-2 baris untuk kartu katalog & header detail. */
-  shortDescription: string;
-  /** Paragraf deskripsi lengkap untuk section "Deskripsi Produk". */
+  /** Paragraf deskripsi lengkap - bagian atas tab "Detail Produk". */
   description?: string[];
   /** Poin penting deskripsi (bullet) - opsional. */
   highlights?: string[];
   /** Section "Informasi Packaging". Isi hanya field yang datanya benar-benar ada. */
   packaging?: ProductDetailItem[];
-  /** Tabel spesifikasi teknis. Kosongkan bila data belum tersedia. */
+  /**
+   * Tabel spesifikasi teknis - tampil di bawah deskripsi pada tab "Detail Produk".
+   * Kosongkan bila data belum tersedia.
+   */
   specifications?: ProductDetailItem[];
   /** Blok informasi tambahan lain (features, applications, warranty, sertifikasi, dll). */
   additionalInformation?: ProductInfoGroup[];
@@ -118,45 +119,143 @@ export type Product = {
   imageAlt: string;
 };
 
-export type ActivityCategory = "Pameran" | "Instalasi" | "Lainnya";
+/**
+ * Kategori konten Activity.
+ *
+ * Activity bukan hanya galeri kegiatan: halaman ini adalah knowledge hub
+ * perusahaan. Tiga kategori di bawah sengaja dibuat sedikit agar filter tetap
+ * mudah dibaca, tetapi cukup luas untuk menampung semua rencana konten:
+ *
+ * - "Insight"  : pembahasan teknologi, tren, dan perbandingan alat.
+ * - "Panduan"  : langkah praktis - cara pakai, perawatan, penyimpanan.
+ * - "Kegiatan" : rekam jejak perusahaan (pameran, instalasi, kunjungan).
+ *
+ * Menambah kategori baru: tambahkan di union ini, lalu daftarkan label dan
+ * gayanya di `activityCategories` (lib/data/activities.ts).
+ */
+export type ActivityCategory = "Insight" | "Panduan" | "Kegiatan";
 
+/**
+ * Topik di dalam kategori "Panduan" - lapisan kedua knowledge hub.
+ *
+ * Kategori menjawab "jenis tulisan apa ini", topik menjawab "pembaca sedang
+ * butuh apa": ingin tahu cara memakai alat, memilih alat, memahami fungsinya,
+ * merawatnya, memecahkan masalahnya, atau bersiap membelinya. Dengan dua
+ * lapis ini, Panduan bisa tumbuh sampai puluhan artikel tanpa menjadi daftar
+ * panjang yang tak terarah.
+ *
+ * Menambah topik baru: tambahkan di union ini, lalu daftarkan urutan dan
+ * keterangannya di `lib/data/activities.ts` (`guideTopics`, `guideTopicDescription`).
+ * Tipe `Record` di sana membuat TypeScript menolak build bila ada yang terlewat.
+ */
+export type ActivityTopic =
+  | "Cara Penggunaan"
+  | "Memilih Alat"
+  | "Fungsi & Prinsip Kerja"
+  | "Tips & Perawatan"
+  | "Troubleshooting"
+  | "Laboratorium Dasar"
+  | "Panduan Pembelian";
+
+/**
+ * Satu blok isi artikel.
+ *
+ * Isi artikel disimpan sebagai daftar blok berjenis, bukan satu string HTML.
+ * Konsekuensinya: penulis konten tidak perlu menulis markup, tampilan setiap
+ * blok dijamin konsisten dengan design system, dan tidak ada HTML mentah yang
+ * masuk ke halaman. Blok baru cukup ditambahkan di union ini lalu diberi
+ * tampilannya di `components/sections/ArticleBody.tsx`.
+ */
+export type ArticleBlock =
+  /** Paragraf biasa. */
+  | { type: "paragraph"; text: string }
+  /** Sub-judul di dalam artikel. Otomatis masuk daftar isi. */
+  | { type: "heading"; text: string }
+  /** Daftar poin. `ordered: true` untuk langkah bernomor. */
+  | { type: "list"; items: string[]; ordered?: boolean }
+  /** Tabel dua kolom - memakai komponen DetailTable yang sama dengan halaman produk. */
+  | { type: "table"; items: ProductDetailItem[]; caption?: string; labelHeader?: string; valueHeader?: string }
+  /**
+   * Langkah kerja berurutan, tiap langkah punya judul singkat + penjelasan.
+   * Dipakai untuk panduan cara penggunaan alat.
+   */
+  | { type: "steps"; items: Array<{ title: string; text: string }> }
+  /**
+   * Kotak catatan. Dipakai hemat, maksimal dua atau tiga per artikel.
+   * - "note"    (bawaan): informasi tambahan penting
+   * - "tip"     : cara kerja yang lebih baik
+   * - "warning" : risiko keselamatan atau kerusakan alat
+   */
+  | { type: "callout"; text: string; title?: string; tone?: "note" | "tip" | "warning" };
+
+/**
+ * Satu entri Activity - artikel, panduan, atau catatan kegiatan.
+ *
+ * `slug` dan `readingMinutes` TIDAK diisi manual: keduanya dihasilkan otomatis
+ * di lib/data/activities.ts, sama seperti pola pada data produk.
+ */
 export type Activity = {
   id: string;
+  /** Slug URL - dibuat otomatis dari judul. */
+  slug: string;
   title: string;
   category: ActivityCategory;
-  /** ISO date (YYYY-MM-DD) - dipakai untuk sorting terbaru ke terlama. */
-  startDate: string;
+  /** Topik - hanya untuk kategori "Panduan". */
+  topic?: ActivityTopic;
+  /** Tanggal publikasi, format ISO (YYYY-MM-DD). Dipakai untuk urutan terbaru. */
+  date: string;
+  /** Tanggal akhir - hanya relevan untuk kegiatan yang berlangsung beberapa hari. */
   endDate?: string;
+  /** Lokasi kegiatan. Kosongkan untuk artikel. */
   location?: string;
-  description: string;
-  image: string;
-  imageAlt: string;
-};
-
-export type CompanyValue = {
-  id: string;
-  title: string;
-  description: string;
-  icon: "shield" | "spark" | "handshake" | "clock";
+  /** Ringkasan 1-2 kalimat: dipakai di kartu, meta description, dan Open Graph. */
+  excerpt: string;
+  /** Isi artikel. Kosongkan bila entri hanya berupa catatan singkat. */
+  body?: ArticleBlock[];
+  /** Estimasi waktu baca (menit) - dihitung otomatis dari `body`. */
+  readingMinutes: number;
+  /** Kata kunci topik, tampil di halaman detail. */
+  tags?: string[];
+  /** Tandai satu artikel sebagai sorotan utama di halaman Activity. */
+  featured?: boolean;
+  /** Override artikel terkait. Bila kosong, dihitung dari kategori & tag. */
+  relatedIds?: string[];
+  /**
+   * Foto/gambar sampul. OPSIONAL: bila dikosongkan, kartu dan header artikel
+   * otomatis memakai sampul bergaya brand (lihat ActivityCover). Cocok untuk
+   * artikel teknis yang belum punya foto sendiri.
+   */
+  image?: string;
+  /** Deskripsi gambar untuk pembaca layar. Wajib diisi bila `image` diisi. */
+  imageAlt?: string;
 };
 
 /**
- * Satu kartu statistik perusahaan (section Trust & Company Statistics).
- * `value` adalah angka final yang dituju animasi counter.
+ * Bentuk data artikel yang ditulis manual - `slug` dan `readingMinutes` dihitung
+ * otomatis. `slug` boleh diisi untuk mengunci URL yang sudah terlanjur dipakai
+ * (mis. sudah terindeks mesin pencari), walaupun judulnya kemudian diubah.
  */
-export type CompanyStat = {
+export type ActivitySeed = Omit<Activity, "slug" | "readingMinutes"> & { slug?: string };
+
+/**
+ * Satu testimoni pelanggan (section Testimoni Pelanggan di halaman About).
+ * Data ada di lib/data/testimonials.ts.
+ */
+export type Testimonial = {
   id: string;
-  /** Label kartu, mis. "Klien Terlayani". */
-  label: string;
-  /** Angka final. Ambil dari data (mis. products.length) bila memungkinkan. */
-  value: number;
-  /** Teks di depan angka, mis. "Rp". */
-  prefix?: string;
-  /** Teks di belakang angka, mis. "+" atau "%". */
-  suffix?: string;
-  /** Keterangan singkat satu baris di bawah label. */
-  description?: string;
-  icon: "handshake" | "box" | "tools" | "check" | "shield" | "spark";
+  /** Kutipan pelanggan. Ringkas: 1-3 kalimat. */
+  quote: string;
+  /** Nama pelanggan. */
+  name: string;
+  /** Instansi/perusahaan (opsional), mis. "Klinik Pratama". Bukan jabatan. */
+  organization?: string;
+  /** Rating 1-5, boleh desimal satu angka (mis. 4.9). Tampil sebagai angka di samping bintang. */
+  rating: number;
+  /**
+   * true = data dummy (bukan pelanggan sungguhan). Hapus field ini setelah testimoni
+   * asli dipasang dan disetujui pelanggan.
+   */
+  placeholder?: boolean;
 };
 
 /** Kartu quick navigation di halaman About. */
@@ -174,6 +273,7 @@ export type ContactFormValues = {
   email: string;
   subject: string;
   message: string;
+  phone: string;
   /** Honeypot anti-spam - harus selalu kosong. */
   company?: string;
 };

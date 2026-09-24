@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
 
+import { Analytics } from "@/components/analytics/Analytics";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { organizationJsonLd } from "@/lib/seo";
-import { gaMeasurementId, siteConfig } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
 
 import "./globals.css";
 
@@ -20,10 +20,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: {
-    default: `${siteConfig.name} | ${siteConfig.tagline}`,
-    template: `%s | ${siteConfig.name}`,
-  },
+  // Judul tab browser = nama halaman saja ("Artha Labs", "Activity", "Contact Us").
+  // Tidak ada `title.template`: nama perusahaan tidak lagi ditempel di belakang judul.
+  // Nilai ini hanya dipakai bila sebuah route tidak menetapkan judulnya sendiri.
+  title: `${siteConfig.name} | ${siteConfig.tagline}`,
   description: siteConfig.description,
   applicationName: siteConfig.name,
   generator: "Next.js",
@@ -74,6 +74,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Nilai token `brand-900`. Meta tag browser tidak bisa membaca CSS variable,
+  // jadi hex-nya ditulis langsung - perbarui bila warna brand di globals.css berubah.
   themeColor: "#0B3929",
   colorScheme: "light",
 };
@@ -96,8 +98,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
         />
 
-        {/* Google Analytics - hanya aktif bila NEXT_PUBLIC_GA_MEASUREMENT_ID diisi */}
-        {gaMeasurementId ? <GoogleAnalytics gaId={gaMeasurementId} /> : null}
+        {/* Seluruh script pengukuran dikumpulkan di satu komponen */}
+        <Analytics />
       </body>
     </html>
   );

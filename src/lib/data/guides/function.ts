@@ -1,0 +1,148 @@
+import { h, note, p, table, tip, ul } from "@/lib/data/guides/blocks";
+import type { ActivitySeed } from "@/types";
+
+/**
+ * PANDUAN - FUNGSI & PRINSIP KERJA
+ * Struktur tiap artikel sengaja seragam agar pembaca mudah membandingkan alat:
+ * fungsi -> cara kerja -> contoh pemakaian -> siapa yang butuh -> parameter penting.
+ */
+export const functionGuides: ActivitySeed[] = [
+  {
+    id: "guide-fungsi-spektrofotometer",
+    slug: "fungsi-spektrofotometer-uv-vis",
+    title: "Spektrofotometer UV-Vis: fungsi, cara kerja, dan parameter yang perlu diperhatikan",
+    category: "Panduan",
+    topic: "Fungsi & Prinsip Kerja",
+    date: "2026-09-10",
+    excerpt:
+      "Spektrofotometer mengukur seberapa banyak cahaya diserap suatu larutan, lalu mengubahnya menjadi konsentrasi. Penjelasan sederhana tentang prinsip, contoh pemakaian, dan spesifikasi kuncinya.",
+    tags: ["Spektrofotometer", "UV-Vis", "Fungsi alat"],
+    body: [
+      h("Apa fungsinya"),
+      p("Spektrofotometer UV-Vis dipakai untuk mengetahui berapa banyak suatu zat dalam larutan. Alat ini menyinari sampel dengan cahaya pada panjang gelombang tertentu dan mengukur berapa banyak cahaya yang diserap. Semakin pekat larutan, semakin banyak cahaya yang diserap, dan dari situ konsentrasinya dapat dihitung."),
+      h("Cara kerja secara sederhana"),
+      p("Cahaya dari lampu diarahkan ke bagian pemisah warna (monokromator) yang hanya meloloskan satu panjang gelombang. Cahaya itu lalu melewati kuvet berisi sampel, dan detektor di sisi lain mengukur seberapa banyak cahaya yang tersisa. Perbandingan antara cahaya yang masuk dan yang keluar dinyatakan sebagai absorbansi."),
+      p("Hubungan absorbansi dengan konsentrasi mengikuti hukum Beer-Lambert: absorbansi sebanding dengan konsentrasi zat dan panjang jalur cahaya di dalam kuvet. Karena hubungan ini lurus pada rentang tertentu, konsentrasi sampel dapat dibaca dari kurva kalibrasi yang dibuat dengan larutan standar."),
+      table(
+        "Komponen utama spektrofotometer UV-Vis",
+        ["Komponen", "Fungsi"],
+        ["Sumber cahaya", "Lampu deuterium untuk daerah ultraviolet, lampu tungsten atau halogen untuk cahaya tampak."],
+        ["Monokromator", "Memilih satu panjang gelombang dari cahaya campuran, umumnya dengan kisi difraksi."],
+        ["Kuvet dan ruang sampel", "Wadah larutan dengan jalur cahaya yang diketahui, umumnya 10 mm."],
+        ["Detektor", "Mengubah cahaya yang tersisa menjadi sinyal listrik yang dibaca sebagai absorbansi."],
+      ),
+      h("Untuk apa dipakai, dan contohnya"),
+      ul(
+        "Menentukan kadar senyawa berwarna atau yang dapat diubah menjadi berwarna dengan reagen, misalnya fosfat, nitrit, atau besi dalam air.",
+        "Mengukur kadar protein dan aktivitas enzim di laboratorium biokimia dan klinik.",
+        "Penetapan kadar zat aktif dalam sediaan obat.",
+        "Memeriksa kemurnian dan konsentrasi asam nukleat pada laboratorium biologi molekuler.",
+        "Memantau warna atau kandungan tertentu pada produk pangan dan minuman.",
+      ),
+      h("Siapa yang biasanya membutuhkan"),
+      p("Laboratorium kimia dan biokimia di universitas, laboratorium lingkungan yang menguji air dan air limbah, laboratorium pengendalian mutu di industri farmasi, pangan, dan minuman, serta laboratorium klinik dan penelitian. Karena serbaguna dan relatif ekonomis dibanding instrumen lain, spektrofotometer termasuk alat yang paling banyak dijumpai di laboratorium analitik."),
+      h("Parameter yang perlu diperhatikan"),
+      table(
+        "Spesifikasi kunci pada spektrofotometer UV-Vis",
+        ["Parameter", "Arti dan alasannya"],
+        ["Rentang panjang gelombang", "Bila metode Anda memakai daerah ultraviolet, pastikan rentang mencakup UV (mulai sekitar 190 - 200 nm). Beberapa model hanya untuk cahaya tampak."],
+        ["Lebar celah spektral (bandwidth)", "Makin sempit, makin tajam pemisahan panjang gelombang, tetapi cahaya yang sampai ke detektor berkurang. Metode tertentu menetapkan bandwidth."],
+        ["Akurasi dan kemampuan ulang fotometrik", "Menunjukkan seberapa dekat dan seberapa konsisten pembacaan absorbansi."],
+        ["Cahaya sesat (stray light)", "Cahaya yang lolos pada panjang gelombang yang tidak diinginkan; membatasi ketelitian pada absorbansi tinggi."],
+        ["Kestabilan (drift)", "Seberapa stabil pembacaan dari waktu ke waktu; penting untuk pengukuran yang lama."],
+        ["Konfigurasi berkas cahaya", "Berkas tunggal lebih ekonomis; berkas ganda memantau sumber cahaya sekaligus dan lebih stabil."],
+      ),
+      note("Kuvet ikut menentukan hasil", "Kuvet kuarsa diperlukan untuk daerah UV, sedangkan kuvet kaca atau plastik cukup untuk cahaya tampak. Tanyakan aksesori yang termasuk dalam paket, karena kuvet adalah bahan yang sering perlu diganti."),
+      tip("Untuk membaca lebih lanjut", "Langkah pengukurannya dijelaskan pada panduan cara menggunakan spektrofotometer UV-Vis."),
+    ],
+  },
+  {
+    id: "guide-fungsi-mikroskop",
+    slug: "fungsi-mikroskop-cahaya",
+    title: "Mikroskop cahaya: fungsi, cara kerja, dan istilah yang perlu dipahami sebelum membeli",
+    category: "Panduan",
+    topic: "Fungsi & Prinsip Kerja",
+    date: "2026-08-25",
+    excerpt:
+      "Perbesaran bukan satu-satunya ukuran mikroskop yang baik. Kenali resolusi, apertur numerik, dan perbedaan jenis mikroskop yang dipakai di pendidikan, klinik, dan industri.",
+    tags: ["Mikroskop", "Fungsi alat", "Optik"],
+    body: [
+      h("Apa fungsinya"),
+      p("Mikroskop memperbesar objek yang terlalu kecil untuk dilihat dengan mata, seperti sel, bakteri, jaringan, dan serat. Mikroskop cahaya majemuk (compound) adalah yang paling umum: cahaya dari lampu menembus sediaan, lalu bayangan diperbesar oleh dua tingkat lensa."),
+      h("Cara kerja secara sederhana"),
+      p("Lensa objektif di dekat sediaan membentuk bayangan pertama yang sudah diperbesar. Lensa okuler yang Anda lihat lalu memperbesar bayangan itu sekali lagi. Perbesaran total adalah perkalian keduanya: okuler 10× dengan objektif 40× memberi perbesaran 400×. Kondensor di bawah meja sediaan memusatkan cahaya, dan diafragma mengatur kontras."),
+      h("Perbesaran dan resolusi tidak sama"),
+      p("Perbesaran menunjukkan seberapa besar bayangan tampak. Resolusi menunjukkan seberapa jelas dua titik yang berdekatan dapat dibedakan. Sebuah mikroskop dapat diperbesar berkali-kali, tetapi bila resolusinya rendah, hasilnya hanya gambar besar yang buram. Resolusi ditentukan oleh apertur numerik (numerical aperture, NA) objektif dan panjang gelombang cahaya. Semakin tinggi NA, semakin halus detail yang terlihat, sebab itu objektif 100× imersi minyak memiliki NA tertinggi."),
+      h("Jenis mikroskop yang umum"),
+      table(
+        "Jenis mikroskop dan pemakaian",
+        ["Jenis", "Kegunaan"],
+        ["Cahaya majemuk (brightfield)", "Sediaan tipis dan diwarnai. Dipakai di praktikum biologi, hematologi, dan mikrobiologi."],
+        ["Kontras fase", "Sel hidup yang tidak diwarnai, misalnya sel kultur dan mikroorganisme hidup."],
+        ["Fluoresensi", "Penanda berpendar pada sel atau jaringan. Untuk penelitian biologi dan diagnostik khusus."],
+        ["Stereo (dissecting)", "Objek besar dan tiga dimensi, seperti serangga, tumbuhan, dan komponen kecil."],
+        ["Inverted", "Pengamatan dari bawah, biasanya untuk sel yang tumbuh dalam cawan atau botol kultur."],
+      ),
+      h("Contoh pemakaian dan siapa yang membutuhkan"),
+      ul(
+        "Pendidikan: praktikum biologi dan mikrobiologi di sekolah menengah dan perguruan tinggi.",
+        "Laboratorium klinik dan rumah sakit: pemeriksaan sediaan apus darah, urin, dan dahak. Pemeriksaan mikroskopis dahak untuk tuberkulosis, misalnya, memakai pewarnaan khusus dan pengamatan pada perbesaran tinggi.",
+        "Laboratorium penelitian dan mikrobiologi: pengamatan bakteri, jamur, dan sel.",
+        "Industri pangan dan farmasi: pemeriksaan kontaminan dan pengamatan bentuk partikel.",
+      ),
+      h("Parameter yang perlu diperhatikan"),
+      ul(
+        "Kualitas objektif. Objektif akromat cukup untuk pengajaran; objektif plan dan tingkat lebih tinggi memberi bidang pandang lebih rata dan koreksi warna lebih baik.",
+        "Apertur numerik. Ditulis pada tubuh objektif, misalnya “40/0,65”. Bandingkan NA, bukan hanya angka perbesaran.",
+        "Sistem penerangan. Lampu LED lebih hemat daya, lebih dingin, dan awet dibanding halogen, sehingga populer untuk pemakaian sehari-hari.",
+        "Jenis kepala. Monokuler hemat, binokuler nyaman untuk pemakaian lama, trinokuler menyediakan jalur untuk kamera.",
+        "Meja sediaan dan kondensor. Meja mekanis dan kondensor yang dapat dipusatkan memudahkan pengamatan yang konsisten.",
+        "Ketersediaan objektif, lampu, dan suku cadang di dalam negeri.",
+      ),
+      tip("Untuk membaca lebih lanjut", "Cara pakai, termasuk penggunaan minyak imersi dan perawatan lensa di iklim lembap, ada di panduan cara menggunakan mikroskop cahaya."),
+    ],
+  },
+  {
+    id: "guide-fungsi-ph-meter",
+    slug: "fungsi-dan-prinsip-kerja-ph-meter",
+    title: "pH meter: fungsi, prinsip kerja elektroda gelas, dan mengapa suhu memengaruhi hasil",
+    category: "Panduan",
+    topic: "Fungsi & Prinsip Kerja",
+    date: "2026-08-23",
+    excerpt:
+      "pH meter sebenarnya mengukur tegangan kecil yang dihasilkan elektroda, lalu menerjemahkannya menjadi angka pH. Memahami prinsip ini membantu menjelaskan kenapa kalibrasi dan suhu begitu penting.",
+    tags: ["pH meter", "Fungsi alat", "Elektroda"],
+    body: [
+      h("Apa fungsinya"),
+      p("pH meter menentukan tingkat keasaman atau kebasaan larutan berdasarkan aktivitas ion hidrogen. Skalanya dari 0 sampai 14: di bawah 7 bersifat asam, di atas 7 bersifat basa, dan sekitar 7 netral. Pengukuran pH menjadi dasar banyak pekerjaan, dari mengendalikan reaksi kimia sampai menilai kualitas air."),
+      h("Cara kerja secara sederhana"),
+      p("Bagian terpenting adalah elektroda gelas. Ujungnya berupa membran kaca tipis yang peka terhadap ion hidrogen. Ketika membran terendam larutan, perbedaan konsentrasi ion hidrogen di kedua sisinya menghasilkan beda potensial listrik yang sangat kecil, hanya beberapa puluh milivolt. Elektroda referensi yang stabil memberi titik acuan, dan meter mengukur selisih tegangan antara keduanya."),
+      p("Hubungan antara tegangan dan pH mengikuti persamaan Nernst. Pada 25 °C, setiap perubahan satu satuan pH menghasilkan perubahan tegangan sekitar 59 mV. Meter kemudian mengubah tegangan itu menjadi angka pH berdasarkan hasil kalibrasi."),
+      h("Mengapa kalibrasi dan suhu penting"),
+      ul(
+        "Kalibrasi. Setiap elektroda memiliki karakter sedikit berbeda dan berubah seiring umur. Kalibrasi dengan buffer bernilai diketahui menyesuaikan pembacaan meter dengan kondisi elektroda saat itu.",
+        "Suhu. Kemiringan hubungan tegangan dan pH bergantung pada suhu. Selain itu, pH larutan sendiri dapat berubah dengan suhu. Karena itu alat memakai kompensasi suhu otomatis, dan hasil dicatat bersama suhunya.",
+        "Kekuatan ion. Larutan yang sangat encer, seperti air murni, memberikan sinyal yang mudah tidak stabil karena sedikitnya ion pembawa muatan.",
+      ),
+      h("Contoh pemakaian dan siapa yang membutuhkan"),
+      ul(
+        "Laboratorium lingkungan dan air minum: baku mutu air minum di Indonesia umumnya mengacu pada rentang pH sekitar 6,5 sampai 8,5.",
+        "Industri makanan dan minuman: pengendalian keasaman produk dan proses fermentasi.",
+        "Industri farmasi dan kimia: kontrol larutan, buffer, dan reaksi.",
+        "Pertanian dan budidaya perairan: pH tanah, air kolam, dan tambak.",
+        "Pendidikan dan penelitian: praktikum kimia dan biokimia.",
+      ),
+      h("Parameter yang perlu diperhatikan"),
+      table(
+        "Spesifikasi pH meter",
+        ["Parameter", "Arti"],
+        ["Rentang pH", "Umumnya 0 - 14; pastikan mencakup nilai yang Anda ukur."],
+        ["Resolusi", "0,1, 0,01, atau 0,001. Resolusi yang tinggi tidak berarti hasil lebih akurat bila kalibrasi dan elektroda tidak terawat."],
+        ["Akurasi", "Selisih maksimum antara pembacaan dan nilai sebenarnya pada kondisi tertentu."],
+        ["Kompensasi suhu", "Otomatis (ATC) atau manual. Otomatis lebih praktis dan lebih dapat diandalkan."],
+        ["Titik kalibrasi", "Satu sampai lima titik. Dua atau tiga titik cukup untuk banyak pekerjaan."],
+      ),
+      note("Keterbatasan", "Elektroda gelas kurang akurat pada larutan sangat basa yang mengandung ion natrium tinggi dan pada larutan sangat asam pekat. Untuk kondisi ekstrem seperti itu, gunakan elektroda khusus yang dirancang untuknya."),
+    ],
+  },
+];

@@ -11,13 +11,13 @@ export const siteConfig = {
   tagline: "Penyedia alat dan bahan laboratorium untuk institusi, industri, dan fasilitas kesehatan",
   description:
     "CV Artha Falah Utama adalah perusahaan penyedia alat dan bahan laboratorium melalui Artha Labs: reagen, alat laboratorium, dan alat kesehatan untuk institusi, industri, dan fasilitas kesehatan di Indonesia.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://arthafalahutama.co.id",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://arthalabs.id",
   locale: "id_ID",
   founded: "2020", // TODO: ganti dengan konten asli
   contact: {
     // TODO: ganti dengan konten asli
-    addressLines: ["Jl. Placeholder No. 00, Kel. Lorem, Kec. Ipsum", "Kota Placeholder, Provinsi Lorem 00000"],
-    addressInline: "Jl. Placeholder No. 00, Kota Placeholder, Provinsi Lorem 00000",
+    addressLines: ["Jl. Kelapa Gading Perum Yasmin F No.1, Bumi Harapan, Kec. Bacukiki Bar., Kota Parepare, Sulawesi Selatan 91121"],
+    addressInline: "Jl. Kelapa Gading Perum Yasmin F No.1, Bumi Harapan, Kec. Bacukiki Bar., Kota Parepare, Sulawesi Selatan 91121",
     email: "arthafalahutama@gmail.com",
     phoneDisplay: "+62 895-8010-44763",
     phoneHref: "+62895801044763",
@@ -26,7 +26,7 @@ export const siteConfig = {
     officeHours: "Senin - Sabtu, 08.00 - 17.00 WIB",
     /** Isi NEXT_PUBLIC_MAPS_EMBED_SRC di .env.local agar peta tampil. */
     mapsEmbedSrc: process.env.NEXT_PUBLIC_MAPS_EMBED_SRC ?? "",
-    mapsLink: "https://maps.google.com/?q=Artha+Falah+Utama",
+    mapsLink: "https://maps.app.goo.gl/BLhYFkBZ9bnJp3qL6",
   },
 } as const;
 

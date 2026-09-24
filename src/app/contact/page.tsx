@@ -3,14 +3,17 @@ import { Suspense } from "react";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { ContactInfo, MapEmbed } from "@/components/sections/ContactInfo";
 import { PageHero } from "@/components/sections/PageHero";
-import { Section } from "@/components/ui/Section";
+import { Button } from "@/components/ui/Button";
+import { Section, SectionHeading } from "@/components/ui/Section";
+import { WhatsappIcon } from "@/components/ui/icons";
 import { CONTACT_FORM_ANCHOR } from "@/lib/quote";
 import { createPageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: "Hubungi Kami",
+  title: "Contact Us",
   description:
-    "Hubungi CV Artha Falah Utama untuk penawaran, konsultasi teknis, maupun kerja sama. Kirim pesan lewat formulir, email, telepon, atau WhatsApp.",
+    "Hubungi CV Artha Falah Utama untuk permintaan penawaran, pertanyaan teknis, maupun kebutuhan pengadaan. Kirim pesan lewat formulir, email, telepon, atau WhatsApp.",
   path: "/contact",
   keywords: ["kontak", "penawaran", "konsultasi", "whatsapp"],
 });
@@ -19,19 +22,31 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
-        eyebrow="Hubungi Kami"
-        title="Mari bicarakan kebutuhan Anda"
-        description="Isi formulir di bawah atau hubungi kami langsung — tim kami merespons pada jam kerja."
+        eyebrow="Contact Us"
+        title="Sampaikan kebutuhan Anda"
+        description="Permintaan penawaran, pertanyaan teknis soal produk, atau kebutuhan pengadaan, semuanya bisa dikirim lewat halaman ini. Kami biasanya membalas dalam 1-2 hari kerja."
+        actions={
+          <>
+            <Button href={`#${CONTACT_FORM_ANCHOR}`} variant="accent" size="lg">
+              Kirim pesan
+            </Button>
+            <Button
+              href={`https://wa.me/${siteConfig.contact.whatsappNumber}`}
+              variant="inverted"
+              size="lg"
+            >
+              <WhatsappIcon aria-hidden="true" width={18} height={18} />
+              Chat WhatsApp
+            </Button>
+          </>
+        }
       />
 
       <Section width="wide">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
           {/* Anchor #contact-form: dipakai CTA "Minta Penawaran" agar form langsung terlihat */}
           <div id={CONTACT_FORM_ANCHOR} className="scroll-mt-28 lg:col-span-7">
-            <h2 className="text-heading font-bold uppercase tracking-[0.08em] text-brand-900">
-              Formulir
-            </h2>
-            <span aria-hidden="true" className="mt-3 block h-1 w-12 rounded-full bg-accent-400" />
+            <SectionHeading title="Kirim Pesan" />
             <div className="mt-8">
               {/* Suspense: form membaca query parameter produk lewat useSearchParams */}
               <Suspense fallback={<FormSkeleton />}>
@@ -47,8 +62,7 @@ export default function ContactPage() {
       </Section>
 
       <Section tone="muted" width="wide" spacing="sm">
-        <h2 className="text-heading font-bold text-brand-900">Lokasi Kantor</h2>
-        <span aria-hidden="true" className="mt-3 block h-1 w-12 rounded-full bg-accent-400" />
+        <SectionHeading title="Lokasi Kantor" />
         <div className="mt-8">
           <MapEmbed />
         </div>

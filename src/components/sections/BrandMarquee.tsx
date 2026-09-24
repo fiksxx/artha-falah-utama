@@ -70,7 +70,7 @@ export function BrandMarquee({
       <Container width="wide">
         <h2
           id={headingId}
-          className="flex items-center justify-center gap-4 text-center text-xs font-bold uppercase tracking-[0.2em] text-green-900 sm:text-sm"
+          className="flex items-center justify-center gap-4 text-center text-xs font-bold uppercase tracking-[0.2em] text-brand-900 sm:text-sm"
         >
           <span className="h-px w-8 bg-line sm:w-12" aria-hidden="true" />
           {title}

@@ -1,18 +1,7 @@
-import { brands } from "@/lib/data/brands";
 import { products } from "@/lib/data/products";
-import type { CompanyStat, CompanyValue, QuickNavCard } from "@/types";
+import type { QuickNavCard } from "@/types";
 
 /** TODO: ganti dengan konten asli - seluruh teks di file ini masih placeholder. */
-
-export const vision =
-  "Menjadi penyedia solusi alat dan bahan laboratorium terdepan di Indonesia yang unggul dalam kualitas produk dan layanan teknis.";
-
-export const missions = [
-  "Menyuplai alat dan reagen bersertifikasi resmi dari prinsipal global terpercaya.",
-  "Memberikan rekomendasi teknis yang tepat sesuai kebutuhan pengujian klien.",
-  "Menjamin pengiriman cepat dengan standar penanganan khusus (cold chain).",
-  "Menyediakan dukungan instalasi, kalibrasi, garansi, dan ketersediaan suku cadang.",
-];
 
 /**
  * Quick navigation compact menuju halaman penting.
@@ -23,99 +12,108 @@ export const quickNavCards: QuickNavCard[] = [
     id: "nav-artha-labs",
     title: "Artha Labs",
     href: "/artha-labs",
-    description: "Solusi laboratorium: reagen, alat lab, dan alat kesehatan.",
+    description: "Katalog reagen, alat laboratorium, dan alat kesehatan yang kami sediakan.",
     icon: "tools",
   },
   {
     id: "nav-activity",
-    title: "Aktivitas",
+    title: "Activity",
     href: "/activity",
-    description: "Rekam jejak pameran, instalasi, dan kegiatan terbaru kami.",
+    description: "Catatan teknis dan panduan penggunaan alat, serta kegiatan perusahaan.",
     icon: "spark",
   },
   {
     id: "nav-contact",
-    title: "Hubungi Kami",
+    title: "Contact Us",
     href: "/contact",
-    description: "Diskusikan kebutuhan dan peluang kerja sama dengan tim kami.",
+    description: "Kirim permintaan penawaran atau pertanyaan teknis kepada tim kami.",
     icon: "mail",
   },
 ];
 
 /**
- * Trust & Company Statistics (halaman About).
+ * LINI BISNIS & CAKUPAN PRODUK (section "Jual Reagen, Alat Laboratorium, dan Alat Kesehatan").
  *
- * CARA MEMPERBARUI ANGKA:
- * - "Produk Tersedia" dan "Brand Mitra" TIDAK perlu disentuh. Keduanya
- *   dihitung otomatis dari data katalog, jadi setiap kali Anda menambah
- *   produk di `products.ts` atau brand di `brands.ts`, angka di website
- *   langsung ikut bertambah.
- * - "Klien Terlayani" dan "Kepuasan Pelanggan" tidak punya sumber data, jadi
- *   angkanya diisi manual di bawah ini. Cukup ubah nilai `value`.
+ * Section ini berbentuk blok editorial yang panjang ke bawah: satu blok = satu gambar +
+ * satu kelompok teks, dan posisi gambar bergantian kiri/kanan sesuai urutan array.
+ * Menambah atau mengurangi blok cukup dengan menyunting `businessBlocks`.
  *
- * TODO WAJIB SEBELUM WEBSITE ONLINE: ganti `value` pada "stat-clients" dan
- * "stat-satisfaction" dengan angka asli perusahaan. Dua angka di bawah ini
- * masih contoh - menampilkan klaim yang tidak bisa dibuktikan berisiko
- * menurunkan kepercayaan calon klien.
+ * Fokus isi: kebutuhan laboratorium (reagen, bahan habis pakai, alat, instrumen, dan
+ * alat kesehatan yang relevan) untuk penelitian, pendidikan, pengujian, dan operasional.
+ * Sektor industri lain tidak dijadikan fokus. Aturan isi: tanpa klaim yang tidak dapat
+ * dibuktikan ("terbaik", "terlengkap", "nomor satu", dan sejenisnya).
  */
-export const companyStats: CompanyStat[] = [
-  {
-    id: "stat-clients",
-    label: "Klien Terlayani",
-    value: 128, // TODO: ganti dengan jumlah klien asli
-    suffix: "+",
-    description: "Institusi pendidikan, industri, dan fasilitas kesehatan.",
-    icon: "handshake",
-  },
-  {
-    id: "stat-products",
-    label: "Produk Tersedia",
-    // Otomatis mengikuti jumlah entri di src/lib/data/products.ts
-    value: products.length,
-    description: "Reagen, alat laboratorium, dan alat kesehatan.",
-    icon: "box",
-  },
-  {
-    id: "stat-brands",
-    label: "Brand Mitra",
-    // Otomatis mengikuti jumlah entri di src/lib/data/brands.ts
-    value: brands.length,
-    description: "Merek prinsipal yang kami distribusikan.",
-    icon: "tools",
-  },
-  {
-    id: "stat-satisfaction",
-    label: "Kepuasan Pelanggan",
-    value: 100, // TODO: ganti dengan angka asli hasil survei/evaluasi layanan
-    suffix: "%",
-    description: "Berdasarkan evaluasi layanan dan pemesanan berulang.",
-    icon: "check",
-  },
-];
 
-export const companyValues: CompanyValue[] = [
+export type BusinessBlock = {
+  id: string;
+  /** Label kecil di atas judul. */
+  eyebrow: string;
+  title: string;
+  text: string;
+  /** Butir informasi. Daftar panjang (kategori, industri) memakai dua kolom. */
+  points: string[];
+  columns: 1 | 2;
+  image: { src: string; alt: string };
+};
+
+/**
+ * Foto produk nyata dari katalog untuk satu subkategori (yang bertanda `featured` lebih dulu).
+ * Gambar selalu file lokal di /public/images/products - bukan URL luar.
+ */
+function productPhoto(subcategory: string, fallbackAlt: string) {
+  const inGroup = products.filter((product) => product.subcategory === subcategory);
+  const pick = inGroup.find((product) => product.featured) ?? inGroup[0];
+  return pick
+    ? { src: pick.image, alt: pick.imageAlt || pick.name }
+    : { src: "/images/artha-labs-hero.png", alt: fallbackAlt };
+}
+
+export const businessBlocks: BusinessBlock[] = [
   {
-    id: "value-01",
-    title: "Integritas",
-    description: "Jujur dan transparan dalam setiap transaksi dan komunikasi dengan klien.",
-    icon: "shield",
+    id: "block-kebutuhan-lab",
+    eyebrow: "Kebutuhan laboratorium",
+    title: "Dari reagen hingga instrumen, disiapkan untuk laboratorium Anda",
+    text: "Artha Labs membantu institusi dan perusahaan menyediakan kebutuhan laboratorium: mulai dari reagen dan bahan habis pakai untuk pekerjaan sehari-hari, sampai instrumen dan peralatan untuk penelitian, pendidikan, dan pengujian. Katalog kami disusun per kategori dan brand mitra agar mudah ditelusuri dan dibandingkan.",
+    points: [
+      "Reagen dan bahan kimia laboratorium.",
+      "Bahan habis pakai (consumable) untuk kegiatan rutin.",
+      "Alat, instrumen, dan peralatan laboratorium.",
+      "Alat kesehatan yang relevan dengan kebutuhan laboratorium.",
+    ],
+    columns: 1,
+    image: { src: "/images/artha-labs-hero.png", alt: "Fasilitas dan produk Artha Labs" },
   },
   {
-    id: "value-02",
-    title: "Kemitraan",
-    description: "Membangun kolaborasi jangka panjang yang saling menguntungkan dan berkelanjutan.",
-    icon: "spark",
+    id: "block-reagen",
+    eyebrow: "Reagen dan bahan habis pakai",
+    title: "Bahan yang dipakai setiap hari di laboratorium",
+    text: "Hasil kerja laboratorium bergantung pada bahan yang dipakai. Kami menyediakan reagen dan bahan habis pakai dari brand mitra, dengan informasi produk yang dapat Anda cocokkan dengan metode dan kebutuhan kerja Anda.",
+    points: [
+      "Reagen analitik",
+      "Bahan kimia laboratorium",
+      "Buffer dan larutan standar",
+      "Bahan habis pakai untuk kerja rutin",
+      "Reagen untuk kebutuhan khusus: tanyakan ke tim kami",
+    ],
+    columns: 2,
+    image: { src: "/images/gambar-reagen.png", alt: "Produk Reagen ArthaLabs" },
   },
   {
-    id: "value-03",
-    title: "Keandalan",
-    description: "Sigap dalam melayani, merespons kendala, dan menepati komitmen waktu.",
-    icon: "handshake",
-  },
-  {
-    id: "value-04",
-    title: "Inovasi",
-    description: "Selalu mencari solusi terbaik dan produk terkini untuk kebutuhan klien.",
-    icon: "clock",
+    id: "block-alat",
+    eyebrow: "Alat, instrumen, dan peralatan",
+    title: "Peralatan untuk analisis, preparasi, dan operasional harian",
+    text: "Dari instrumen analitik sampai peralatan pendukung yang dipakai setiap hari. Kami juga menyediakan alat kesehatan yang relevan dengan kebutuhan laboratorium, misalnya untuk laboratorium klinik dan fasilitas kesehatan.",
+    points: [
+      "Instrumen analitik dan spektroskopi",
+      "Mikroskop",
+      "Sentrifuge",
+      "Inkubator, oven, dan alat pemanas",
+      "Autoklaf dan alat sterilisasi",
+      "Timbangan analitik",
+      "Alat uji kualitas air",
+      "Biosafety cabinet dan fume hood",
+    ],
+    columns: 2,
+    image: { src: "/images/gambar-alat.png", alt: "Produk Alat ArthaLabs" },
   },
 ];

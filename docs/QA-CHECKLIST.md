@@ -209,7 +209,7 @@ Legenda: ✅ terpenuhi di kode · 🔎 perlu verifikasi runtime (butuh `npm inst
 
 - [x] Tombol **Download Brochure** di Product Header (secondary) di samping CTA primary **Minta Penawaran**
 - [x] Tombol brosur hanya muncul bila `brochureUrl` terisi; tanpa data, tombol disembunyikan (tanpa broken link / PDF dummy)
-- [x] Tiga section digabung menjadi tab horizontal: Detail Produk / Spesifikasi Produk / Informasi Tambahan
+- [x] Tiga section digabung menjadi tab horizontal: Detail Produk (deskripsi + tabel spesifikasi) / Informasi Tambahan
 - [x] Hanya konten tab aktif yang dirender sehingga halaman jauh lebih compact
 - [x] Tab aktif jelas: dark green + teks gold + underline gold; transisi fade subtle dan hormati `prefers-reduced-motion`
 - [x] Tab bisa dioperasikan dengan keyboard (panah kiri/kanan, Home, End) dengan `role="tablist"`/`tab`/`tabpanel`

@@ -6,9 +6,15 @@ import { quoteHref } from "@/lib/quote";
 import { cn, formatRupiah } from "@/lib/utils";
 import type { Product } from "@/types";
 
-/** Fallback gambar SVG jika src produk kosong atau tidak valid */
+/**
+ * Fallback gambar bila src produk kosong atau tidak valid.
+ *
+ * Warna ditulis sebagai hex karena data URI tidak bisa membaca CSS variable.
+ * Nilainya sengaja disamakan dengan token palet: %23EDF3EF = `surface-strong`,
+ * %235F6C64 = `ink-subtle`. Bila token itu berubah, ubah juga dua nilai di sini.
+ */
 const PLACEHOLDER_IMAGE =
-  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23f1f5f9'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%2394a3b8' font-family='sans-serif' font-size='14'>Gambar Tidak Tersedia</text></svg>";
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='400' height='300' fill='%23EDF3EF'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%235F6C64' font-family='sans-serif' font-size='14'>Gambar tidak tersedia</text></svg>";
 
 function getSafeImageUrl(src?: string | null): string {
   if (!src || typeof src !== "string") {
@@ -94,15 +100,7 @@ export function ProductCard({
           </Link>
         </h3>
         {/* HARGA - selalu dari data produk (field `price`), tidak pernah ditulis di komponen */}
-        <p className="mt-2.5 text-lg font-bold text-brand-800">
-          {typeof product.price === "number" ? (
-            formatRupiah(product.price)
-          ) : (
-            <span className="text-base font-semibold text-ink-muted">Harga atas permintaan</span>
-          )}
-        </p>
-
-        <p className="mt-2.5 text-sm leading-relaxed text-ink-muted">{product.shortDescription}</p>
+        <p className="mt-2.5 text-lg font-bold text-brand-800">{formatRupiah(product.price)}</p>
 
         {/* Status stok - warna hanya pendukung, statusnya tetap tertulis sebagai teks */}
         <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-ink-muted">
