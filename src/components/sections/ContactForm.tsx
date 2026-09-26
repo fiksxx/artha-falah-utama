@@ -6,7 +6,12 @@ import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { AlertIcon, CheckIcon } from "@/components/ui/icons";
 import { trackEvent } from "@/lib/analytics";
-import { QUOTE_PARAMS, resolveQuoteRequest } from "@/lib/quote";
+import {
+  PRODUCT_NAMES_URL,
+  QUOTE_PARAMS,
+  resolveQuoteRequest,
+  type ProductNameMap,
+} from "@/lib/quote";
 import { contactFormSchema, toFieldErrors } from "@/lib/validation/contact";
 import { cn } from "@/lib/utils";
 import type { ContactApiResponse, ContactFormValues } from "@/types";
@@ -27,19 +32,46 @@ const fieldClasses =
 
 export function ContactForm() {
   const searchParams = useSearchParams();
+  const productParam = searchParams.get(QUOTE_PARAMS.product);
+  const categoryParam = searchParams.get(QUOTE_PARAMS.category);
+
+  /**
+   * Nama produk untuk isian otomatis "Minta Penawaran".
+   * Diambil dari JSON kecil (/data/nama-produk.json) HANYA bila halaman dibuka
+   * dengan ?product=, sehingga halaman ini tidak perlu mengunduh seluruh data
+   * katalog. `lookupKey` = parameter produk yang sudah selesai dicari (berhasil
+   * maupun gagal); selama belum selesai, isian otomatis ditunda.
+   */
+  const [productNames, setProductNames] = useState<ProductNameMap | null>(null);
+  const [lookupKey, setLookupKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!productParam) return;
+    let cancelled = false;
+
+    fetch(PRODUCT_NAMES_URL)
+      .then((response) => (response.ok ? (response.json() as Promise<ProductNameMap>) : null))
+      .catch(() => null)
+      .then((data) => {
+        if (cancelled) return;
+        if (data) setProductNames(data);
+        // Gagal mengunduh tetap dianggap selesai: nama produk dibentuk dari slug.
+        setLookupKey(productParam);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [productParam]);
+
+  const lookupDone = !productParam || lookupKey === productParam;
 
   const quote = useMemo(
-    () =>
-      resolveQuoteRequest(
-        searchParams.get(QUOTE_PARAMS.product),
-        searchParams.get(QUOTE_PARAMS.category),
-      ),
-    [searchParams],
+    () => (lookupDone ? resolveQuoteRequest(productParam, categoryParam, productNames) : null),
+    [lookupDone, productParam, categoryParam, productNames],
   );
 
-  const [values, setValues] = useState<ContactFormValues>(() =>
-    quote ? { ...initialValues, subject: quote.subject, message: quote.message } : initialValues,
-  );
+  const [values, setValues] = useState<ContactFormValues>(initialValues);
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormValues, string>>>({});
   const [status, setStatus] = useState<Status>("idle");
   const [feedback, setFeedback] = useState("");

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { ActivityCard } from "@/components/sections/ActivityCard";
 import { ActivityHeader } from "@/components/sections/ActivityHeader";
+import { ArticleCatalogLinks } from "@/components/sections/ArticleCatalogLinks";
 import { ArticleBody, extractHeadings } from "@/components/sections/ArticleBody";
 import { Button } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
@@ -34,6 +35,9 @@ type ActivityPageProps = {
 export function generateStaticParams() {
   return activities.map((activity) => ({ slug: activity.slug }));
 }
+
+/** Slug artikel yang tidak ada langsung dijawab halaman 404 global (Tahap 5E). */
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: ActivityPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -222,6 +226,10 @@ export default async function ActivityDetailPage({ params }: ActivityPageProps) 
             </aside>
           ) : null}
         </div>
+
+        {/* Produk terkait di katalog - hanya untuk artikel yang dipasangkan di
+            lib/data/article-catalog-links.ts */}
+        <ArticleCatalogLinks articleSlug={activity.slug} className="mt-14" />
 
         {/* CTA ringkas - gaya sama dengan halaman detail produk */}
         <div className="mt-14 flex flex-col gap-4 rounded-xl border border-accent-200 bg-accent-50 p-6 sm:flex-row sm:items-center sm:justify-between">

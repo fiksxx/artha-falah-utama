@@ -6,10 +6,13 @@ import { QuickNavCards } from "@/components/sections/QuickNavCards";
 import { TestimonialCarousel } from "@/components/sections/TestimonialCarousel";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { testimonials } from "@/lib/data/testimonials";
-import { createPageMetadata } from "@/lib/seo";
+import { HOME_TITLE, TITLE_BRAND, createPageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: "About",
+  // Beranda memakai judul lengkap (sudah memuat brand) - lihat HOME_TITLE di lib/seo.ts.
+  title: TITLE_BRAND,
+  absoluteTitle: HOME_TITLE,
   description:
     "Profil CV Artha Falah Utama: pemasok reagen, alat laboratorium, dan alat kesehatan melalui Artha Labs untuk institusi, industri, dan fasilitas kesehatan.",
   path: "/",
@@ -21,6 +24,21 @@ export const metadata = createPageMetadata({
     "alat kesehatan",
   ],
 });
+
+/**
+ * Structured data WebSite - hanya di beranda. Membantu Google menentukan nama
+ * situs di hasil pencarian. Semua nilai sudah tampil di situs (tidak ada klaim
+ * baru). Sengaja TANPA SearchAction: fitur kotak pencarian sitelinks sudah
+ * dihentikan Google.
+ */
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: TITLE_BRAND,
+  alternateName: siteConfig.name,
+  url: siteConfig.url,
+  inLanguage: "id-ID",
+};
 
 /**
  * Halaman About.
@@ -42,6 +60,11 @@ export const metadata = createPageMetadata({
 export default function AboutPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+
       {/* 1. Hero / Company Introduction */}
       <HomeHero />
 

@@ -39,8 +39,26 @@ function getSafeImageUrl(src?: string | null): string {
   return `/${clean}`;
 }
 
+/**
+ * Kolom produk yang dipakai kartu. Sengaja dipersempit (bukan `Product` penuh)
+ * agar katalog bisa memakai indeks ringan tanpa spesifikasi & deskripsi.
+ */
+export type ProductCardData = Pick<
+  Product,
+  | "slug"
+  | "name"
+  | "brand"
+  | "model"
+  | "category"
+  | "subcategory"
+  | "price"
+  | "availability"
+  | "image"
+  | "imageAlt"
+>;
+
 type ProductCardProps = {
-  product: Product;
+  product: ProductCardData;
   /** Muat gambar lebih awal untuk kartu yang tampil di viewport pertama. */
   eager?: boolean;
   sizes?: string;

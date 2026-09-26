@@ -13,7 +13,9 @@ export type ProductTab = {
 
 /**
  * Navigasi tab compact untuk halaman detail produk.
- * Hanya konten tab aktif yang dirender agar halaman tetap pendek.
+ * Hanya konten tab aktif yang TERLIHAT agar halaman tetap pendek. Konten tab
+ * lain tetap dirender di HTML dengan atribut `hidden`, sehingga seluruh
+ * informasi produk dapat dibaca mesin pencari tanpa harus mengeklik tab.
  * Tab aktif: dark green + teks gold + underline gold. Mobile: scroll horizontal.
  */
 export function ProductTabs({ tabs, className }: { tabs: ProductTab[]; className?: string }) {
@@ -101,6 +103,23 @@ export function ProductTabs({ tabs, className }: { tabs: ProductTab[]; className
             {active.content}
           </motion.div>
         </AnimatePresence>
+
+        {/* Panel tab yang tidak aktif: ada di HTML, disembunyikan dengan `hidden`
+            (juga dari pembaca layar). Sengaja tanpa class tata letak - class
+            display (mis. `grid`/`flex`) akan mengalahkan atribut `hidden`. */}
+        {tabs
+          .filter((tab) => tab.id !== active.id)
+          .map((tab) => (
+            <div
+              key={tab.id}
+              role="tabpanel"
+              id={`product-panel-${tab.id}`}
+              aria-labelledby={`product-tab-${tab.id}`}
+              hidden
+            >
+              {tab.content}
+            </div>
+          ))}
       </div>
     </div>
   );

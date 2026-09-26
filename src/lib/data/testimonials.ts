@@ -4,78 +4,32 @@ import type { Testimonial } from "@/types";
  * TESTIMONI PELANGGAN (halaman About)
  * ===================================
  *
- * PERHATIAN - ISI SAAT INI ADALAH DATA DUMMY.
- * Nama, instansi, kutipan, dan rating di bawah adalah contoh rekaan agar tampilan
- * section dapat dinilai. Tidak ada pelanggan sungguhan di baliknya. GANTI dengan
- * testimoni asli sebelum website dibuka untuk publik: menampilkan testimoni rekaan
- * sebagai ucapan pelanggan nyata dapat menyesatkan pengunjung dan berisiko secara hukum.
+ * SAAT INI SENGAJA KOSONG.
+ * Data contoh (dummy) yang sebelumnya ada di sini sudah dihapus, karena menampilkan
+ * testimoni rekaan sebagai ucapan pelanggan nyata dapat menyesatkan pengunjung dan
+ * berisiko secara hukum. Selama array di bawah kosong, section "Testimoni Pelanggan"
+ * di halaman About otomatis TIDAK ditampilkan (lihat kondisi di src/app/page.tsx dan
+ * src/components/sections/TestimonialCarousel.tsx) - tidak ada kode lain yang perlu diubah.
  *
- * Yang ditampilkan: rating (bintang + angka), kutipan, dan nama pelanggan/instansi.
- * Jabatan tidak ditampilkan.
+ * MENAMPILKAN TESTIMONI ASLI:
+ * Tambahkan objek ke dalam array. Section langsung muncul kembali dengan tampilan yang
+ * sama seperti sebelumnya (3 kartu terlihat, bergeser satu kartu tiap 4 detik).
+ * Urutan array = urutan tampil di carousel.
  *
- * Urutan array = urutan tampil di carousel: 3 kartu terlihat, bergeser satu kartu tiap 4 detik.
+ * Contoh satu entri (ganti seluruh isinya dengan data asli):
  *
- * Mengganti per kartu: isi `quote`, `name`, `organization`, `rating` dengan data asli,
- * lalu HAPUS baris `placeholder: true`. Tambah/kurangi kartu sesuka Anda. Bila array
- * dikosongkan, section tidak ditampilkan.
+ *   {
+ *     id: "testimonial-1",
+ *     quote: "Kutipan asli dari pelanggan, ditulis apa adanya.",
+ *     name: "Nama pelanggan",
+ *     organization: "Nama instansi/perusahaan", // opsional
+ *     rating: 5, // rating yang benar-benar diberikan pelanggan (1-5)
+ *   },
  *
- * Sebelum mempublikasikan testimoni asli: minta persetujuan tertulis pelanggan untuk
- * kutipan dan namanya, tulis kutipan apa adanya, dan pakai rating yang benar-benar
- * diberikan pelanggan.
+ * Aturan sebelum mempublikasikan testimoni:
+ * - Hanya dari pelanggan sungguhan, dengan persetujuan tertulis untuk kutipan dan namanya.
+ * - Kutipan ditulis apa adanya; jangan diubah maknanya.
+ * - Rating harus rating yang benar-benar diberikan pelanggan.
+ * - Jangan memakai field `placeholder: true` untuk data yang tampil di website publik.
  */
-export const testimonials: Testimonial[] = [
-  {
-    id: "testimonial-1",
-    quote:
-      "Kami mengirim daftar kebutuhan alat praktikum, lalu penawaran kembali dengan rapi dan lengkap dengan spesifikasi tiap item. Itu memudahkan kami menyiapkan dokumen pengadaan.",
-    name: "Rina Kusumawati",
-    organization: "Perguruan Tinggi Negeri",
-    rating: 5.0,
-    placeholder: true,
-  },
-  {
-    id: "testimonial-2",
-    quote:
-      "Sebelum membeli kami sempat bertanya soal perbedaan dua tipe alat. Penjelasannya runtut dan tidak mengarahkan ke yang lebih mahal.",
-    name: "Hendra Wijaya",
-    organization: "Klinik Pratama",
-    rating: 4.9,
-    placeholder: true,
-  },
-  {
-    id: "testimonial-3",
-    quote:
-      "Saat kami meminta CoA dan SDS untuk beberapa reagen, dokumennya dikirim tanpa berbelit. Itu penting untuk arsip mutu kami.",
-    name: "Sari Puspitasari",
-    organization: "Laboratorium Pengujian Air",
-    rating: 5.0,
-    placeholder: true,
-  },
-  {
-    id: "testimonial-4",
-    quote:
-      "Tim sales menanyakan jenis sampel dan volume harian kami lebih dulu sebelum merekomendasikan model. Kebutuhan kami terasa didengarkan.",
-    name: "Ahmad Fauzi",
-    organization: "Industri Pangan dan Minuman",
-    rating: 4.8,
-    placeholder: true,
-  },
-  {
-    id: "testimonial-5",
-    quote:
-      "Anggaran laboratorium sekolah kami terbatas. Kami dibantu menyesuaikan daftar alat dengan anggaran tanpa mengorbankan kebutuhan praktikum utama.",
-    name: "Maya Anggraini",
-    organization: "SMK",
-    rating: 4.9,
-    placeholder: true,
-  },
-  {
-    id: "testimonial-6",
-    quote:
-      "Halaman produk yang memuat spesifikasi lengkap memudahkan kami mencocokkannya dengan kebutuhan teknis. Komunikasi lewat email dan WhatsApp juga lancar.",
-    name: "Bambang Santoso",
-    organization: "Instansi Pemerintah Daerah",
-    rating: 5.0,
-    placeholder: true,
-  },
-];
+export const testimonials: Testimonial[] = [];

@@ -4,10 +4,16 @@ import { PageHero } from "@/components/sections/PageHero";
 import { ProductGrid } from "@/components/sections/ProductGrid";
 import { Button } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
+import {
+  catalogTotal,
+  getCatalogCategoryNav,
+  getCatalogFacets,
+  getInitialCatalogItems,
+} from "@/lib/data/catalog-index";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
-  title: "Artha Labs",
+  title: "Katalog Reagen & Alat Laboratorium",
   description:
     "Katalog Artha Labs: reagen, alat laboratorium, dan alat kesehatan dari brand mitra, lengkap dengan dukungan teknis dan layanan purna jual.",
   path: "/artha-labs",
@@ -73,10 +79,20 @@ export default function ArthaLabsPage() {
 
       <BrandMarquee />
 
+      {/* Satu section katalog (Tahap 5F): navigasi kategori ada di dalam panel
+          katalog. Tautan kategori & subkategori tetap dirender di server agar
+          setiap halaman kategori dapat ditemukan mesin pencari. */}
       <Section id="katalog" width="wide">
         <SectionHeading size="display" title="Katalog Produk Artha Labs" />
-        <div className="mt-10">
-          <ProductGrid />
+        <div className="mt-8">
+          {/* Batch pertama & pilihan filter dihitung di server; katalog lengkap
+              diunduh sebagai JSON ringan oleh ProductGrid (lihat lib/catalog.ts). */}
+          <ProductGrid
+            initialItems={getInitialCatalogItems()}
+            facets={getCatalogFacets()}
+            categoryNav={getCatalogCategoryNav()}
+            total={catalogTotal}
+          />
         </div>
       </Section>
     </>

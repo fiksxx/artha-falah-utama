@@ -3,9 +3,8 @@ import Link from "next/link";
 import { ActivityCategoryIcon } from "@/components/sections/ActivityCategoryIcon";
 import { ActivityCover } from "@/components/sections/ActivityCover";
 import { ArrowRightIcon, MapPinIcon } from "@/components/ui/icons";
-import { isEventActivity } from "@/lib/data/activities";
+import { isEventActivity, type ActivityListItem } from "@/lib/activity-meta";
 import { cn, formatDateID, formatDateRangeID } from "@/lib/utils";
-import type { Activity } from "@/types";
 
 /**
  * Kartu satu entri Activity.
@@ -30,7 +29,8 @@ import type { Activity } from "@/types";
  *                 pada carousel di halaman About agar banyak kartu muat satu layar.
  */
 type ActivityCardProps = {
-  activity: Activity;
+  /** Cukup data kartu (tanpa isi artikel); `Activity` lengkap juga diterima. */
+  activity: ActivityListItem;
   variant?: "default" | "featured" | "compact";
   /** Muat gambar lebih awal untuk kartu yang tampil di layar pertama. */
   eager?: boolean;

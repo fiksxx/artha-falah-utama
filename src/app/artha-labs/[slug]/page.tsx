@@ -11,8 +11,9 @@ import { Section, SectionHeading } from "@/components/ui/Section";
 import { BoxIcon, CheckIcon, MailIcon } from "@/components/ui/icons";
 import { getProductBySlug, getRelatedProducts, products } from "@/lib/data/products";
 import { quoteHref } from "@/lib/quote";
-import { createPageMetadata } from "@/lib/seo";
+import { META_DESCRIPTION_MAX, TITLE_BRAND, createPageMetadata, truncateAtWord } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
+import type { Product } from "@/types";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -21,6 +22,31 @@ type ProductPageProps = {
 /** Semua halaman detail dibuat otomatis dari data - tidak ada halaman hardcoded. */
 export function generateStaticParams() {
   return products.map((product) => ({ slug: product.slug }));
+}
+
+/** Slug produk yang tidak ada langsung dijawab halaman 404 global (Tahap 5E). */
+export const dynamicParams = false;
+
+/** Ajakan di akhir meta description produk (pilihan pemilik, Tahap 5C). */
+const QUOTE_CTA = `Minta penawaran di ${TITLE_BRAND}.`;
+
+/**
+ * Meta description produk: paragraf pertama deskripsi produk (teks yang sama
+ * dengan yang tampil di halaman dan di JSON-LD), dipendekkan di batas kata,
+ * lalu ditutup ajakan minta penawaran. Totalnya tidak melebihi
+ * META_DESCRIPTION_MAX. Produk tanpa deskripsi memakai kalimat ringkas dari
+ * nama, brand, model, dan kategori.
+ */
+function productMetaDescription(product: Product) {
+  const intro = product.description?.[0]?.trim();
+
+  if (!intro) {
+    return `${product.name} dari ${product.brand}, model ${product.model}. Kategori ${product.category}. ${QUOTE_CTA}`;
+  }
+
+  const summary = truncateAtWord(intro, META_DESCRIPTION_MAX - QUOTE_CTA.length - 1);
+  const ended = /[.!?…]$/.test(summary) ? summary : `${summary}.`;
+  return `${ended} ${QUOTE_CTA}`;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
@@ -37,7 +63,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   return createPageMetadata({
     title: product.name,
-    description: `${product.name} dari ${product.brand}, model ${product.model}. Kategori ${product.category}. Minta Penawaran melalui Artha Labs.`,
+    description: productMetaDescription(product),
     path: `/artha-labs/${product.slug}`,
     image: product.image,
     keywords: [product.name, product.brand, product.model, product.category],

@@ -5,6 +5,11 @@ import { Container } from "@/components/layout/Container";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Button } from "@/components/ui/Button";
 import { ArrowLeftIcon, DownloadIcon, MailIcon } from "@/components/ui/icons";
+import {
+  categoryHref,
+  getProductCategoryTrail,
+  subcategoryHref,
+} from "@/lib/data/category-pages";
 import { COMPANY_PHOTO } from "@/lib/images";
 import { quoteHref } from "@/lib/quote";
 import { formatRupiah } from "@/lib/utils";
@@ -16,6 +21,8 @@ import type { Product } from "@/types";
  * Desktop: [ gambar ] | [ informasi ]. Mobile: gambar -> informasi -> CTA.
  */
 export function ProductHeader({ product }: { product: Product }) {
+  const trail = getProductCategoryTrail(product);
+
   // Ringkasan spesifikasi kunci. Semuanya dari data produk, tidak ada teks tetap.
   const meta = [
     { label: "Brand", value: product.brand },
@@ -40,11 +47,25 @@ export function ProductHeader({ product }: { product: Product }) {
       <div aria-hidden="true" className="divider-gold absolute inset-x-0 bottom-0 h-px" />
 
       <Container width="wide" className="relative py-10 lg:py-14">
+        {/* Breadcrumb: Home / Artha Labs / Kategori / Subkategori / Produk.
+            Kategori & subkategori hanya ditautkan bila halamannya ada
+            (lihat lib/data/category-pages.ts). */}
         <Breadcrumb
           tone="invert"
           items={[
             { label: "Home", href: "/" },
             { label: "Artha Labs", href: "/artha-labs" },
+            ...(trail.category
+              ? [{ label: trail.category.label, href: categoryHref(trail.category) }]
+              : []),
+            ...(trail.category && trail.subcategory
+              ? [
+                  {
+                    label: trail.subcategory.name,
+                    href: subcategoryHref(trail.category, trail.subcategory),
+                  },
+                ]
+              : []),
             { label: product.name },
           ]}
         />

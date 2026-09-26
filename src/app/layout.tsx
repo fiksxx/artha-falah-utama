@@ -5,7 +5,7 @@ import { Analytics } from "@/components/analytics/Analytics";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SkipLink } from "@/components/layout/SkipLink";
-import { organizationJsonLd } from "@/lib/seo";
+import { HOME_TITLE, TITLE_TEMPLATE, organizationJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 import "./globals.css";
@@ -20,10 +20,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  // Judul tab browser = nama halaman saja ("Artha Labs", "Activity", "Contact Us").
-  // Tidak ada `title.template`: nama perusahaan tidak lagi ditempel di belakang judul.
-  // Nilai ini hanya dipakai bila sebuah route tidak menetapkan judulnya sendiri.
-  title: `${siteConfig.name} | ${siteConfig.tagline}`,
+  // Judul halaman = "<judul halaman> | Artha Labs" lewat `title.template`.
+  // `default` dipakai bila sebuah route tidak menetapkan judulnya sendiri, dan
+  // sama dengan judul beranda. Nilai keduanya diatur di satu tempat: lib/seo.ts.
+  title: { default: HOME_TITLE, template: TITLE_TEMPLATE },
   description: siteConfig.description,
   applicationName: siteConfig.name,
   generator: "Next.js",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     locale: siteConfig.locale,
     siteName: siteConfig.name,
     url: siteConfig.url,
-    title: `${siteConfig.name} | ${siteConfig.tagline}`,
+    title: HOME_TITLE,
     description: siteConfig.description,
     images: [
       {
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} | ${siteConfig.tagline}`,
+    title: HOME_TITLE,
     description: siteConfig.description,
     images: ["/og-image.png"],
   },

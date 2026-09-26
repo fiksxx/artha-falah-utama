@@ -1,3 +1,4 @@
+import { orderCatalog } from "@/lib/catalog";
 import { brands } from "@/lib/data/brands";
 import {
   availabilityOptions,
@@ -47631,52 +47632,12 @@ export function subcategoriesInCategories(categories: string[]) {
    ========================================================================== */
 
 /**
- * Pengacak angka yang dapat diulang (mulberry32).
- * "Seeded" artinya: seed yang sama SELALU menghasilkan urutan yang sama.
- * Inilah yang membuat katalog terlihat acak, tetapi tidak berpindah-pindah
- * saat pengguna memfilter, mencari, atau menekan "Tampilkan lebih banyak".
- */
-function mulberry32(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a += 0x6d2b79f5;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/**
- * Urutan katalog: acak, TETAPI tiga produk teratas selalu mewakili tiga
- * kategori utama secara berurutan - Reagen, Alat Lab, lalu Alat Kesehatan.
- *
- * Wakil tiap kategori diambil dari produk `featured: true` lebih dahulu; bila
- * tidak ada yang ditandai, produk mana pun dari kategori itu dipakai. Jadi
- * Anda bisa mengatur "produk andalan" hanya dengan satu field di data.
+ * Urutan katalog: acak dengan seed, tiga produk teratas mewakili Reagen,
+ * Alat Lab, lalu Alat Kesehatan. Logikanya ada di lib/catalog.ts (orderCatalog)
+ * agar server dan browser memakai fungsi yang sama persis.
  */
 export function orderedCatalog(seed: number, source: Product[] = products): Product[] {
-  const shuffled = [...source];
-  const random = mulberry32(seed);
-
-  // Fisher-Yates: distribusi acak yang merata
-  for (let i = shuffled.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(random() * (i + 1));
-    const a = shuffled[i] as Product;
-    const b = shuffled[j] as Product;
-    shuffled[i] = b;
-    shuffled[j] = a;
-  }
-
-  const lead: Product[] = [];
-  productCategories.forEach((category) => {
-    const inCategory = shuffled.filter((product) => product.category === category);
-    const pick = inCategory.find((product) => product.featured) ?? inCategory[0];
-    if (pick) lead.push(pick);
-  });
-
-  const leadIds = new Set(lead.map((product) => product.id));
-  return [...lead, ...shuffled.filter((product) => !leadIds.has(product.id))];
+  return orderCatalog(seed, source);
 }
 
 /** Cari produk dari slug URL. Dipakai route dinamis /artha-labs/[slug]. */
@@ -47687,25 +47648,62 @@ export function getProductBySlug(slug: string) {
 /** Semua slug produk - dipakai generateStaticParams & sitemap. */
 export const productSlugs = products.map((product) => product.slug);
 
+/** Produk per subkategori, sesuai urutan data - dihitung sekali saat modul dimuat. */
+const productsBySubcategory = new Map<string, Product[]>();
+products.forEach((product) => {
+  const group = productsBySubcategory.get(product.subcategory);
+  if (group) group.push(product);
+  else productsBySubcategory.set(product.subcategory, [product]);
+});
+
 /**
- * Produk terkait: prioritas daftar manual (`relatedProductIds`), lalu subkategori
- * sama, lalu kategori sama, lalu brand sama. Produk yang sedang dibuka tidak
- * pernah ikut tampil.
+ * Produk terkait (section "Produk Terkait" di halaman detail).
+ *
+ * Urutan prioritas:
+ *   1. Daftar manual `relatedProductIds` (bila diisi).
+ *   2. Tetangga di subkategori yang sama, menurut urutan data: produk sesudahnya,
+ *      produk sebelumnya, lalu produk di posisi tengah subkategori.
+ *   3. Bila subkategori terlalu kecil: kategori sama, lalu brand sama.
+ *
+ * Kenapa tetangga, bukan "3 produk pertama di subkategori": dengan cara lama,
+ * produk yang sama tampil di ratusan halaman, sementara sebagian besar produk
+ * tidak pernah ditautkan dari halaman mana pun (tidak bisa ditemukan lewat
+ * tautan internal). Dengan tetangga, setiap produk menerima tautan dari produk
+ * lain di subkategorinya, dan varian/seri yang berdekatan di data ikut
+ * direkomendasikan. Lompatan "posisi tengah" memperpendek jalur di subkategori
+ * yang besar. Hasilnya selalu sama untuk produk yang sama (tidak acak), dan
+ * produk yang sedang dibuka tidak pernah ikut tampil.
  */
 export function getRelatedProducts(product: Product, limit = 3): Product[] {
-  const pool = products.filter((item) => item.id !== product.id);
   const picked: Product[] = [];
 
   const push = (candidate?: Product) => {
-    if (candidate && !picked.some((item) => item.id === candidate.id)) {
+    if (
+      candidate &&
+      candidate.id !== product.id &&
+      !picked.some((item) => item.id === candidate.id)
+    ) {
       picked.push(candidate);
     }
   };
 
-  product.relatedProductIds?.forEach((id) => push(pool.find((item) => item.id === id)));
-  pool.filter((item) => item.subcategory === product.subcategory).forEach(push);
-  pool.filter((item) => item.category === product.category).forEach(push);
-  pool.filter((item) => item.brandId === product.brandId).forEach(push);
+  product.relatedProductIds?.forEach((id) => push(products.find((item) => item.id === id)));
+
+  const group = productsBySubcategory.get(product.subcategory) ?? [];
+  const index = group.findIndex((item) => item.id === product.id);
+  if (index >= 0 && group.length > 1) {
+    const size = group.length;
+    push(group[(index + 1) % size]);
+    push(group[(index - 1 + size) % size]);
+    push(group[(index + Math.floor(size / 2)) % size]);
+  }
+
+  if (picked.length < limit) {
+    products.filter((item) => item.category === product.category).forEach(push);
+  }
+  if (picked.length < limit) {
+    products.filter((item) => item.brandId === product.brandId).forEach(push);
+  }
 
   return picked.slice(0, limit);
 }

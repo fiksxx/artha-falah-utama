@@ -11,7 +11,7 @@ import { createPageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: "Contact Us",
+  title: "Hubungi Kami",
   description:
     "Hubungi CV Artha Falah Utama untuk permintaan penawaran, pertanyaan teknis, maupun kebutuhan pengadaan. Kirim pesan lewat formulir, email, telepon, atau WhatsApp.",
   path: "/contact",

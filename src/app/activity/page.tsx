@@ -3,12 +3,13 @@ import { ActivityTopics } from "@/components/sections/ActivityTopics";
 import { PageHero } from "@/components/sections/PageHero";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
+import { toActivityListItem } from "@/lib/activity-meta";
 import { withActivityImages } from "@/lib/activity-images";
 import { activities } from "@/lib/data/activities";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
-  title: "Activity",
+  title: "Panduan & Artikel Alat Laboratorium",
   description:
     "Catatan teknis seputar pemilihan, penggunaan, dan perawatan alat laboratorium, serta rekam jejak kegiatan CV Artha Falah Utama.",
   path: "/activity",
@@ -57,8 +58,9 @@ export default function ActivityPage() {
 
       <Section id="tulisan" tone="soft" width="wide">
         {/* Gambar sampul dilengkapi di sini (Server Component - fs) sesuai urutan
-            entri, lalu dioper ke bawah. Lihat src/lib/activity-images.ts. */}
-        <ActivityGrid activities={withActivityImages(activities)} />
+            entri, lalu dioper ke bawah. Lihat src/lib/activity-images.ts.
+            Isi artikel (body) dibuang dulu: daftar hanya butuh data kartu. */}
+        <ActivityGrid activities={withActivityImages(activities).map(toActivityListItem)} />
       </Section>
     </>
   );

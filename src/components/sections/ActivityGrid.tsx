@@ -8,31 +8,33 @@ import { Button } from "@/components/ui/Button";
 import { FilterTabs } from "@/components/ui/FilterTabs";
 import { CloseIcon, SearchIcon } from "@/components/ui/icons";
 import {
-  activities as baseActivities,
+  activityCategories,
   activityCategoryDescription,
-  featuredActivity as baseFeaturedActivity,
   guideTopicDescription,
-  usedActivityCategories,
-  usedGuideTopics,
-} from "@/lib/data/activities";
+  guideTopics,
+  type ActivityListItem,
+} from "@/lib/activity-meta";
 import { normalizeText } from "@/lib/utils";
-import type { Activity, ActivityCategory, ActivityTopic } from "@/types";
+import type { ActivityCategory, ActivityTopic } from "@/types";
 
 type Filter = ActivityCategory | "Semua";
 type TopicFilter = ActivityTopic | "Semua topik";
 
 type ActivityGridProps = {
   /**
-   * Seluruh entri Activity, SUDAH dilengkapi gambar sampul lokal (lihat
-   * src/lib/activity-images.ts). Dihitung sekali di Server Component pemanggil
+   * Seluruh entri Activity (terurut terbaru), SUDAH dilengkapi gambar sampul
+   * lokal (lihat src/lib/activity-images.ts) dan TANPA isi artikel (lihat
+   * ActivityListItem). Dihitung sekali di Server Component pemanggil
    * (src/app/activity/page.tsx) lalu dioper ke sini - komponen ini "use client"
    * sehingga tidak bisa membaca berkas gambar sendiri.
+   *
+   * CATATAN PERFORMA: komponen ini sengaja tidak mengimpor lib/data/activities.ts
+   * agar isi seluruh artikel tidak ikut diunduh sebagai JavaScript. Semua yang
+   * dihitung di bawah (jumlah per kategori, indeks pencarian, sorotan) dibentuk
+   * dari props ini.
    */
-  activities: Activity[];
+  activities: ActivityListItem[];
 };
-
-const filters: readonly Filter[] = ["Semua", ...usedActivityCategories] as const;
-const topicFilters: readonly TopicFilter[] = ["Semua topik", ...usedGuideTopics] as const;
 
 /**
  * Jumlah kartu per batch. Kelipatan 3 agar baris grid selalu penuh di desktop.
@@ -41,45 +43,68 @@ const topicFilters: readonly TopicFilter[] = ["Semua topik", ...usedGuideTopics]
  */
 const PAGE_SIZE = 9;
 
-/** Jumlah tulisan per kategori - tampil pada tab filter. Dihitung sekali. */
-const filterCounts: Record<Filter, number> = {
-  Semua: baseActivities.length,
-  Insight: 0,
-  Panduan: 0,
-  Kegiatan: 0,
-};
-baseActivities.forEach((activity) => {
-  filterCounts[activity.category] += 1;
-});
-
-/** Jumlah artikel Panduan per topik - tampil pada filter tingkat dua. */
-const topicCounts: Partial<Record<TopicFilter, number>> = {
-  "Semua topik": filterCounts.Panduan,
-};
-baseActivities.forEach((activity) => {
-  if (activity.topic) topicCounts[activity.topic] = (topicCounts[activity.topic] ?? 0) + 1;
-});
-
 /**
- * Indeks pencarian, dibangun SEKALI saat modul dimuat (bukan tiap ketikan).
- * Mencakup judul, ringkasan, kategori, topik Panduan, lokasi, dan tag
- * (tag memuat nama alat, mis. "Micropipette", "pH meter").
+ * Pilihan filter, jumlah per kategori/topik, indeks pencarian, dan entri
+ * sorotan - semuanya dari daftar entri. Dihitung sekali per daftar (useMemo),
+ * bukan tiap ketikan.
  */
-const searchIndex: ReadonlyMap<string, string> = new Map(
-  baseActivities.map((activity) => [
-    activity.id,
-    normalizeText(
-      [
-        activity.title,
-        activity.excerpt,
-        activity.category,
-        activity.topic ?? "",
-        activity.location ?? "",
-        ...(activity.tags ?? []),
-      ].join(" "),
-    ),
-  ]),
-);
+function buildActivityIndex(list: readonly ActivityListItem[]) {
+  /** Kategori yang benar-benar dipakai minimal satu entri - filter tidak pernah kosong. */
+  const usedCategories = activityCategories.filter((category) =>
+    list.some((activity) => activity.category === category),
+  );
+  /** Topik Panduan yang sudah punya minimal satu artikel. */
+  const usedTopics = guideTopics.filter((topic) =>
+    list.some((activity) => activity.topic === topic),
+  );
+
+  const filters: readonly Filter[] = ["Semua", ...usedCategories];
+  const topicFilters: readonly TopicFilter[] = ["Semua topik", ...usedTopics];
+
+  /** Jumlah tulisan per kategori - tampil pada tab filter. */
+  const filterCounts: Record<Filter, number> = {
+    Semua: list.length,
+    Insight: 0,
+    Panduan: 0,
+    Kegiatan: 0,
+  };
+  list.forEach((activity) => {
+    filterCounts[activity.category] += 1;
+  });
+
+  /** Jumlah artikel Panduan per topik - tampil pada filter tingkat dua. */
+  const topicCounts: Partial<Record<TopicFilter, number>> = {
+    "Semua topik": filterCounts.Panduan,
+  };
+  list.forEach((activity) => {
+    if (activity.topic) topicCounts[activity.topic] = (topicCounts[activity.topic] ?? 0) + 1;
+  });
+
+  /**
+   * Indeks pencarian: judul, ringkasan, kategori, topik Panduan, lokasi, dan tag
+   * (tag memuat nama alat, mis. "Micropipette", "pH meter").
+   */
+  const searchIndex: ReadonlyMap<string, string> = new Map(
+    list.map((activity) => [
+      activity.id,
+      normalizeText(
+        [
+          activity.title,
+          activity.excerpt,
+          activity.category,
+          activity.topic ?? "",
+          activity.location ?? "",
+          ...(activity.tags ?? []),
+        ].join(" "),
+      ),
+    ]),
+  );
+
+  /** Tulisan sorotan: entri bertanda `featured`, atau entri terbaru bila tidak ada. */
+  const featuredActivity = list.find((activity) => activity.featured) ?? list[0];
+
+  return { filters, topicFilters, filterCounts, topicCounts, searchIndex, featuredActivity };
+}
 
 /**
  * Daftar konten Activity.
@@ -98,6 +123,9 @@ export function ActivityGrid({ activities }: ActivityGridProps) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const prefersReducedMotion = useReducedMotion();
 
+  const { filters, topicFilters, filterCounts, topicCounts, searchIndex, featuredActivity } =
+    useMemo(() => buildActivityIndex(activities), [activities]);
+
   /** Penyaringan memakai nilai "tertunda" agar ketikan tetap ringan saat daftar besar. */
   const deferredQuery = useDeferredValue(query);
   const needle = normalizeText(deferredQuery);
@@ -107,12 +135,6 @@ export function ActivityGrid({ activities }: ActivityGridProps) {
   const showTopics = activeFilter === "Panduan" && topicFilters.length > 2;
   const topicFilter = showTopics ? activeTopic : "Semua topik";
 
-  /** Entri sorotan (dengan gambar lokal) dicari lewat id dari daftar yang diterima lewat props. */
-  const featuredActivity = useMemo(
-    () => activities.find((item) => item.id === baseFeaturedActivity?.id),
-    [activities],
-  );
-
   const matches = useMemo(
     () =>
       activities.filter((activity) => {
@@ -121,7 +143,7 @@ export function ActivityGrid({ activities }: ActivityGridProps) {
         if (!isSearching) return true;
         return searchIndex.get(activity.id)?.includes(needle) ?? false;
       }),
-    [activities, activeFilter, topicFilter, isSearching, needle],
+    [activities, activeFilter, topicFilter, isSearching, needle, searchIndex],
   );
 
   const selectCategory = (next: Filter) => {
@@ -142,7 +164,15 @@ export function ActivityGrid({ activities }: ActivityGridProps) {
   }, [activeFilter, topicFilter, needle]);
 
   const paged = listed.slice(0, visibleCount);
-  const remainingCount = listed.length - paged.length;
+  /**
+   * Kartu yang belum ditampilkan ("Tampilkan lebih banyak"). Tetap dirender di
+   * HTML dalam daftar tersembunyi agar setiap tulisan tertaut dari halaman ini
+   * dan dapat ditemukan mesin pencari tanpa menjalankan JavaScript. Isinya sama
+   * persis dengan kartu yang akan tampil setelah tombol ditekan, dan selalu
+   * mengikuti filter/pencarian yang aktif.
+   */
+  const hiddenRest = listed.slice(visibleCount);
+  const remainingCount = hiddenRest.length;
 
   const resetAll = () => {
     selectCategory("Semua");
@@ -254,6 +284,19 @@ export function ActivityGrid({ activities }: ActivityGridProps) {
           ))}
         </AnimatePresence>
       </ul>
+
+      {/* Sisa kartu: ada di HTML, disembunyikan sampai "Tampilkan lebih banyak" ditekan.
+          Atribut `hidden` juga menyembunyikannya dari pembaca layar. Sengaja tanpa
+          class tata letak (mis. `grid`): class display akan mengalahkan `hidden`. */}
+      {hiddenRest.length > 0 ? (
+        <ul hidden>
+          {hiddenRest.map((activity) => (
+            <li key={activity.id}>
+              <ActivityCard activity={activity} />
+            </li>
+          ))}
+        </ul>
+      ) : null}
 
       {remainingCount > 0 ? (
         <div className="mt-10 flex flex-col items-center gap-2.5">

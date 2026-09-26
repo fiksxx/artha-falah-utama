@@ -70,7 +70,21 @@ export function LoopCarousel({
   className,
 }: LoopCarouselProps) {
   const count = slides.length;
-  const prefersReducedMotion = useReducedMotion();
+  const systemPrefersReducedMotion = useReducedMotion();
+
+  /**
+   * Pengaturan "kurangi gerakan" baru dipakai SETELAH halaman aktif (hydrated).
+   * Di server nilainya tidak diketahui, sehingga server selalu merender carousel
+   * biasa. Bila browser langsung merender versi lain pada render pertama, markup
+   * tidak cocok (React error #418) dan seluruh halaman digambar ulang. Dengan
+   * menunda satu langkah, render pertama selalu sama dengan server, lalu tampilan
+   * berganti ke deretan gulir manual bagi pengguna "reduce motion".
+   */
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+  const prefersReducedMotion = hydrated && Boolean(systemPrefersReducedMotion);
 
   const [wide, setWide] = useState(true);
   const visible = wide ? visibleWide : 1;
@@ -120,7 +134,7 @@ export function LoopCarousel({
     [canMove, count, lastIndex, mode],
   );
 
-  const autoplay = !prefersReducedMotion && !interacting && canMove;
+  const autoplay = hydrated && !prefersReducedMotion && !interacting && canMove;
 
   useEffect(() => {
     if (!autoplay) return;

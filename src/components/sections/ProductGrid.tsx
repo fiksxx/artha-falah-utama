@@ -1,28 +1,33 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { type MouseEvent, useDeferredValue, useEffect, useMemo, useState } from "react";
 
 import { ProductCard } from "@/components/sections/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { MultiSelect } from "@/components/ui/MultiSelect";
-import { CloseIcon, FilterIcon, SearchIcon } from "@/components/ui/icons";
-import {
-  orderedCatalog,
-  productApplications,
-  productAvailabilities,
-  productBrands,
-  productCategories,
-  productTypes,
-  products,
-  subcategoriesInCategories,
-} from "@/lib/data/products";
+import { ArrowRightIcon, CloseIcon, FilterIcon, SearchIcon } from "@/components/ui/icons";
 import { trackEvent } from "@/lib/analytics";
-import { cn, compactText, normalizeText } from "@/lib/utils";
-import type { Product } from "@/types";
+import {
+  CATALOG_INDEX_URL,
+  applicationOptionsOf,
+  buildSearchIndex,
+  catalogSortOptions as sortOptions,
+  filterCatalog,
+  orderCatalog,
+  subcategoriesFor,
+  type CatalogCategoryNavItem,
+  type CatalogFacets,
+  type CatalogItem,
+  type CatalogSearchIndex,
+  type CatalogSortId as SortId,
+} from "@/lib/catalog";
+import { cn } from "@/lib/utils";
 
 /**
  * Jumlah kartu produk yang dirender per batch.
+ * Harus sama dengan CATALOG_PAGE_SIZE di lib/data/catalog-index.ts.
  */
 const PAGE_SIZE = 24;
 
@@ -34,51 +39,94 @@ const SEED_KEY = "artha-labs-catalog-seed";
 /** Seed yang dipakai saat render di server, agar HTML awal selalu sama. */
 const SSR_SEED = 1;
 
-const sortOptions = [
-  { id: "katalog", label: "Urutan katalog" },
-  { id: "nama-asc", label: "Nama A - Z" },
-  { id: "nama-desc", label: "Nama Z - A" },
-  { id: "harga-asc", label: "Harga terendah" },
-  { id: "harga-desc", label: "Harga tertinggi" },
-] as const;
-
-type SortId = (typeof sortOptions)[number]["id"];
-
-/** Semua teks produk yang ikut dicari oleh kolom pencarian. */
-const haystackOf = (product: Product) =>
-  [
-    product.name,
-    product.model,
-    product.brand,
-    product.category,
-    product.subcategory,
-    product.productType,
-    ...(product.applications ?? []),
-    ...(product.keywords ?? []),
-    // Deskripsi lengkap menggantikan ringkasan pendek yang sudah dihapus,
-    // sehingga istilah teknis di dalam deskripsi tetap bisa dicari.
-    ...(product.description ?? []),
-  ].join(" ");
-
-/**
- * Indeks pencarian, dibangun SEKALI saat modul dimuat.
- *
- * Sebelumnya teks pencarian setiap produk dirangkai dan dinormalisasi ulang
- * pada setiap ketikan. Dengan katalog yang kini berisi ratusan produk, itu
- * berarti ribuan operasi string per huruf yang diketik. Sekarang hasilnya
- * dihitung di muka dan pencarian tinggal membaca dari sini.
- */
-const searchIndex: ReadonlyMap<string, { normalized: string; compact: string }> = new Map(
-  products.map((product) => {
-    const haystack = haystackOf(product);
-    return [product.id, { normalized: normalizeText(haystack), compact: compactText(haystack) }];
-  }),
-);
-
 /** Jeda sebelum kata kunci pencarian dicatat ke analytics (menunggu user berhenti mengetik). */
 const SEARCH_TRACK_DELAY_MS = 800;
 
-export function ProductGrid() {
+/**
+ * Jumlah chip subkategori yang tampil sebelum tombol "lainnya" (layar sm ke atas).
+ * Di layar kecil semua chip tetap ada dalam satu baris yang bisa digeser.
+ */
+const SUBCATEGORY_PREVIEW = 8;
+
+/** Gaya tab kategori (Semua / Reagen / Alat Laboratorium). */
+const tabClass = (active: boolean) =>
+  cn(
+    "inline-flex min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full border px-5 text-[0.9375rem] font-semibold transition-all duration-200 ease-smooth active:translate-y-px motion-reduce:active:translate-y-0",
+    active
+      ? "border-brand-700 bg-brand-700 text-white shadow-card"
+      : "border-line-strong bg-surface text-ink hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700",
+  );
+
+const tabCountClass = (active: boolean) =>
+  cn(
+    "rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums",
+    active ? "bg-white/15 text-white" : "bg-surface-muted text-ink-subtle",
+  );
+
+/** Gaya chip subkategori - lebih kecil dari tab agar hierarki kategori tetap jelas. */
+const subChipClass = (active: boolean) =>
+  cn(
+    "inline-flex min-h-[36px] items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 text-sm font-medium transition-all duration-200 ease-smooth",
+    active
+      ? "border-brand-600 bg-brand-50 text-brand-800"
+      : "border-line bg-surface text-ink-muted hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700",
+  );
+
+/** Baris chip: satu baris yang bisa digeser di layar kecil, membungkus di sm ke atas. */
+const chipRowClass =
+  "-mx-4 flex gap-2 overflow-x-auto px-4 pb-0.5 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden";
+
+/**
+ * Tautan kategori/subkategori tetap berupa <a href> asli (bisa dirayapi mesin
+ * pencari dan dibuka di tab baru). Klik biasa menyaring katalog di tempat;
+ * klik dengan tombol pengubah / tombol tengah tetap mengikuti tautan.
+ */
+function opensLink(event: MouseEvent<HTMLAnchorElement>) {
+  return (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  );
+}
+
+type LoadedIndex = {
+  items: CatalogItem[];
+  search: CatalogSearchIndex;
+  /** Opsi filter "Aplikasi" (ribuan entri - sengaja tidak dikirim bersama HTML). */
+  applications: string[];
+};
+
+type ProductGridProps = {
+  /** Batch pertama (urutan seed SSR) - dirender di server, tampil sebelum indeks dimuat. */
+  initialItems: CatalogItem[];
+  /** Pilihan filter, dihitung di server dari data produk. */
+  facets: CatalogFacets;
+  /** Navigasi kategori & subkategori (dengan tautan halaman kategori), dari server. */
+  categoryNav: CatalogCategoryNavItem[];
+  /** Jumlah seluruh produk di katalog. */
+  total: number;
+};
+
+/** Daftar opsi kosong selama indeks belum dimuat. */
+const NO_OPTIONS: string[] = [];
+
+/** Indeks kosong untuk kartu awal (pencarian belum dipakai sebelum indeks dimuat). */
+const EMPTY_SEARCH_INDEX: CatalogSearchIndex = new Map();
+
+/**
+ * Katalog produk dengan filter & pencarian.
+ *
+ * CATATAN PERFORMA: data katalog lengkap TIDAK dibundel ke JavaScript halaman.
+ * 24 kartu pertama datang dari server (props), lalu indeks ringan
+ * (/data/katalog.json) diunduh di belakang layar setelah halaman tampil.
+ * Filter, pencarian, urutan, dan "Tampilkan lebih banyak" memakai indeks itu;
+ * bila pengunjung sudah berinteraksi sebelum indeks siap, tampil keterangan
+ * "Memuat katalog lengkap...".
+ */
+export function ProductGrid({ initialItems, facets, categoryNav, total }: ProductGridProps) {
   const [query, setQuery] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
   const [subcategories, setSubcategories] = useState<string[]>([]);
@@ -88,9 +136,13 @@ export function ProductGrid() {
   const [availabilities, setAvailabilities] = useState<string[]>([]);
   const [sort, setSort] = useState<SortId>("katalog");
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [showAllSubcategories, setShowAllSubcategories] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [seed, setSeed] = useState(SSR_SEED);
   const [seedReady, setSeedReady] = useState(false);
+  const [loaded, setLoaded] = useState<LoadedIndex | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -112,14 +164,87 @@ export function ProductGrid() {
     setSeedReady(true);
   }, []);
 
-  const catalog = useMemo(() => orderedCatalog(seed), [seed]);
+  /** Unduh indeks katalog setelah halaman tampil (diulang bila "Coba lagi"). */
+  useEffect(() => {
+    let cancelled = false;
+    setLoadFailed(false);
 
-  const subcategoryOptions = useMemo(
-    () => subcategoriesInCategories(categories),
-    [categories],
+    fetch(CATALOG_INDEX_URL)
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json() as Promise<CatalogItem[]>;
+      })
+      .then((items) => {
+        if (cancelled) return;
+        setLoaded({
+          items,
+          search: buildSearchIndex(items),
+          applications: applicationOptionsOf(items),
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setLoadFailed(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loadAttempt]);
+
+  /** Sebelum indeks siap, katalog = kartu awal dari server (urutan seed SSR). */
+  const catalog = useMemo(
+    () => (loaded ? orderCatalog(seed, loaded.items) : initialItems),
+    [loaded, initialItems, seed],
   );
 
-  const brandOptions = useMemo(() => productBrands.map((brand) => brand.name), []);
+  const subcategoryOptions = useMemo(
+    () => subcategoriesFor(facets, categories),
+    [facets, categories],
+  );
+
+  /** Kategori yang sedang dibuka lewat tab (katalog hanya memakai satu kategori sekaligus). */
+  const activeCategory =
+    categories.length === 1
+      ? categoryNav.find((item) => item.category === categories[0])
+      : undefined;
+
+  /** Chip subkategori: milik kategori aktif, atau seluruh subkategori saat "Semua". */
+  const subcategoryChips = useMemo(
+    () =>
+      activeCategory
+        ? activeCategory.subcategories
+        : categoryNav
+            .flatMap((item) => item.subcategories)
+            .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "id")),
+    [activeCategory, categoryNav],
+  );
+
+  const collapsedSubcategoryCount = showAllSubcategories
+    ? 0
+    : subcategoryChips.filter(
+        (entry, index) => index >= SUBCATEGORY_PREVIEW && !subcategories.includes(entry.name),
+      ).length;
+
+  /** Tautan ke halaman kategori/subkategori yang sedang dipilih (bila halamannya ada). */
+  const selectedSubcategoryPage =
+    subcategories.length === 1
+      ? subcategoryChips.find((entry) => entry.name === subcategories[0] && entry.href)
+      : undefined;
+  const pageLink = selectedSubcategoryPage?.href
+    ? { href: selectedSubcategoryPage.href, label: selectedSubcategoryPage.name }
+    : activeCategory
+      ? { href: activeCategory.href, label: activeCategory.label }
+      : null;
+
+  const categoryLabel = (value: string) =>
+    categoryNav.find((item) => item.category === value)?.label ?? value;
+
+  const selectCategory = (value: string | null) => {
+    setCategories(value ? [value] : []);
+  };
+
+  const brandOptions = facets.brands;
+  const applicationOptions = loaded?.applications ?? NO_OPTIONS;
 
   const keyword = query.trim();
 
@@ -131,55 +256,35 @@ export function ProductGrid() {
    */
   const deferredQuery = useDeferredValue(query);
 
-  const filtered = useMemo(() => {
-    const needle = normalizeText(deferredQuery);
-    const needleCompact = compactText(deferredQuery);
-
-    const result = catalog.filter((product) => {
-      if (categories.length > 0 && !categories.includes(product.category)) return false;
-      if (subcategories.length > 0 && !subcategories.includes(product.subcategory)) return false;
-      if (brandNames.length > 0 && !brandNames.includes(product.brand)) return false;
-      if (types.length > 0 && !types.includes(product.productType)) return false;
-      if (availabilities.length > 0 && !availabilities.includes(product.availability)) return false;
-      if (
-        applications.length > 0 &&
-        !(product.applications ?? []).some((item) => applications.includes(item))
-      ) {
-        return false;
-      }
-
-      if (needle === "") return true;
-
-      const indexed = searchIndex.get(product.id);
-      if (!indexed) return false;
-
-      return (
-        indexed.normalized.includes(needle) || indexed.compact.includes(needleCompact)
-      );
-    });
-
-    if (sort === "katalog") return result;
-
-    const sorted = [...result];
-    sorted.sort((a, b) => {
-      if (sort === "nama-asc") return a.name.localeCompare(b.name, "id");
-      if (sort === "nama-desc") return b.name.localeCompare(a.name, "id");
-
-      return sort === "harga-asc" ? a.price - b.price : b.price - a.price;
-    });
-
-    return sorted;
-  }, [
-    applications,
-    availabilities,
-    brandNames,
-    catalog,
-    categories,
-    deferredQuery,
-    sort,
-    subcategories,
-    types,
-  ]);
+  const filtered = useMemo(
+    () =>
+      filterCatalog(
+        catalog,
+        {
+          query: deferredQuery,
+          categories,
+          subcategories,
+          brands: brandNames,
+          types,
+          applications,
+          availabilities,
+          sort,
+        },
+        loaded?.search ?? EMPTY_SEARCH_INDEX,
+      ),
+    [
+      applications,
+      availabilities,
+      brandNames,
+      catalog,
+      categories,
+      deferredQuery,
+      loaded,
+      sort,
+      subcategories,
+      types,
+    ],
+  );
 
   /**
    * Catat kata kunci pencarian ke analytics setelah pengunjung berhenti
@@ -188,6 +293,8 @@ export function ProductGrid() {
    * orang tetapi belum ada di katalog.
    */
   useEffect(() => {
+    // Jumlah hasil baru bermakna setelah indeks katalog lengkap dimuat.
+    if (!loaded) return;
     const term = deferredQuery.trim();
     if (term.length < 3) return;
 
@@ -199,22 +306,23 @@ export function ProductGrid() {
     }, SEARCH_TRACK_DELAY_MS);
 
     return () => clearTimeout(timer);
-  }, [deferredQuery, filtered.length]);
+  }, [deferredQuery, filtered.length, loaded]);
 
   useEffect(() => {
     setSubcategories((current) => {
-      const allowed = subcategoriesInCategories(categories) as readonly string[];
-      const next = current.filter((item) => allowed.includes(item));
+      const next = current.filter((item) => subcategoryOptions.includes(item));
       return next.length === current.length ? current : next;
     });
-  }, [categories]);
+  }, [subcategoryOptions]);
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
   }, [applications, availabilities, brandNames, categories, deferredQuery, sort, subcategories, types]);
 
   const paged = filtered.slice(0, visibleCount);
-  const remainingCount = filtered.length - paged.length;
+  /** Sebelum indeks siap, kartu awal = batch pertama dari seluruh katalog. */
+  const resultCount = loaded ? filtered.length : total;
+  const remainingCount = resultCount - paged.length;
   const hasMore = remainingCount > 0;
 
   const chips: Array<{ key: string; label: string; onRemove: () => void }> = [];
@@ -241,7 +349,13 @@ export function ProductGrid() {
     });
   };
 
-  pushChips("kategori", categories, setCategories);
+  categories.forEach((value) => {
+    chips.push({
+      key: `kategori-${value}`,
+      label: categoryLabel(value),
+      onRemove: () => setCategories(categories.filter((item) => item !== value)),
+    });
+  });
   pushChips("subkategori", subcategories, setSubcategories);
   pushChips("brand", brandNames, setBrandIds);
   pushChips("jenis", types, setTypes);
@@ -250,6 +364,16 @@ export function ProductGrid() {
 
   const activeFilterCount = chips.length;
   const isFiltered = activeFilterCount > 0;
+  /** Hanya tab kategori yang aktif (tanpa pencarian/filter lain). */
+  const onlyCategory = Boolean(activeCategory) && activeFilterCount === 1;
+  const scopeText = activeCategory ? ` di ${activeCategory.label}` : "";
+
+  /**
+   * Pengunjung sudah memakai filter/pencarian/urutan/"Tampilkan lebih banyak"
+   * sebelum indeks katalog selesai dimuat: hasil belum bisa dihitung.
+   */
+  const waitingForIndex =
+    !loaded && (isFiltered || sort !== "katalog" || visibleCount > PAGE_SIZE);
 
   const resetFilters = () => {
     setQuery("");
@@ -274,20 +398,179 @@ export function ProductGrid() {
 
   return (
     <div>
-      {/* PANEL FILTER */}
-      <div className="rounded-xl border border-line bg-surface p-5 shadow-card sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="text-base font-semibold text-ink">Temukan Produk Anda</h3>
-            <span aria-hidden="true" className="mt-2 block h-px w-10 bg-accent-400" />
+      {/* PANEL KATALOG: kategori -> subkategori -> pencarian & filter */}
+      <div className="rounded-xl border border-line bg-surface p-4 shadow-card sm:p-6">
+        {/* Navigasi kategori - bagian dari katalog, bukan section terpisah (Tahap 5F) */}
+        <nav id="kategori" aria-label="Kategori produk" className="scroll-mt-24">
+          <ul className={chipRowClass}>
+            <li className="shrink-0">
+              <button
+                type="button"
+                onClick={() => selectCategory(null)}
+                aria-pressed={!activeCategory}
+                className={tabClass(!activeCategory)}
+              >
+                Semua
+                <span className={tabCountClass(!activeCategory)}>{total}</span>
+              </button>
+            </li>
+            {categoryNav.map((item) => {
+              const isActive = activeCategory?.category === item.category;
+              return (
+                <li key={item.category} className="shrink-0">
+                  <a
+                    href={item.href}
+                    aria-current={isActive ? "true" : undefined}
+                    onClick={(event) => {
+                      if (opensLink(event)) return;
+                      event.preventDefault();
+                      selectCategory(item.category);
+                    }}
+                    className={tabClass(isActive)}
+                  >
+                    {item.label}
+                    <span className={tabCountClass(isActive)}>{item.count}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          {subcategoryChips.length > 0 ? (
+            <ul aria-label="Subkategori" className={cn(chipRowClass, "mt-3")}>
+              {subcategoryChips.map((entry, index) => {
+                const isActive = subcategories.includes(entry.name);
+                const collapsed =
+                  !showAllSubcategories && index >= SUBCATEGORY_PREVIEW && !isActive;
+                const label = (
+                  <>
+                    {entry.name}
+                    <span className="text-xs font-semibold tabular-nums text-ink-subtle">
+                      {entry.count}
+                    </span>
+                  </>
+                );
+
+                return (
+                  <li key={entry.name} className={cn("shrink-0", collapsed && "sm:hidden")}>
+                    {entry.href ? (
+                      <a
+                        href={entry.href}
+                        aria-current={isActive ? "true" : undefined}
+                        onClick={(event) => {
+                          if (opensLink(event)) return;
+                          event.preventDefault();
+                          toggleValue(entry.name, subcategories, setSubcategories);
+                        }}
+                        className={subChipClass(isActive)}
+                      >
+                        {label}
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        aria-pressed={isActive}
+                        onClick={() => toggleValue(entry.name, subcategories, setSubcategories)}
+                        className={subChipClass(isActive)}
+                      >
+                        {label}
+                      </button>
+                    )}
+                  </li>
+                );
+              })}
+              {subcategoryChips.length > SUBCATEGORY_PREVIEW &&
+              (showAllSubcategories || collapsedSubcategoryCount > 0) ? (
+                <li className="hidden shrink-0 sm:block">
+                  <button
+                    type="button"
+                    onClick={() => setShowAllSubcategories((open) => !open)}
+                    aria-expanded={showAllSubcategories}
+                    className="inline-flex min-h-[36px] items-center px-2 text-sm font-semibold text-brand-700 underline-offset-4 transition-colors duration-200 hover:text-brand-600 hover:underline"
+                  >
+                    {showAllSubcategories
+                      ? "Ringkas subkategori"
+                      : `+${collapsedSubcategoryCount} subkategori lainnya`}
+                  </button>
+                </li>
+              ) : null}
+            </ul>
+          ) : null}
+
+          {pageLink ? (
+            <Link
+              href={pageLink.href}
+              className="group mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors duration-200 hover:text-brand-600"
+            >
+              Buka halaman {pageLink.label}
+              <ArrowRightIcon
+                aria-hidden="true"
+                width={16}
+                height={16}
+                className="transition-transform duration-200 ease-smooth group-hover:translate-x-1 motion-reduce:transform-none"
+              />
+            </Link>
+          ) : null}
+        </nav>
+
+        {/* Pencarian + urutan (+ tombol filter di layar kecil) */}
+        <div className="mt-4 flex flex-wrap gap-3 border-t border-line pt-4 sm:mt-5 sm:pt-5 lg:flex-nowrap">
+          <div className="relative min-w-0 basis-full sm:flex-1 sm:basis-auto">
+            <label htmlFor="product-search" className="sr-only">
+              Cari produk
+            </label>
+            <SearchIcon
+              aria-hidden="true"
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-subtle"
+            />
+            <input
+              id="product-search"
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={
+                activeCategory
+                  ? `Cari di ${activeCategory.label}: nama, model, brand...`
+                  : "Nama produk, model, brand, atau kata kunci..."
+              }
+              autoComplete="off"
+              className="h-12 w-full rounded-lg border border-line-strong bg-surface pl-11 pr-12 text-[0.9375rem] text-ink transition-colors duration-200 placeholder:text-ink-subtle hover:border-brand-300 focus:border-brand-500 focus:outline-none"
+            />
+            {query ? (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label="Hapus kata kunci pencarian"
+                className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-md text-ink-subtle transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700"
+              >
+                <CloseIcon width={16} height={16} />
+              </button>
+            ) : null}
           </div>
+
+          <label htmlFor="product-sort" className="sr-only">
+            Urutkan
+          </label>
+          <select
+            id="product-sort"
+            value={sort}
+            onChange={(event) => setSort(event.target.value as SortId)}
+            className="h-12 min-w-0 flex-1 rounded-lg border border-line-strong bg-surface px-3.5 text-[0.9375rem] text-ink transition-colors duration-200 hover:border-brand-300 focus:border-brand-500 focus:outline-none sm:w-56 sm:flex-none"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+
           <button
             type="button"
             onClick={() => setFiltersOpen((open) => !open)}
             aria-expanded={filtersOpen}
             aria-controls="product-filter-panel"
             className={cn(
-              "inline-flex min-h-[40px] items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-all duration-200 ease-smooth lg:hidden",
+              "inline-flex h-12 shrink-0 items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-all duration-200 ease-smooth lg:hidden",
               filtersOpen || activeFilterCount > 0
                 ? "border-accent-400 bg-accent-50 text-accent-700"
                 : "border-line-strong bg-surface text-ink-muted hover:border-brand-300 hover:text-brand-700",
@@ -303,109 +586,12 @@ export function ProductGrid() {
           </button>
         </div>
 
-        {/* Baris 1: Pencarian + Urutan */}
-        <div className="mt-4 grid gap-4 lg:grid-cols-12 lg:gap-5">
-          <div className="lg:col-span-8">
-            <label
-              htmlFor="product-search"
-              className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-subtle"
-            >
-              Cari produk
-            </label>
-            <div className="relative mt-2.5">
-              <SearchIcon
-                aria-hidden="true"
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-subtle"
-              />
-              <input
-                id="product-search"
-                type="text"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Nama produk, model, brand, atau kata kunci..."
-                autoComplete="off"
-                className="h-12 w-full rounded-lg border border-line-strong bg-surface pl-11 pr-12 text-[0.9375rem] text-ink transition-colors duration-200 placeholder:text-ink-subtle hover:border-brand-300 focus:border-brand-500 focus:outline-none"
-              />
-              {query ? (
-                <button
-                  type="button"
-                  onClick={() => setQuery("")}
-                  aria-label="Hapus kata kunci pencarian"
-                  className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-md text-ink-subtle transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700"
-                >
-                  <CloseIcon width={16} height={16} />
-                </button>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="lg:col-span-4">
-            <label
-              htmlFor="product-sort"
-              className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-subtle"
-            >
-              Urutkan
-            </label>
-            <select
-              id="product-sort"
-              value={sort}
-              onChange={(event) => setSort(event.target.value as SortId)}
-              className="mt-2.5 h-12 w-full rounded-lg border border-line-strong bg-surface px-3.5 text-[0.9375rem] text-ink transition-colors duration-200 hover:border-brand-300 focus:border-brand-500 focus:outline-none"
-            >
-              {sortOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Baris 2: Filter Rinci */}
+        {/* Filter lainnya: selalu tampil di desktop, dibuka lewat tombol "Filter" di layar kecil */}
         <div
           id="product-filter-panel"
           className={cn("lg:block", filtersOpen ? "block" : "hidden")}
         >
-          {/* Kategori */}
-          <div className="mt-5 border-t border-line pt-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-subtle">
-              Kategori
-            </p>
-            <div role="group" aria-label="Filter kategori produk" className="mt-2.5 flex flex-wrap gap-2">
-              {productCategories.map((option) => {
-                const isActive = categories.includes(option);
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() => toggleValue(option, categories, setCategories)}
-                    aria-pressed={isActive}
-                    className={cn(
-                      "inline-flex min-h-[40px] shrink-0 items-center whitespace-nowrap rounded-full border px-4 text-sm font-medium transition-all duration-200 ease-smooth active:translate-y-px motion-reduce:active:translate-y-0",
-                      isActive
-                        ? "border-brand-700 bg-brand-700 text-white shadow-card"
-                        : "border-line-strong bg-surface text-ink-muted hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700",
-                    )}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Subkategori, Brand, Jenis, Aplikasi */}
-          <div className="mt-5 grid gap-4 border-t border-line pt-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-            <MultiSelect
-              id="filter-subcategory"
-              label="Subkategori"
-              placeholder="Semua subkategori"
-              noun="subkategori"
-              options={subcategoryOptions}
-              values={subcategories}
-              onChange={setSubcategories}
-              searchPlaceholder="Cari subkategori..."
-            />
+          <div className="mt-4 grid gap-4 border-t border-line pt-4 sm:mt-5 sm:grid-cols-2 sm:pt-5 lg:grid-cols-4 lg:gap-5">
             <MultiSelect
               id="filter-brand"
               label="Brand"
@@ -421,7 +607,7 @@ export function ProductGrid() {
               label="Jenis produk"
               placeholder="Semua jenis"
               noun="jenis"
-              options={productTypes}
+              options={facets.types}
               values={types}
               onChange={setTypes}
               searchPlaceholder="Cari jenis produk..."
@@ -431,49 +617,47 @@ export function ProductGrid() {
               label="Aplikasi"
               placeholder="Semua aplikasi"
               noun="aplikasi"
-              options={productApplications}
+              options={applicationOptions}
               values={applications}
               onChange={setApplications}
               searchPlaceholder="Cari bidang penggunaan..."
             />
-          </div>
-
-          {/* Ketersediaan */}
-          <div className="mt-5 border-t border-line pt-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-subtle">
-              Ketersediaan
-            </p>
-            <div
-              role="group"
-              aria-label="Filter ketersediaan produk"
-              className="mt-2.5 flex flex-wrap gap-2"
-            >
-              {productAvailabilities.map((option) => {
-                const isActive = availabilities.includes(option);
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() => toggleValue(option, availabilities, setAvailabilities)}
-                    aria-pressed={isActive}
-                    className={cn(
-                      "inline-flex min-h-[40px] shrink-0 items-center whitespace-nowrap rounded-full border px-4 text-sm font-medium transition-all duration-200 ease-smooth active:translate-y-px motion-reduce:active:translate-y-0",
-                      isActive
-                        ? "border-brand-700 bg-brand-700 text-white shadow-card"
-                        : "border-line-strong bg-surface text-ink-muted hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700",
-                    )}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-subtle">
+                Ketersediaan
+              </p>
+              <div
+                role="group"
+                aria-label="Filter ketersediaan produk"
+                className="mt-2.5 flex flex-wrap gap-2"
+              >
+                {facets.availabilities.map((option) => {
+                  const isActive = availabilities.includes(option);
+                  return (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => toggleValue(option, availabilities, setAvailabilities)}
+                      aria-pressed={isActive}
+                      className={cn(
+                        "inline-flex min-h-[40px] shrink-0 items-center whitespace-nowrap rounded-full border px-4 text-sm font-medium transition-all duration-200 ease-smooth active:translate-y-px motion-reduce:active:translate-y-0",
+                        isActive
+                          ? "border-brand-700 bg-brand-700 text-white shadow-card"
+                          : "border-line-strong bg-surface text-ink-muted hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700",
+                      )}
+                    >
+                      {option}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Chip Filter Aktif */}
         {isFiltered ? (
-          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-line pt-5">
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-line pt-4 sm:mt-5 sm:pt-5">
             <span className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-subtle">
               Filter aktif
             </span>
@@ -497,27 +681,55 @@ export function ProductGrid() {
       </div>
 
       {/* Penghitung Hasil */}
-      <p aria-live="polite" className="mt-6 text-sm text-ink-subtle">
-        {hasMore ? (
+      <p aria-live="polite" className="mt-5 text-sm text-ink-subtle">
+        {waitingForIndex ? (
+          loadFailed ? (
+            <>
+              Katalog lengkap belum berhasil dimuat.{" "}
+              <button
+                type="button"
+                onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+                className="font-semibold text-brand-700 underline-offset-4 transition-colors duration-200 hover:text-brand-600 hover:underline"
+              >
+                Coba lagi
+              </button>
+            </>
+          ) : (
+            "Memuat katalog lengkap..."
+          )
+        ) : hasMore ? (
           <>
             Menampilkan <span className="font-semibold text-ink">{paged.length}</span> dari{" "}
-            {filtered.length} produk
-            {isFiltered ? " yang cocok" : null}
+            {resultCount} produk
+            {isFiltered && !onlyCategory ? " yang cocok" : null}
+            {scopeText}
           </>
         ) : isFiltered ? (
-          <>
-            <span className="font-semibold text-ink">{filtered.length}</span> produk cocok dari{" "}
-            {products.length} produk
-          </>
+          onlyCategory ? (
+            <>
+              <span className="font-semibold text-ink">{resultCount}</span> produk{scopeText}
+            </>
+          ) : (
+            <>
+              <span className="font-semibold text-ink">{resultCount}</span> produk cocok
+              {scopeText || ` dari ${total} produk`}
+            </>
+          )
         ) : (
           <>
-            <span className="font-semibold text-ink">{products.length}</span> produk ditemukan
+            <span className="font-semibold text-ink">{total}</span> produk ditemukan
           </>
         )}
       </p>
 
       {/* Grid Produk */}
-      <ul className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <ul
+        aria-busy={waitingForIndex || undefined}
+        className={cn(
+          "mt-4 grid gap-6 transition-opacity duration-200 sm:grid-cols-2 lg:grid-cols-3",
+          waitingForIndex && "opacity-60",
+        )}
+      >
         <AnimatePresence mode="popLayout" initial={false}>
           {paged.map((product, index) => (
             <motion.li
@@ -536,7 +748,7 @@ export function ProductGrid() {
       </ul>
 
       {/* Tampilkan Lebih Banyak */}
-      {hasMore ? (
+      {hasMore && !waitingForIndex ? (
         <div className="mt-8 flex flex-col items-center gap-2.5">
           <Button type="button" variant="secondary" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
             Tampilkan lebih banyak
@@ -548,7 +760,7 @@ export function ProductGrid() {
       ) : null}
 
       {/* Tampilan Kosong */}
-      {filtered.length === 0 ? (
+      {filtered.length === 0 && !waitingForIndex ? (
         <div className="mt-4 rounded-xl border border-line bg-surface-muted px-6 py-14 text-center">
           <span
             aria-hidden="true"

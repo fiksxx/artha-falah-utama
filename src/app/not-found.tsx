@@ -6,7 +6,14 @@ import { Button } from "@/components/ui/Button";
 export const metadata: Metadata = {
   title: "Halaman tidak ditemukan",
   description: "Halaman yang Anda cari tidak tersedia.",
-  robots: { index: false, follow: false },
+  // Tahap 5D: putuskan warisan metadata beranda dari layout. Halaman 404 tidak
+  // boleh ber-canonical ke beranda atau memakai pratinjau sosial beranda.
+  // robots: null menghapus "index, follow" warisan layout; Next.js sendiri
+  // menambahkan tepat satu <meta name="robots" content="noindex"> di halaman 404.
+  robots: null,
+  alternates: { canonical: null },
+  openGraph: null,
+  twitter: null,
 };
 
 export default function NotFound() {

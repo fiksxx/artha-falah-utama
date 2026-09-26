@@ -41,10 +41,14 @@ export const navItems: NavItem[] = [
   { label: "Contact Us", href: "/contact", description: "Hubungi tim kami" },
 ];
 
-/** TODO: ganti dengan konten asli (hapus entri yang tidak dipakai). */
+/**
+ * Tautan sosial media di footer dan halaman Contact Us.
+ * Hanya cantumkan profil yang benar-benar ada. LinkedIn sengaja tidak dicantumkan
+ * karena perusahaan belum memiliki halaman LinkedIn; bila nanti ada, tambahkan
+ * kembali `{ label: "LinkedIn", href: "<URL halaman perusahaan>", icon: "linkedin" }`.
+ */
 export const socialLinks: SocialLink[] = [
   { label: "Instagram", href: "https://www.instagram.com/artha.falah/", icon: "instagram" },
-  { label: "LinkedIn", href: "https://linkedin.com/", icon: "linkedin" },
   { label: "WhatsApp", href: `https://wa.me/${siteConfig.contact.whatsappNumber}`, icon: "whatsapp" },
   { label: "Email", href: `mailto:${siteConfig.contact.email}`, icon: "mail" },
 ];

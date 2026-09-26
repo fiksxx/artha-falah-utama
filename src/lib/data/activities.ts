@@ -6,14 +6,9 @@ import { insightArticles } from "@/lib/data/guides/insight";
 import { selectionGuides } from "@/lib/data/guides/selection";
 import { troubleshootingGuides } from "@/lib/data/guides/troubleshooting";
 import { usageGuides } from "@/lib/data/guides/usage";
+import { activityCategories, guideTopics } from "@/lib/activity-meta";
 import { slugify } from "@/lib/utils";
-import type {
-  Activity,
-  ActivityCategory,
-  ActivitySeed,
-  ActivityTopic,
-  ArticleBlock,
-} from "@/types";
+import type { Activity, ActivitySeed, ArticleBlock } from "@/types";
 
 /**
  * KONTEN HALAMAN ACTIVITY
@@ -34,41 +29,18 @@ import type {
  * di bagian bawah file ini (pola yang sama dipakai pada data produk).
  */
 
-/** Urutan kategori pada filter halaman Activity. */
-export const activityCategories: ActivityCategory[] = ["Insight", "Panduan", "Kegiatan"];
-
-/** Keterangan singkat tiap kategori - tampil sebagai penjelasan filter. */
-export const activityCategoryDescription: Record<ActivityCategory, string> = {
-  Insight: "Pembahasan teknologi, tren, dan perbandingan alat laboratorium.",
-  Panduan: "Langkah praktis penggunaan, perawatan, dan penyimpanan.",
-  Kegiatan: "Rekam jejak pameran, instalasi, dan kunjungan teknis kami.",
-};
-
-/**
- * Urutan topik Panduan pada filter tingkat dua. Urutannya mengikuti perjalanan
- * pembaca: kenali dasarnya, pilih alatnya, pahami cara kerjanya, pakai dengan
- * benar, rawat, atasi masalah, lalu bersiap membeli.
+/*
+ * Kategori, topik, keterangannya, dan isEventActivity didefinisikan di
+ * lib/activity-meta.ts (file ringan tanpa isi artikel, aman dipakai komponen
+ * browser) dan diekspor ulang dari sini agar impor lama tetap bekerja.
  */
-export const guideTopics: ActivityTopic[] = [
-  "Laboratorium Dasar",
-  "Memilih Alat",
-  "Fungsi & Prinsip Kerja",
-  "Cara Penggunaan",
-  "Tips & Perawatan",
-  "Troubleshooting",
-  "Panduan Pembelian",
-];
-
-/** Keterangan singkat tiap topik - tampil sebagai penjelasan filter. */
-export const guideTopicDescription: Record<ActivityTopic, string> = {
-  "Laboratorium Dasar": "Bekal dasar bekerja di laboratorium: air, alat gelas, dan penyimpanan bahan.",
-  "Memilih Alat": "Cara menentukan jenis, kapasitas, dan spesifikasi alat sesuai kebutuhan.",
-  "Fungsi & Prinsip Kerja": "Apa fungsi sebuah alat dan bagaimana cara kerjanya, dijelaskan sederhana.",
-  "Cara Penggunaan": "Langkah demi langkah memakai alat dengan benar dan aman.",
-  "Tips & Perawatan": "Membersihkan, menyimpan, dan menjaga alat agar hasilnya tetap dapat dipercaya.",
-  Troubleshooting: "Masalah umum saat memakai alat, beserta pemeriksaan yang aman dilakukan sendiri.",
-  "Panduan Pembelian": "Hal yang perlu dipahami dan ditanyakan sebelum membeli alat laboratorium.",
-};
+export {
+  activityCategories,
+  activityCategoryDescription,
+  guideTopicDescription,
+  guideTopics,
+  isEventActivity,
+} from "@/lib/activity-meta";
 
 /**
  * Artikel Panduan ditulis di file terpisah per kelompok topik (folder `guides/`)
@@ -387,14 +359,6 @@ export const usedGuideTopics = guideTopics.filter((topic) =>
  */
 export const featuredActivity: Activity | undefined =
   activities.find((activity) => activity.featured) ?? activities[0];
-
-/**
- * Kegiatan (pameran, instalasi, kunjungan) dibaca sebagai peristiwa: yang
- * relevan adalah tanggal dan lokasinya, bukan estimasi waktu baca.
- */
-export function isEventActivity(activity: Pick<Activity, "category">): boolean {
-  return activity.category === "Kegiatan";
-}
 
 /** Cari satu entri dari slug URL. Dipakai route /activity/[slug]. */
 export function getActivityBySlug(slug: string): Activity | undefined {
