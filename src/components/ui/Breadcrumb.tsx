@@ -80,7 +80,7 @@ export function Breadcrumb({
                 <Link
                   href={item.href}
                   className={cn(
-                    "transition-colors duration-200",
+                    "-my-3 inline-flex min-h-[44px] items-center transition-colors duration-200",
                     invert
                       ? "text-white/70 hover:text-accent-300"
                       : "text-ink-subtle hover:text-brand-700",

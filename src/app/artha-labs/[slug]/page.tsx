@@ -132,8 +132,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               <DetailTable
                 items={specifications}
                 caption={`Spesifikasi Teknis ${product.name}`}
-                labelHeader="Specification"
-                valueHeader="Details"
+                labelHeader="Spesifikasi"
+                valueHeader="Keterangan"
               />
             </div>
           ) : (
@@ -148,8 +148,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       {hasHighlights ? (
         <aside className="lg:col-span-4">
-          <div className="rounded-xl border border-line bg-surface p-6 shadow-card">
-            <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">
+          <div className="rounded-xl border border-line bg-surface-muted p-6">
+            <h4 className="text-base font-semibold text-ink">
               Poin Penting
             </h4>
             <ul className="mt-4 space-y-3">
@@ -183,7 +183,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               items={packaging}
               caption={`Informasi packaging ${product.name}`}
               labelHeader="Packaging"
-              valueHeader="Detail"
+              valueHeader="Keterangan"
             />
           </div>
         </div>
@@ -192,7 +192,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       {additionalGroups.length > 0 ? (
         <div className={packaging.length > 0 ? "space-y-6 lg:col-span-5" : "space-y-6 lg:col-span-8"}>
           {additionalGroups.map((group) => (
-            <div key={group.id} className="rounded-xl border border-line bg-surface p-6 shadow-card">
+            <div key={group.id} className="rounded-xl border border-line bg-surface p-6">
               <h3 className="text-base font-semibold text-ink">{group.title}</h3>
               {group.bullets && group.bullets.length > 0 ? (
                 <ul className="mt-3 space-y-2.5">
@@ -253,9 +253,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <ProductTabs tabs={tabs} className="mt-8" />
 
         {/* CTA ringkas - tetap satu design system, tidak memakai banner besar */}
-        <div className="mt-10 flex flex-col gap-4 rounded-xl border border-accent-200 bg-accent-50 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-4 rounded-xl border border-line bg-surface-muted p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
-            <h3 className="text-base font-semibold text-ink">Butuh penawaran produk ini?</h3>
+            <h3 className="text-xl font-semibold text-ink">Butuh penawaran produk ini?</h3>
             <p className="mt-1 text-sm leading-relaxed text-ink-muted">
               Subjek dan pesan akan otomatis terisi sesuai produk yang Anda buka.
             </p>
@@ -271,7 +271,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       {relatedProducts.length > 0 ? (
         <Section tone="muted" width="wide" spacing="sm">
           <SectionHeading title="Produk Terkait" />
-          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {relatedProducts.map((item) => (
               <li key={item.id} className="h-full">
                 <ProductCard product={item} />
@@ -287,7 +287,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 /** Catatan netral saat sebuah field data belum tersedia - bukan pesan error. */
 function InfoNote({ children }: { children: ReactNode }) {
   return (
-    <div className="mt-4 flex items-start gap-3.5 rounded-xl border border-line bg-surface p-5 shadow-card">
+    <div className="mt-4 flex items-start gap-3.5 rounded-xl border border-line bg-surface-muted p-5">
       <span
         aria-hidden="true"
         className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-700"

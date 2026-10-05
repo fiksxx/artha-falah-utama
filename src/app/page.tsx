@@ -1,8 +1,9 @@
-import { ActivityCarousel } from "@/components/sections/ActivityCarousel";
 import { BrandMarquee } from "@/components/sections/BrandMarquee";
-import { BusinessScope } from "@/components/sections/BusinessScope";
+import { CtaBand } from "@/components/sections/CtaBand";
+import { HomeCatalogRow } from "@/components/sections/HomeCatalogRow";
+import { HomeCategories } from "@/components/sections/HomeCategories";
+import { HomeGuides } from "@/components/sections/HomeGuides";
 import { HomeHero } from "@/components/sections/HomeHero";
-import { QuickNavCards } from "@/components/sections/QuickNavCards";
 import { TestimonialCarousel } from "@/components/sections/TestimonialCarousel";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { testimonials } from "@/lib/data/testimonials";
@@ -43,19 +44,20 @@ const websiteJsonLd = {
 /**
  * Halaman About.
  *
- * Header (hero) tidak diubah. Section navigasi, testimoni, dan Activity dibuat ringkas
- * (`spacing="sm"`); section Lini bisnis sengaja lega dan panjang (`spacing="md"`).
+ * Susunan sejak Tahap R2 (redesign beranda):
  *
- *   1. Hero              : perkenalan + foto gedung (full-width)
- *   2. Brand Mitra       : bukti sosial paling cepat dicerna (marquee logo)
- *   3. Navigation Cards  : arahkan pengunjung ke halaman tujuan
- *   4. Lini bisnis       : blok editorial selang-seling (gambar kiri/kanan) yang panjang ke bawah
- *   5. Testimoni         : 3 kartu terlihat, bergeser satu kartu tiap 4 detik
- *   6. Activity          : 3 kartu terlihat, bergeser satu kartu tiap 3 detik (bolak-balik)
- *   7. Footer            : dirender global di layout.tsx
+ *   1. Hero              : perkenalan + foto gedung (struktur tidak diubah)
+ *   2. Brand Mitra       : marquee logo (tidak diubah)
+ *   3. Kategori          : dua panel kategori katalog + lini bisnis ringkas
+ *   4. Dari katalog      : 4 produk pertama urutan katalog
+ *   5. Testimoni         : hanya tampil bila datanya ada
+ *   6. Panduan           : 1 tulisan utama + daftar tulisan terbaru
+ *   7. Pita ajakan       : menuju halaman Kontak / WhatsApp
+ *   8. Footer            : dirender global di layout.tsx
  *
- * Seluruh judul section memakai komponen `SectionHeading` - jangan menulis
- * ulang pola judul + garis emas secara manual di sini.
+ * Section di bawah hero muncul halus saat masuk layar lewat komponen `Reveal`
+ * (lihat catatan di components/ui/Reveal.tsx: isi tidak pernah tersembunyi di
+ * HTML dari server).
  */
 export default function AboutPage() {
   return (
@@ -70,23 +72,16 @@ export default function AboutPage() {
 
       {/* 2. Brand Mitra Artha Labs - daftar brand yang sama dengan halaman Artha Labs */}
       <BrandMarquee
-        title="Brand mitra Artha Labs"
+        title="Brand yang kami sediakan"
         headingId="brand-marquee-about"
         className="py-7 lg:py-8"
       />
 
-      {/* 3. Navigation Cards */}
-      <Section id="navigasi" spacing="sm" width="wide">
-        <SectionHeading
-          title="Apa yang bisa Anda temukan"
-        />
-        <div className="mt-6">
-          <QuickNavCards />
-        </div>
-      </Section>
+      {/* 3. Kategori katalog + lini bisnis - teks dari category-pages.ts & about.ts */}
+      <HomeCategories />
 
-      {/* 4. Lini bisnis & cakupan produk - teks bersumber dari lib/data/about.ts */}
-      <BusinessScope />
+      {/* 4. Cuplikan katalog */}
+      <HomeCatalogRow />
 
       {/* 5. Testimoni Pelanggan - data di lib/data/testimonials.ts (saat ini dummy) */}
       {testimonials.length > 0 ? (
@@ -101,8 +96,11 @@ export default function AboutPage() {
         </Section>
       ) : null}
 
-      {/* 6. Activity - 3 kartu terlihat, bergeser satu kartu tiap 3 detik */}
-      <ActivityCarousel />
+      {/* 6. Tulisan terbaru (menggantikan carousel Activity) */}
+      <HomeGuides />
+
+      {/* 7. Pita ajakan */}
+      <CtaBand />
     </>
   );
 }

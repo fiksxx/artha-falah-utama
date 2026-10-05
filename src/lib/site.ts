@@ -31,14 +31,15 @@ export const siteConfig = {
 } as const;
 
 /**
- * 4 tab navigasi utama - URUTAN: About, Artha Labs, Activity, Contact Us.
+ * 4 tab navigasi utama - URUTAN: Tentang Kami, Arthalabs, Aktivitas, Kontak.
+ * Hanya LABEL yang berbahasa Indonesia (Tahap R1); `href` tidak berubah.
  * Menambah halaman baru cukup menambah entri di sini (navbar, footer, dan sitemap ikut otomatis).
  */
 export const navItems: NavItem[] = [
-  { label: "About", href: "/", description: "Profil, visi misi, dan sejarah perusahaan" },
-  { label: "Artha Labs", href: "/artha-labs", description: "Brand & produk laboratorium" },
-  { label: "Activity", href: "/activity", description: "Rekam jejak kegiatan perusahaan" },
-  { label: "Contact Us", href: "/contact", description: "Hubungi tim kami" },
+  { label: "Tentang Kami", href: "/", description: "Profil, visi misi, dan sejarah perusahaan" },
+  { label: "Arthalabs", href: "/artha-labs", description: "Brand & produk laboratorium" },
+  { label: "Aktivitas", href: "/activity", description: "Rekam jejak kegiatan perusahaan" },
+  { label: "Kontak", href: "/contact", description: "Hubungi tim kami" },
 ];
 
 /**

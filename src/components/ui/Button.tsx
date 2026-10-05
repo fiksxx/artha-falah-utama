@@ -7,7 +7,7 @@ type Variant = "primary" | "secondary" | "accent" | "ghost" | "inverted";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex select-none items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-200 ease-smooth active:translate-y-px disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-line disabled:bg-surface-strong disabled:text-ink-subtle disabled:shadow-none motion-reduce:active:translate-y-0";
+  "inline-flex select-none items-center justify-center gap-2 rounded-lg font-semibold transition duration-200 ease-smooth active:translate-y-px disabled:pointer-events-none disabled:cursor-not-allowed disabled:border-line disabled:bg-surface-strong disabled:text-ink-subtle disabled:shadow-none motion-reduce:active:translate-y-0";
 
 /**
  * State setiap variant: default -> hover -> active -> disabled.
@@ -28,7 +28,8 @@ const sizes: Record<Size, string> = {
   // min-height 44px agar target sentuh nyaman di mobile
   sm: "min-h-[40px] px-4 text-sm",
   md: "min-h-[44px] px-5 text-[0.9375rem]",
-  lg: "min-h-[48px] px-6 text-base",
+  // Tahap P1: tombol besar diturunkan ke 44px agar tidak mendominasi hero.
+  lg: "min-h-[44px] px-5 text-[0.9375rem]",
 };
 
 type CommonProps = {

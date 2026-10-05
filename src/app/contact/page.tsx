@@ -22,7 +22,8 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
-        eyebrow="Contact Us"
+        eyebrow="Kontak"
+        textWidth="wide"
         title="Sampaikan kebutuhan Anda"
         description="Permintaan penawaran, pertanyaan teknis soal produk, atau kebutuhan pengadaan, semuanya bisa dikirim lewat halaman ini. Kami biasanya membalas dalam 1-2 hari kerja."
         actions={
@@ -46,7 +47,7 @@ export default function ContactPage() {
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
           {/* Anchor #contact-form: dipakai CTA "Minta Penawaran" agar form langsung terlihat */}
           <div id={CONTACT_FORM_ANCHOR} className="scroll-mt-28 lg:col-span-7">
-            <SectionHeading title="Kirim Pesan" />
+            <SectionHeading title="Kirim pesan" />
             <div className="mt-8">
               {/* Suspense: form membaca query parameter produk lewat useSearchParams */}
               <Suspense fallback={<FormSkeleton />}>
@@ -62,7 +63,7 @@ export default function ContactPage() {
       </Section>
 
       <Section tone="muted" width="wide" spacing="sm">
-        <SectionHeading title="Lokasi Kantor" />
+        <SectionHeading title="Lokasi kantor" />
         <div className="mt-8">
           <MapEmbed />
         </div>

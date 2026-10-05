@@ -145,7 +145,7 @@ export function Footer() {
           className="py-6 text-xs text-white/55"
         >
           <p>
-            &copy; {year} {siteConfig.legalName}. All Rights Reserved.
+            &copy; {year} {siteConfig.legalName}. Hak cipta dilindungi.
           </p>
         </Container>
       </div>

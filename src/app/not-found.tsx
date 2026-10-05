@@ -19,13 +19,16 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <Container className="flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
-      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-600">Error 404</p>
-      <h1 className="mt-4 text-display">Halaman tidak ditemukan</h1>
+      <p className="font-mono text-base font-medium text-brand-700">404</p>
+      <h1 className="mt-4 text-balance text-[clamp(2rem,1.4rem+2.4vw,3rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-ink">Halaman tidak ditemukan</h1>
       <p className="mt-4 max-w-content text-ink-muted">
         Tautan yang Anda buka mungkin sudah dipindahkan atau tidak pernah ada.
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <Button href="/">Kembali ke About</Button>
+        <Button href="/">Kembali ke Tentang Kami</Button>
+        <Button href="/artha-labs" variant="secondary">
+          Buka katalog
+        </Button>
         <Button href="/contact" variant="secondary">
           Hubungi kami
         </Button>

@@ -44,7 +44,7 @@ export function FilterTabs<T extends string>({
             onClick={() => onChange(option)}
             aria-pressed={isActive}
             className={cn(
-              "inline-flex shrink-0 items-center whitespace-nowrap rounded-full border font-medium transition-all duration-200 ease-smooth active:translate-y-px motion-reduce:active:translate-y-0",
+              "inline-flex shrink-0 items-center whitespace-nowrap rounded-full border font-medium transition duration-200 ease-smooth active:translate-y-px motion-reduce:active:translate-y-0",
               isSmall ? "min-h-[36px] px-3.5 text-[0.8125rem]" : "min-h-[40px] px-4 text-sm",
               isActive
                 ? isSmall

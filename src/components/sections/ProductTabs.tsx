@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { type ReactNode, useRef, useState } from "react";
 
+import { DURATION, EASE_SMOOTH } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 export type ProductTab = {
@@ -54,7 +55,7 @@ export function ProductTabs({ tabs, className }: { tabs: ProductTab[]; className
       <div
         role="tablist"
         aria-label="Informasi produk"
-        className="scrollbar-soft -mx-1 flex gap-1.5 overflow-x-auto border-b border-line px-1 sm:mx-0 sm:gap-2 sm:px-0"
+        className="scrollbar-soft -mx-1 flex gap-7 overflow-x-auto border-b border-line px-1 sm:mx-0 sm:gap-9 sm:px-0"
       >
         {tabs.map((tab) => {
           const isActive = tab.id === active.id;
@@ -74,10 +75,11 @@ export function ProductTabs({ tabs, className }: { tabs: ProductTab[]; className
               onClick={() => setActiveId(tab.id)}
               onKeyDown={handleKeyDown}
               className={cn(
-                "relative min-h-[44px] shrink-0 whitespace-nowrap rounded-t-lg px-4 text-sm font-semibold transition-all duration-200 ease-smooth sm:px-5 sm:text-[0.9375rem]",
+                "relative min-h-[48px] shrink-0 whitespace-nowrap px-1 text-[0.9375rem] font-semibold transition-colors duration-200 ease-smooth sm:text-base",
+                // Tahap R4: tab bergaris bawah (bukan tab berisi hijau).
                 isActive
-                  ? "bg-brand-800 text-accent-300 after:absolute after:inset-x-0 after:-bottom-px after:h-[3px] after:rounded-t-full after:bg-accent-400 after:content-['']"
-                  : "text-ink-muted hover:bg-brand-50 hover:text-brand-700",
+                  ? "text-brand-800 after:absolute after:inset-x-0 after:-bottom-px after:h-[2px] after:bg-brand-700 after:content-['']"
+                  : "text-ink-muted hover:text-brand-700",
               )}
             >
               {tab.label}
@@ -97,7 +99,7 @@ export function ProductTabs({ tabs, className }: { tabs: ProductTab[]; className
             initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
-            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: DURATION.fast, ease: EASE_SMOOTH }}
             className="focus-visible:outline-none"
           >
             {active.content}

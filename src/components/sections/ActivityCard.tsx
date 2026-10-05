@@ -64,7 +64,7 @@ export function ActivityCard({
   return (
     <article
       className={cn(
-        "group/card relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover focus-within:border-brand-300 focus-within:shadow-card-hover motion-reduce:transform-none",
+        "group/card relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface transition duration-300 ease-smooth hover:-translate-y-[3px] hover:border-brand-300 focus-within:border-brand-300 motion-reduce:transform-none",
         isFeatured && "lg:flex-row",
         className,
       )}
@@ -93,10 +93,10 @@ export function ActivityCard({
         />
         <span
           className={cn(
-            "absolute inline-flex items-center gap-1.5 rounded-full border border-accent-400/30 bg-brand-900/85 font-semibold uppercase text-accent-300 backdrop-blur-sm",
+            "absolute inline-flex items-center gap-1.5 rounded-md bg-brand-900/90 font-semibold text-white",
             isCompact
-              ? "left-2.5 top-2.5 px-2 py-0.5 text-[0.625rem] tracking-[0.1em]"
-              : "left-4 top-4 px-2.5 py-1 text-[0.6875rem] tracking-[0.12em]",
+              ? "left-2.5 top-2.5 px-2 py-0.5 text-[0.6875rem]"
+              : "left-3 top-3 px-2.5 py-1 text-xs",
           )}
         >
           <ActivityCategoryIcon
@@ -178,7 +178,7 @@ export function ActivityCard({
               {chips.map((chip) => (
                 <li
                   key={chip}
-                  className="max-w-[10rem] truncate rounded-full border border-line bg-surface-muted px-2.5 py-0.5 text-xs text-ink-muted"
+                  className="max-w-[10rem] truncate rounded-md border border-line bg-surface-muted px-2.5 py-0.5 text-xs text-ink-muted"
                 >
                   {chip}
                 </li>

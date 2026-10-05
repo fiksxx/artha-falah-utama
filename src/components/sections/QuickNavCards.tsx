@@ -36,7 +36,7 @@ export function QuickNavCards() {
               {/* TODO: ganti dengan konten asli */}
               <Link
                 href={card.href}
-                className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface p-5 shadow-card transition-all duration-300 ease-smooth hover:-translate-y-1 hover:border-brand-800 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-800 motion-reduce:transform-none"
+                className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface p-5 shadow-card transition duration-300 ease-smooth hover:-translate-y-[3px] hover:border-brand-800 hover:shadow-card-hover focus-visible:-translate-y-[3px] focus-visible:border-brand-800 motion-reduce:transform-none"
               >
                 {/* Latar dark green yang muncul halus saat hover */}
                 <span
@@ -51,7 +51,7 @@ export function QuickNavCards() {
 
                 <span
                   aria-hidden="true"
-                  className="relative grid h-10 w-10 place-items-center rounded-lg bg-brand-50 text-brand-700 transition-all duration-300 ease-smooth group-hover:scale-105 group-hover:bg-accent-400 group-hover:text-brand-950 group-focus-visible:bg-accent-400 group-focus-visible:text-brand-950 motion-reduce:transform-none"
+                  className="relative grid h-10 w-10 place-items-center rounded-lg bg-brand-50 text-brand-700 transition duration-300 ease-smooth group-hover:scale-105 group-hover:bg-accent-400 group-hover:text-brand-950 group-focus-visible:bg-accent-400 group-focus-visible:text-brand-950 motion-reduce:transform-none"
                 >
                   <Icon width={20} height={20} />
                 </span>

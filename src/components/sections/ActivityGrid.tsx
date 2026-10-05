@@ -14,6 +14,7 @@ import {
   guideTopics,
   type ActivityListItem,
 } from "@/lib/activity-meta";
+import { DURATION, EASE_SMOOTH } from "@/lib/motion";
 import { normalizeText } from "@/lib/utils";
 import type { ActivityCategory, ActivityTopic } from "@/types";
 
@@ -276,7 +277,7 @@ export function ActivityGrid({ activities }: ActivityGridProps) {
               initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: DURATION.fast, ease: EASE_SMOOTH }}
               className="h-full"
             >
               <ActivityCard activity={activity} eager={index < 3 && !showFeatured} />

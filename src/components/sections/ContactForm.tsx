@@ -28,7 +28,7 @@ const initialValues: ContactFormValues = {
 };
 
 const fieldClasses =
-  "w-full rounded-lg border bg-surface px-4 py-3 text-base text-ink placeholder:text-ink-subtle/70 transition-colors focus:border-brand-500";
+  "min-h-[48px] w-full rounded-lg border bg-surface px-4 py-3 text-base text-ink placeholder:text-ink-subtle/70 transition-colors focus:border-brand-500";
 
 export function ContactForm() {
   const searchParams = useSearchParams();
@@ -161,15 +161,15 @@ export function ContactForm() {
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
       {quote ? (
-        <div className="rounded-xl border border-accent-200 bg-accent-50 p-4 sm:p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-700">
+        <div className="rounded-xl border border-line bg-surface-muted p-4 sm:p-5">
+          <p className="text-sm font-medium text-ink-muted">
             Permintaan penawaran untuk
           </p>
           <p className="mt-1.5 text-base font-semibold text-ink">{quote.productName}</p>
           {quote.category ? (
             <p className="mt-0.5 text-sm text-ink-muted">Kategori {quote.category}</p>
           ) : null}
-          <p className="mt-2.5 text-xs leading-relaxed text-ink-subtle">
+          <p className="mt-2.5 text-sm leading-relaxed text-ink-subtle">
             Subjek dan pesan sudah terisi otomatis - silakan ubah bila perlu sebelum mengirim.
           </p>
         </div>
@@ -218,7 +218,7 @@ export function ContactForm() {
         <Field
           id="phone"
           type="tel"
-          label="Nomor Telepon / WhatsApp"
+          label="Nomor telepon / WhatsApp"
           placeholder="081234567890"
           autoComplete="tel"
           inputMode="tel"
@@ -256,10 +256,10 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Button type="submit" size="lg" disabled={isSubmitting}>
-          {isSubmitting ? "Mengirim..." : "Kirim Pesan"}
+          {isSubmitting ? "Mengirim..." : "Kirim pesan"}
         </Button>
         <p className="text-sm text-ink-subtle">
-          Kami biasanya membalas dalam 1 - 2 hari kerja.
+          Kami biasanya membalas dalam 1–2 hari kerja.
         </p>
       </div>
 

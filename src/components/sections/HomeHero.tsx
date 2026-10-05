@@ -24,7 +24,7 @@ import { siteConfig } from "@/lib/site";
  */
 export function HomeHero() {
   return (
-    <section className="relative isolate flex min-h-[60vh] items-center overflow-hidden bg-brand-950 text-white lg:min-h-[68vh]">
+    <section className="relative isolate flex items-center overflow-hidden bg-brand-950 text-white">
       {/* Lapis 1 - foto gedung. alt kosong: dekoratif, pesannya sudah ada di teks. */}
       <Image
         src={COMPANY_PHOTO}
@@ -41,8 +41,9 @@ export function HomeHero() {
       {/* Garis emas tipis sebagai transisi elegan ke section berikutnya */}
       <div aria-hidden="true" className="divider-gold absolute inset-x-0 bottom-0 z-10 h-px" />
 
-      <Container width="wide" className="relative py-14 lg:py-16">
-        <div className="max-w-3xl">
+      <Container width="wide" className="relative py-12 lg:py-[4.5rem]">
+        {/* Tahap R2: area teks dilebarkan agar judul memakai ruang horizontal (2 baris di desktop). */}
+        <div className="max-w-5xl">
           <p className="flex animate-fade-up items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.22em] text-accent-300">
             <span
               aria-hidden="true"
@@ -53,21 +54,21 @@ export function HomeHero() {
 
           {/* Judul memakai skala `display-lg` yang sama dengan header halaman lain,
               bukan ukuran lepas - supaya tipografi seluruh situs tetap satu sistem. */}
-          <h1 className="mt-6 animate-fade-up text-4xl text-white [animation-delay:90ms]">
+          <h1 className="mt-5 max-w-[50rem] animate-fade-up text-[clamp(1.75rem,1.15rem+1.95vw,2.75rem)] leading-[1.12] tracking-[-0.022em] text-white [animation-delay:90ms]">
             Solusi Terintegrasi Kebutuhan <span className="text-brand-300">Alat, Reagen, dan Bahan Laboratorium Presisi</span>
           </h1>
 
           <span
             aria-hidden="true"
-            className="mt-7 block h-1 w-16 animate-fade-up rounded-full bg-accent-400 [animation-delay:150ms]"
+            className="mt-6 block h-[3px] w-12 animate-fade-up rounded-full bg-accent-400 [animation-delay:150ms]"
           />
 
-          <p className="mt-7 max-w-content animate-fade-up text-base leading-relaxed text-white/80 [animation-delay:200ms] lg:text-lg">
+          <p className="mt-6 max-w-[42rem] animate-fade-up text-base leading-[1.65] text-white/85 [animation-delay:200ms] lg:text-[1.0625rem]">
             Melalui Artha Labs, kami menyediakan reagen, instrumen laboratorium, dan alat kesehatan
             dari brand mitra, beserta dokumen pendukung, bantuan instalasi, dan layanan purna jual.
           </p>
 
-          <div className="mt-10 flex animate-fade-up flex-wrap gap-3 [animation-delay:280ms]">
+          <div className="mt-8 flex animate-fade-up flex-wrap gap-3 [animation-delay:280ms]">
             <Button href="/artha-labs" variant="accent" size="lg">
               Lihat Katalog Produk
             </Button>

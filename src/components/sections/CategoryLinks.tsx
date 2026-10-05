@@ -9,9 +9,9 @@ import {
 } from "@/lib/data/category-pages";
 import { cn } from "@/lib/utils";
 
-/** Gaya chip yang sama dengan tombol filter katalog (ProductGrid) dalam keadaan tidak aktif. */
+/** Gaya tautan subkategori - selaras dengan daftar kategori di katalog (Tahap R3C). */
 const chipClass =
-  "inline-flex min-h-[40px] items-center gap-2 whitespace-nowrap rounded-full border border-line-strong bg-surface px-4 text-sm font-medium text-ink-muted transition-all duration-200 ease-smooth hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700";
+  "inline-flex min-h-[44px] items-center gap-2.5 whitespace-nowrap rounded-lg border border-line-strong bg-surface px-3.5 text-[0.9375rem] font-medium text-ink transition-colors duration-200 ease-smooth hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700";
 
 /**
  * Daftar tautan subkategori sebuah kategori (chip + jumlah produk).
@@ -35,7 +35,7 @@ export function SubcategoryLinks({
     <ul className={cn("flex flex-wrap gap-2", className)}>
       {linked.map((entry) => {
         const count = (
-          <span className="text-xs font-semibold tabular-nums text-ink-subtle">
+          <span className="font-mono text-[0.8125rem] text-ink-subtle">
             {entry.products.length}
           </span>
         );

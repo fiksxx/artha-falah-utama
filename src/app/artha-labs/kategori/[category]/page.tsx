@@ -82,12 +82,15 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             </Button>
           </>
         }
+        // Latar & lebar teks sama dengan halaman /artha-labs (Tahap R3C).
+        backgroundSrc="/images/artha-labs-hero.png"
+        textWidth="wide"
       />
 
       <Section width="wide">
         <Breadcrumb
           items={[
-            { label: "Home", href: "/" },
+            { label: "Beranda", href: "/" },
             { label: "Artha Labs", href: "/artha-labs" },
             { label: page.label },
           ]}

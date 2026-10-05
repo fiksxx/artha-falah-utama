@@ -8,10 +8,15 @@ import { cn } from "@/lib/utils";
 /** Jarak geser minimum (px) agar sentuhan dihitung sebagai swipe. */
 const SWIPE_PX = 40;
 
-/** Kelas statis (Tailwind harus melihat nama kelas utuh) untuk jumlah kartu terlihat di layar >= 768px. */
+/**
+ * Kelas statis (Tailwind harus melihat nama kelas utuh) untuk jumlah kartu terlihat.
+ * 1 dan 3: satu kartu di ponsel, penuh mulai 768px.
+ * 4 (Tahap M4): 1 kartu di ponsel, 2 mulai 640px, 4 mulai 1024px.
+ */
 const VISIBLE_CLASS = {
   1: "[--per:1] md:[--per:1]",
   3: "[--per:1] md:[--per:3]",
+  4: "[--per:1] sm:[--per:2] lg:[--per:4]",
 } as const;
 
 type LoopCarouselProps = {
@@ -19,8 +24,11 @@ type LoopCarouselProps = {
   slides: ReactNode[];
   /** Label untuk pembaca layar. */
   label: string;
-  /** Jumlah kartu yang terlihat sekaligus di layar >= 768px. Di ponsel selalu 1. */
-  visibleWide: 1 | 3;
+  /**
+   * Jumlah kartu yang terlihat sekaligus di layar lebar. Di ponsel selalu 1.
+   * Nilai 4 punya tahap tengah: 2 kartu pada 640-1023px.
+   */
+  visibleWide: 1 | 3 | 4;
   /** Jeda antar pergeseran (dari awal satu geseran ke awal geseran berikutnya). */
   intervalMs: number;
   /** Durasi gerak satu geseran. Harus jauh lebih pendek dari `intervalMs`. */
@@ -86,8 +94,8 @@ export function LoopCarousel({
   }, []);
   const prefersReducedMotion = hydrated && Boolean(systemPrefersReducedMotion);
 
-  const [wide, setWide] = useState(true);
-  const visible = wide ? visibleWide : 1;
+  // Nilai awal = jumlah layar lebar, sama dengan render server; disesuaikan setelah aktif.
+  const [visible, setVisible] = useState<number>(visibleWide);
 
   // Indeks terbesar yang boleh dicapai. Loop: `count` (posisi salinan). Bounce: kartu terakhir tepat di tepi kanan.
   const canMove = count > visible;
@@ -102,12 +110,18 @@ export function LoopCarousel({
 
   // Tentukan mode ponsel/lebar. Lebar kartu diatur CSS; ini hanya untuk logika geser.
   useEffect(() => {
-    const query = window.matchMedia("(min-width: 768px)");
-    const update = () => setWide(query.matches);
+    const medium = window.matchMedia("(min-width: 768px)");
+    const small = window.matchMedia("(min-width: 640px)");
+    const large = window.matchMedia("(min-width: 1024px)");
+    const update = () => {
+      if (visibleWide === 4) setVisible(large.matches ? 4 : small.matches ? 2 : 1);
+      else setVisible(medium.matches ? visibleWide : 1);
+    };
     update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
+    const queries = [medium, small, large];
+    queries.forEach((query) => query.addEventListener("change", update));
+    return () => queries.forEach((query) => query.removeEventListener("change", update));
+  }, [visibleWide]);
 
   // Jumlah kartu terlihat berubah (mis. layar diputar): mulai lagi dari awal.
   useEffect(() => {

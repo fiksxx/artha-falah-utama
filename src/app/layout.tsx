@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 
 import { Analytics } from "@/components/analytics/Analytics";
 import { Footer } from "@/components/layout/Footer";
@@ -10,12 +10,24 @@ import { siteConfig } from "@/lib/site";
 
 import "./globals.css";
 
-const inter = Inter({
+// Font utama situs (judul + isi). Variable font: satu file untuk semua ketebalan.
+const fontSans = Instrument_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-sans",
   // Preload subset latin saja agar CLS & LCP tetap kecil
   fallback: ["system-ui", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+});
+
+// Hanya untuk nomor model, kode katalog, dan angka (kelas `font-mono`).
+// Tidak di-preload karena tidak dipakai di layar pertama.
+const fontMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+  variable: "--font-mono",
+  preload: false,
+  fallback: ["ui-monospace", "Consolas", "Menlo", "monospace"],
 });
 
 export const metadata: Metadata = {
@@ -82,7 +94,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={inter.variable}>
+    <html lang="id" className={`${fontSans.variable} ${fontMono.variable}`}>
       <body className="flex min-h-screen flex-col font-sans">
         <SkipLink />
         <Navbar />

@@ -23,9 +23,10 @@ const tones = {
 } as const;
 
 const spacings = {
-  sm: "py-12 lg:py-16",
-  md: "py-16 lg:py-24",
-  lg: "py-20 lg:py-28",
+  // Tahap P1: padding luar sedikit diturunkan; ruang dipindahkan ke dalam section.
+  sm: "py-11 lg:py-[3.75rem]",
+  md: "py-[3.25rem] lg:py-20",
+  lg: "py-16 lg:py-24",
 } as const;
 
 /** Pembungkus section standar: latar, padding vertikal, dan container konsisten. */
@@ -64,15 +65,22 @@ type SectionHeadingProps = {
 };
 
 const headingSizes = {
-  section: "text-heading font-bold uppercase tracking-[0.08em]",
-  display: "text-display font-bold uppercase tracking-[0.06em]",
+  section: "text-balance text-[clamp(1.5rem,1.23rem+0.85vw,2rem)] font-semibold leading-[1.18] tracking-[-0.02em]",
+  // Ukuran ditulis sebagai nilai arbitrer (bukan kelas `text-display`): tailwind-merge
+  // menganggap `text-display` sebagai WARNA teks, sehingga kelas itu terbuang saat
+  // digabung dengan `text-brand-900` dan judul tampil sekecil teks biasa.
+  display:
+    "text-balance text-[clamp(1.5rem,1.23rem+0.85vw,2rem)] font-semibold leading-[1.18] tracking-[-0.02em]",
 } as const;
 
 /**
  * Judul section - SATU pola untuk seluruh website.
  *
  * Bentuknya selalu sama, dari atas ke bawah:
- *   eyebrow (opsional) -> judul -> garis emas -> deskripsi (opsional)
+ *   eyebrow (opsional) -> judul -> deskripsi (opsional)
+ *
+ * Tahap R1: judul memakai huruf biasa dengan ukuran lebih besar; huruf kapital
+ * ber-tracking dan garis emas di bawah judul dihapus (hierarki cukup dari ukuran).
  *
  * Sebelumnya pola ini ditulis ulang manual di hampir setiap halaman, sehingga
  * panjang garis, tracking huruf, dan jaraknya sempat berbeda-beda antar
@@ -114,19 +122,10 @@ export function SectionHeading({
         {title}
       </Tag>
 
-      {/* Garis emas: penanda hierarki yang sama di semua judul section */}
-      <span
-        aria-hidden="true"
-        className={cn(
-          "mt-3 block h-1 rounded-full bg-accent-400",
-          size === "display" ? "w-16" : "w-12",
-        )}
-      />
-
       {description ? (
         <p
           className={cn(
-            "mt-5 max-w-content text-base leading-relaxed lg:text-[1.0625rem]",
+            "mt-3 max-w-[40rem] text-base leading-relaxed",
             invert ? "text-white/75" : "text-ink-muted",
           )}
         >

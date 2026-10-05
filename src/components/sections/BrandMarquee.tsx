@@ -55,7 +55,7 @@ export function BrandMarquee({
             sizes="160px"
             // Marquee berada di paruh atas halaman: muat lebih awal tanpa memblokir LCP
             loading="lazy"
-            className="h-14 w-auto opacity-90 saturate-90 transition duration-300 hover:opacity-100 hover:saturate-150 sm:h-16"
+            className="h-11 w-auto opacity-90 saturate-90 transition duration-300 hover:opacity-100 hover:saturate-150 sm:h-12"
           />
         </li>
       ))}
@@ -64,7 +64,7 @@ export function BrandMarquee({
 
   return (
     <section
-      className={cn("border-b border-line bg-surface-muted py-10 lg:py-12", className)}
+      className={cn("border-b border-line bg-surface-muted py-7 lg:py-8", className)}
       aria-labelledby={headingId}
     >
       <Container width="wide">
@@ -78,7 +78,7 @@ export function BrandMarquee({
         </h2>
       </Container>
 
-      <div className="marquee-viewport marquee-mask relative mt-8 overflow-hidden">
+      <div className="marquee-viewport marquee-mask relative mt-5 overflow-hidden">
         <div
           className="marquee-track flex w-max animate-marquee items-center"
           style={{ "--marquee-duration": `${durationSeconds}s` } as CSSProperties}

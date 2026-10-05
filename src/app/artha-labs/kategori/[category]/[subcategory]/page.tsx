@@ -68,12 +68,15 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
             </Button>
           </>
         }
+        // Latar & lebar teks sama dengan halaman /artha-labs (Tahap R3C).
+        backgroundSrc="/images/artha-labs-hero.png"
+        textWidth="wide"
       />
 
       <Section id="produk" width="wide" className="scroll-mt-20">
         <Breadcrumb
           items={[
-            { label: "Home", href: "/" },
+            { label: "Beranda", href: "/" },
             { label: "Artha Labs", href: "/artha-labs" },
             { label: page.category.label, href: categoryHref(page.category) },
             { label: page.name },

@@ -41,7 +41,7 @@ export function ArticleCatalogLinks({
         </div>
         <Link
           href={target.href}
-          className="group inline-flex min-h-[40px] items-center gap-2 self-start rounded-full border border-line-strong bg-surface px-4 text-sm font-medium text-ink-muted transition-all duration-200 ease-smooth hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 sm:self-auto"
+          className="group inline-flex min-h-[40px] items-center gap-2 self-start rounded-full border border-line-strong bg-surface px-4 text-sm font-medium text-ink-muted transition-colors duration-200 ease-smooth hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 sm:self-auto"
         >
           Lihat semua {target.label.toLowerCase()}
           <span className="text-xs font-semibold tabular-nums text-ink-subtle">{target.count}</span>

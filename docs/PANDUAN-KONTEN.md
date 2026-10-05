@@ -926,7 +926,7 @@ Marquee di About memakai daftar brand YANG SAMA dengan halaman Artha Labs, yaitu
 Bila ingin mengubah judulnya, edit pemakaiannya di `src/app/page.tsx`:
 
 ```tsx
-<BrandMarquee title="Brand mitra Artha Labs" headingId="brand-marquee-about" />
+<BrandMarquee title="Brand yang kami sediakan" headingId="brand-marquee-about" />
 ```
 
 Opsi yang tersedia:

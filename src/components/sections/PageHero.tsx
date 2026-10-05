@@ -11,6 +11,16 @@ type PageHeroProps = {
   description: string;
   actions?: ReactNode;
   aside?: ReactNode;
+  /**
+   * Foto latar. Bawaan: foto gedung perusahaan (COMPANY_PHOTO). Halaman yang
+   * punya foto sendiri (mis. Artha Labs) boleh menggantinya; scrim tetap sama.
+   */
+  backgroundSrc?: string;
+  /**
+   * Lebar area teks bila tidak ada `aside`. "wide" mengikuti hero beranda:
+   * judul lebih besar dan boleh memanjang (Tahap R3B).
+   */
+  textWidth?: "default" | "wide";
   className?: string;
 };
 
@@ -34,17 +44,28 @@ type PageHeroProps = {
  * Animasi masuk memakai keyframe `fade-up` dengan delay bertingkat, dan mati
  * otomatis pada prefers-reduced-motion (diatur di globals.css).
  */
-export function PageHero({ eyebrow, title, description, actions, aside, className }: PageHeroProps) {
+export function PageHero({
+  eyebrow,
+  title,
+  description,
+  actions,
+  aside,
+  backgroundSrc = COMPANY_PHOTO,
+  textWidth = "default",
+  className,
+}: PageHeroProps) {
+  const wide = textWidth === "wide" && !aside;
+
   return (
     <section
       className={cn(
-        "relative isolate flex items-center overflow-hidden bg-brand-950 text-white lg:min-h-[44vh]",
+        "relative isolate flex items-center overflow-hidden bg-brand-950 text-white",
         className,
       )}
     >
       {/* Foto perusahaan sebagai latar - alt kosong karena murni dekoratif */}
       <Image
-        src={COMPANY_PHOTO}
+        src={backgroundSrc}
         alt=""
         fill
         priority
@@ -56,11 +77,11 @@ export function PageHero({ eyebrow, title, description, actions, aside, classNam
       {/* Garis gold tipis sebagai transisi elegan ke section berikutnya */}
       <div aria-hidden="true" className="divider-gold absolute inset-x-0 bottom-0 z-10 h-px" />
 
-      <Container width="wide" className="relative py-14 lg:py-16">
+      <Container width="wide" className="relative py-12 lg:py-[4.5rem]">
         <div
           className={cn(
             "grid items-center gap-10",
-            aside ? "lg:grid-cols-12 lg:gap-14" : "max-w-3xl",
+            aside ? "lg:grid-cols-12 lg:gap-14" : wide ? "max-w-5xl" : "max-w-3xl",
           )}
         >
           <div className={cn(aside && "lg:col-span-7")}>
@@ -72,21 +93,33 @@ export function PageHero({ eyebrow, title, description, actions, aside, classNam
               {eyebrow}
             </p>
 
-            <h1 className="mt-6 animate-fade-up text-4xl text-white [animation-delay:90ms]">
+            <h1
+              className={cn(
+                "mt-5 animate-fade-up text-white [animation-delay:90ms]",
+                wide
+                  ? "max-w-[50rem] text-[clamp(1.75rem,1.15rem+1.95vw,2.75rem)] leading-[1.12] tracking-[-0.022em]"
+                  : "text-[clamp(1.75rem,1.3rem+1.1vw,2.25rem)] leading-[1.15] tracking-[-0.02em]",
+              )}
+            >
               {title}
             </h1>
 
             <span
               aria-hidden="true"
-              className="mt-7 block h-1 w-16 animate-fade-up rounded-full bg-accent-400 [animation-delay:150ms]"
+              className="mt-6 block h-[3px] w-12 animate-fade-up rounded-full bg-accent-400 [animation-delay:150ms]"
             />
 
-            <p className="mt-7 max-w-content animate-fade-up text-base leading-relaxed text-white/80 [animation-delay:200ms] lg:text-lg">
+            <p
+              className={cn(
+                "mt-6 max-w-[42rem] animate-fade-up text-base leading-[1.65] [animation-delay:200ms] lg:text-[1.0625rem]",
+                wide ? "text-white/85" : "text-white/80",
+              )}
+            >
               {description}
             </p>
 
             {actions ? (
-              <div className="mt-10 flex animate-fade-up flex-wrap gap-3 [animation-delay:280ms]">
+              <div className="mt-8 flex animate-fade-up flex-wrap gap-3 [animation-delay:280ms]">
                 {actions}
               </div>
             ) : null}

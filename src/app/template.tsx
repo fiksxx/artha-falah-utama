@@ -3,6 +3,8 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+import { DURATION, EASE_SMOOTH } from "@/lib/motion";
+
 /**
  * Sudah pernah ada halaman yang tampil di tab ini?
  * Hanya berubah di browser (lewat useEffect), jadi di server selalu false.
@@ -33,7 +35,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
     <motion.div
       initial={animateIn && !prefersReducedMotion ? { opacity: 0, y: 8 } : false}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: prefersReducedMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: prefersReducedMotion ? 0 : DURATION.base, ease: EASE_SMOOTH }}
     >
       {children}
     </motion.div>

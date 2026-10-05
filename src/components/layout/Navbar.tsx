@@ -9,6 +9,7 @@ import { Container } from "@/components/layout/Container";
 import { Logo } from "@/components/layout/Logo";
 import { Button } from "@/components/ui/Button";
 import { CloseIcon, MenuIcon } from "@/components/ui/icons";
+import { DURATION, EASE_SMOOTH } from "@/lib/motion";
 import { navItems } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -138,7 +139,7 @@ export function Navbar() {
             initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
             animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, height: "auto" }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: DURATION.fast, ease: EASE_SMOOTH }}
             className="overflow-hidden border-t border-line bg-surface lg:hidden"
           >
             <Container width="wide" className="py-4">

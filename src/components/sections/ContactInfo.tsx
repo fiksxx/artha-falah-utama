@@ -27,14 +27,16 @@ export function ContactInfo() {
   const { contact } = siteConfig;
 
   return (
-    <div className="rounded-xl border border-line bg-surface-muted p-6 lg:p-8">
-      <h2 className="text-heading font-bold text-brand-900">Informasi Kontak</h2>
-      <ul className="mt-6 space-y-5 text-sm">
-        <li className="flex gap-3">
+    <div>
+      <h2 className="text-balance text-[clamp(1.75rem,1.2rem+1.6vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.025em] text-brand-900">
+        Informasi kontak
+      </h2>
+      <ul className="mt-8 divide-y divide-line border-y border-line text-sm">
+        <li className="flex gap-3 py-4">
           <MapPinIcon className="mt-0.5 shrink-0 text-brand-600" />
           <div>
-            <p className="font-semibold text-ink">Alamat kantor</p>
-            <address className="mt-1 not-italic leading-relaxed text-ink-muted">
+            <p className="font-medium text-ink-muted">Alamat kantor</p>
+            <address className="mt-1 text-base not-italic leading-relaxed text-ink">
               {contact.addressLines.map((line) => (
                 <span key={line} className="block">
                   {line}
@@ -44,57 +46,57 @@ export function ContactInfo() {
           </div>
         </li>
 
-        <li className="flex gap-3">
+        <li className="flex gap-3 py-4">
           <MailIcon className="mt-0.5 shrink-0 text-brand-600" />
           <div>
-            <p className="font-semibold text-ink">Email</p>
+            <p className="font-medium text-ink-muted">Email</p>
             <a
               href={`mailto:${contact.email}`}
-              className="mt-1 inline-block text-ink-muted underline-offset-4 hover:text-brand-700 hover:underline"
+              className="-my-1 inline-flex min-h-[44px] items-center text-base text-ink underline-offset-4 transition-colors hover:text-brand-700 hover:underline"
             >
               {contact.email}
             </a>
           </div>
         </li>
 
-        <li className="flex gap-3">
+        <li className="flex gap-3 py-4">
           <PhoneIcon className="mt-0.5 shrink-0 text-brand-600" />
           <div>
-            <p className="font-semibold text-ink">Telepon</p>
+            <p className="font-medium text-ink-muted">Telepon</p>
             <a
               href={`tel:${contact.phoneHref}`}
-              className="mt-1 inline-block text-ink-muted underline-offset-4 hover:text-brand-700 hover:underline"
+              className="-my-1 inline-flex min-h-[44px] items-center text-base text-ink underline-offset-4 transition-colors hover:text-brand-700 hover:underline"
             >
               {contact.phoneDisplay}
             </a>
           </div>
         </li>
 
-        <li className="flex gap-3">
+        <li className="flex gap-3 py-4">
           <WhatsappIcon className="mt-0.5 shrink-0 text-brand-600" />
           <div>
-            <p className="font-semibold text-ink">WhatsApp</p>
+            <p className="font-medium text-ink-muted">WhatsApp</p>
             <a
               href={`https://wa.me/${contact.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 inline-block text-ink-muted underline-offset-4 hover:text-brand-700 hover:underline"
+              className="-my-1 inline-flex min-h-[44px] items-center text-base text-ink underline-offset-4 transition-colors hover:text-brand-700 hover:underline"
             >
               {contact.whatsappDisplay}
             </a>
           </div>
         </li>
 
-        <li className="flex gap-3">
+        <li className="flex gap-3 py-4">
           <ClockIcon className="mt-0.5 shrink-0 text-brand-600" />
           <div>
-            <p className="font-semibold text-ink">Jam operasional</p>
-            <p className="mt-1 text-ink-muted">{contact.officeHours}</p>
+            <p className="font-medium text-ink-muted">Jam operasional</p>
+            <p className="mt-1 text-base text-ink">{contact.officeHours}</p>
           </div>
         </li>
       </ul>
 
-      <div className="mt-7 border-t border-line pt-6">
+      <div className="mt-7">
         <p className="text-sm font-semibold text-ink">Media sosial</p>
         <ul className="mt-3 flex flex-wrap gap-2">
           {socialLinks.map((social) => {

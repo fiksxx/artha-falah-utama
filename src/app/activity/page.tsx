@@ -34,7 +34,7 @@ export default function ActivityPage() {
   return (
     <>
       <PageHero
-        eyebrow="Activity"
+        eyebrow="Aktivitas"
         // @ts-expect-error: PageHero aslinya menerima string, kita paksa kirim ReactNode agar bisa pakai warna
         title={
           <>
@@ -54,6 +54,8 @@ export default function ActivityPage() {
           </>
         }
         aside={<ActivityTopics />}
+        // Latar sama dengan halaman /artha-labs (Tahap R5A), bukan foto gedung.
+        backgroundSrc="/images/artha-labs-hero.png"
       />
 
       <Section id="tulisan" tone="soft" width="wide">

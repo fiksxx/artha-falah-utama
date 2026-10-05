@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import type { ProductDetailItem } from "@/types";
 
 /**
@@ -19,27 +18,24 @@ export function DetailTable({
   if (items.length === 0) return null;
 
   return (
-    <div className="scrollbar-soft overflow-x-auto overflow-y-hidden rounded-xl border border-line bg-surface shadow-card">
+    <div className="scrollbar-soft overflow-x-auto overflow-y-hidden rounded-xl border border-line bg-surface">
       <table className="w-full min-w-[20rem] table-fixed border-collapse text-left text-sm">
         {caption ? <caption className="sr-only">{caption}</caption> : null}
         <thead>
-          <tr className="bg-brand-800 text-white">
-            <th scope="col" className="w-[42%] px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] sm:px-5">
+          <tr className="bg-surface-muted text-ink">
+            <th scope="col" className="w-[42%] px-4 py-3 text-sm font-semibold sm:px-5">
               {labelHeader}
             </th>
-            <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-accent-300 sm:px-5">
+            <th scope="col" className="px-4 py-3 text-sm font-semibold sm:px-5">
               {valueHeader}
             </th>
           </tr>
         </thead>
         <tbody>
-          {items.map((item, index) => (
+          {items.map((item) => (
             <tr
               key={item.label}
-              className={cn(
-                "transition-colors duration-200 hover:bg-brand-50/70",
-                index % 2 === 1 && "bg-surface-muted/70",
-              )}
+              className="transition-colors duration-200 hover:bg-brand-50/60"
             >
               <th
                 scope="row"

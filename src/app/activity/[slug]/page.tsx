@@ -151,13 +151,13 @@ export default async function ActivityDetailPage({ params }: ActivityPageProps) 
             {/* Tag topik */}
             {activity.tags && activity.tags.length > 0 ? (
               <div className="mt-10 flex flex-wrap items-center gap-2 border-t border-line pt-6">
-                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-subtle">
+                <span className="text-sm font-semibold text-ink-subtle">
                   Topik
                 </span>
                 {activity.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center rounded-full border border-line-strong bg-surface-muted px-3 py-1 text-sm text-ink-muted"
+                    className="inline-flex items-center rounded-md border border-line-strong bg-surface-muted px-3 py-1 text-sm text-ink-muted"
                   >
                     {tag}
                   </span>
@@ -167,7 +167,7 @@ export default async function ActivityDetailPage({ params }: ActivityPageProps) 
 
             {/* Bagikan */}
             <div className="mt-6 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-subtle">
+              <span className="text-sm font-semibold text-ink-subtle">
                 Bagikan
               </span>
               {shareLinks.map(({ label, href, Icon }) => (
@@ -199,17 +199,16 @@ export default async function ActivityDetailPage({ params }: ActivityPageProps) 
               >
                 <h2
                   id="daftar-isi"
-                  className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-700"
+                  className="text-base font-semibold text-ink"
                 >
                   Daftar isi
                 </h2>
-                <span aria-hidden="true" className="rule-accent mt-2.5 block h-px w-10" />
                 <ol className="mt-4 space-y-2.5">
                   {headings.map((heading, index) => (
                     <li key={heading.id} className="flex gap-3">
                       <span
                         aria-hidden="true"
-                        className="text-xs font-bold tabular-nums text-accent-500"
+                        className="pt-0.5 font-mono text-xs text-ink-subtle"
                       >
                         {String(index + 1).padStart(2, "0")}
                       </span>
@@ -232,9 +231,9 @@ export default async function ActivityDetailPage({ params }: ActivityPageProps) 
         <ArticleCatalogLinks articleSlug={activity.slug} className="mt-14" />
 
         {/* CTA ringkas - gaya sama dengan halaman detail produk */}
-        <div className="mt-14 flex flex-col gap-4 rounded-xl border border-accent-200 bg-accent-50 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-4 rounded-xl border border-line bg-surface-muted p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
-            <h2 className="text-base font-semibold text-ink">Ada yang ingin didiskusikan?</h2>
+            <h2 className="text-xl font-semibold text-ink">Ada yang ingin didiskusikan?</h2>
             <p className="mt-1 text-sm leading-relaxed text-ink-muted">
               Sampaikan kebutuhan laboratorium Anda, tim kami akan membantu menyiapkan pilihannya.
             </p>

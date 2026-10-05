@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ArrowRightIcon } from "@/components/ui/icons";
 import { quoteHref } from "@/lib/quote";
 import { cn, formatRupiah } from "@/lib/utils";
 import type { Product } from "@/types";
@@ -66,7 +65,10 @@ type ProductCardProps = {
 };
 
 /**
- * Kartu produk katalog - dipakai di grid Artha Labs dan section Related Products.
+ * Kartu produk katalog - dipakai di beranda, grid Artha Labs, halaman kategori,
+ * dan section Produk Terkait. Tampilan sejak Tahap R3A: border tipis tanpa
+ * bayangan, foto utuh di ubin abu muda, model memakai huruf mono, harga dan
+ * status dalam satu baris.
  * Seluruh area kartu bisa diklik menuju halaman detail (overlay `after:` pada judul),
  * sementara CTA "Minta penawaran" tetap menjadi link terpisah di atasnya (z-10).
  */
@@ -81,34 +83,33 @@ export function ProductCard({
   return (
     <article
       className={cn(
-        "group/card relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover focus-within:border-brand-300 focus-within:shadow-card-hover motion-reduce:transform-none",
+        "group/card relative flex h-full flex-col overflow-hidden rounded-xl border border-brand-200/80 bg-brand-50 transition duration-300 ease-smooth hover:-translate-y-[3px] hover:border-brand-300 focus-within:border-brand-300 motion-reduce:transform-none",
         className,
       )}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-surface-strong">
-        <Image
-          src={safeImageSrc}
-          alt={product.imageAlt || product.name || "Gambar produk"}
-          fill
-          sizes={sizes}
-          loading={eager ? "eager" : "lazy"}
-          className="object-cover transition-transform duration-500 ease-smooth group-hover/card:scale-[1.04] motion-reduce:transform-none"
-        />
-        {/* Badge kategori di atas gambar - hijau gelap + teks gold */}
-        <span className="absolute left-3 top-3 inline-flex rounded-full bg-brand-900/85 px-2.5 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-accent-300 backdrop-blur-sm">
-          {product.category}
-        </span>
+      {/* Ubin gambar: foto produk tampil UTUH (object-contain) di atas latar abu
+          muda. mix-blend-multiply membuat latar putih foto menyatu dengan ubin. */}
+      <div className="aspect-[4/3] bg-surface p-5">
+        <div className="relative h-full w-full">
+          <Image
+            src={safeImageSrc}
+            alt={product.imageAlt || product.name || "Gambar produk"}
+            fill
+            sizes={sizes}
+            loading={eager ? "eager" : "lazy"}
+            className="object-contain mix-blend-multiply transition-transform duration-300 ease-smooth group-hover/card:scale-[1.02] motion-reduce:transform-none"
+          />
+        </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-brand-600">
-          <span className="truncate">{product.brand}</span>
-          <span aria-hidden="true" className="h-1 w-1 shrink-0 rounded-full bg-accent-400" />
-          <span className="shrink-0 text-ink-subtle">{product.model}</span>
-        </div>
-        <p className="mt-1.5 text-xs text-ink-subtle">{product.subcategory}</p>
+      <div className="flex flex-1 flex-col px-5 pb-2 pt-4">
+        <p className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-[0.8125rem]">
+          <span className="font-semibold text-brand-700">{product.brand}</span>
+          {/* Nomor model / katalog memakai huruf mono agar mudah dibandingkan */}
+          <span className="break-words font-mono text-ink-subtle">{product.model}</span>
+        </p>
 
-        <h3 className="mt-2.5 text-lg font-semibold text-ink">
+        <h3 className="mt-2 text-[1.0625rem] font-semibold leading-snug text-ink">
           {/* Overlay link: membuat seluruh kartu clickable tanpa nested anchor */}
           <Link
             href={`/artha-labs/${product.slug}`}
@@ -117,37 +118,34 @@ export function ProductCard({
             {product.name}
           </Link>
         </h3>
-        {/* HARGA - selalu dari data produk (field `price`), tidak pernah ditulis di komponen */}
-        <p className="mt-2.5 text-lg font-bold text-brand-800">{formatRupiah(product.price)}</p>
+        <p className="mt-1.5 text-sm text-ink-subtle">{product.subcategory}</p>
 
-        {/* Status stok - warna hanya pendukung, statusnya tetap tertulis sebagai teks */}
-        <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-ink-muted">
-          <span
-            aria-hidden="true"
-            className={cn(
-              "h-1.5 w-1.5 rounded-full",
-              product.availability === "Tersedia" ? "bg-brand-500" : "bg-accent-400",
-            )}
-          />
-          {product.availability}
-        </p>
-
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pt-5">
-          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors duration-200 group-hover/card:text-brand-600">
-            Lihat detail
-            <ArrowRightIcon
-              aria-hidden="true"
-              className="transition-transform duration-200 ease-smooth group-hover/card:translate-x-1 motion-reduce:transform-none"
-            />
-          </span>
-          {/* CTA tetap ada & tetap bisa diklik di atas overlay kartu */}
-          <Link
-            href={quoteHref(product)}
-            aria-label={`Minta penawaran untuk ${product.name}`}
-            className="relative z-10 inline-flex min-h-[40px] items-center text-sm font-semibold text-accent-700 underline-offset-4 transition-colors duration-200 hover:text-accent-600 hover:underline"
-          >
-            Minta penawaran
-          </Link>
+        <div className="mt-auto pt-4">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 border-t border-brand-100 pt-1.5">
+            <p className="flex items-center gap-3 text-sm">
+              {/* HARGA - selalu dari data produk (field `price`), tidak pernah ditulis di komponen */}
+              <span className="font-semibold text-ink">{formatRupiah(product.price)}</span>
+              {/* Status stok - warna hanya pendukung, statusnya tetap tertulis sebagai teks */}
+              <span className="inline-flex items-center gap-1.5 text-ink-muted">
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "h-2 w-2 rounded-full",
+                    product.availability === "Tersedia" ? "bg-brand-500" : "bg-accent-500",
+                  )}
+                />
+                {product.availability}
+              </span>
+            </p>
+            {/* CTA tetap ada & tetap bisa diklik di atas overlay kartu */}
+            <Link
+              href={quoteHref(product)}
+              aria-label={`Minta penawaran untuk ${product.name}`}
+              className="relative z-10 inline-flex min-h-[44px] items-center text-sm font-semibold text-brand-700 underline-offset-4 transition-colors duration-200 hover:text-brand-600 hover:underline"
+            >
+              Minta penawaran
+            </Link>
+          </div>
         </div>
       </div>
     </article>

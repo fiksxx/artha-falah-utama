@@ -69,7 +69,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Consolas", "Menlo", "monospace"],
       },
       fontSize: {
         "display-lg": ["clamp(2.5rem, 1.6rem + 3.4vw, 4rem)", { lineHeight: "1.08", letterSpacing: "-0.02em" }],
