@@ -14,7 +14,12 @@ import {
   getActivityBySlug,
   getRelatedActivities,
 } from "@/lib/data/activities";
-import { META_DESCRIPTION_MAX, createPageMetadata, truncateAtWord } from "@/lib/seo";
+import {
+  META_DESCRIPTION_MAX,
+  ORGANIZATION_ID,
+  createPageMetadata,
+  truncateAtWord,
+} from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import type { Activity } from "@/types";
 
@@ -92,8 +97,11 @@ export default async function ActivityDetailPage({ params }: ActivityPageProps) 
     // Tanpa foto sampul, field image dihilangkan - lebih baik kosong daripada menunjuk ke berkas yang tidak ada.
     ...(activity.image ? { image: `${siteConfig.url}${activity.image}` } : {}),
     articleSection: activity.category,
-    author: { "@type": "Organization", name: siteConfig.name },
-    publisher: { "@type": "Organization", name: siteConfig.name },
+    // Tahap S3: penulis & penerbit merujuk blok Organization di halaman ini
+    // (layout.tsx), bukan menulis ulang namanya. Tanpa dateModified dan tanpa
+    // penulis perorangan: datanya belum ada.
+    author: { "@id": ORGANIZATION_ID },
+    publisher: { "@id": ORGANIZATION_ID },
     mainEntityOfPage: url,
   };
 

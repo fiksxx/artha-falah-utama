@@ -7,7 +7,13 @@ import { HomeHero } from "@/components/sections/HomeHero";
 import { TestimonialCarousel } from "@/components/sections/TestimonialCarousel";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { testimonials } from "@/lib/data/testimonials";
-import { HOME_TITLE, TITLE_BRAND, createPageMetadata } from "@/lib/seo";
+import {
+  HOME_TITLE,
+  ORGANIZATION_ID,
+  TITLE_BRAND,
+  WEBSITE_ID,
+  createPageMetadata,
+} from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 export const metadata = createPageMetadata({
@@ -35,10 +41,13 @@ export const metadata = createPageMetadata({
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": WEBSITE_ID,
   name: TITLE_BRAND,
   alternateName: siteConfig.name,
   url: siteConfig.url,
   inLanguage: "id-ID",
+  // Tahap S3: penerbit situs = blok Organization di halaman yang sama (layout.tsx).
+  publisher: { "@id": ORGANIZATION_ID },
 };
 
 /**

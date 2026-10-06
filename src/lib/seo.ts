@@ -143,6 +143,18 @@ const STREET_ADDRESS = "Jl. Kelapa Gading Perum Yasmin F No.1, Bumi Harapan, Kec
  */
 const SAME_AS_ICONS = new Set(["instagram"]);
 
+/**
+ * Pengenal entitas di data terstruktur (Tahap S3).
+ *
+ * `@id` adalah nama tetap sebuah entitas, bukan alamat halaman. Blok lain
+ * (WebSite, Article) merujuk organisasi lewat `{ "@id": ORGANIZATION_ID }`
+ * alih-alih menulis ulang namanya, sehingga mesin pencari tahu semuanya adalah
+ * entitas yang sama. Rujukan itu sah karena blok Organization dicetak di setiap
+ * halaman lewat app/layout.tsx.
+ */
+export const ORGANIZATION_ID = `${siteConfig.url}/#organization`;
+export const WEBSITE_ID = `${siteConfig.url}/#website`;
+
 /** JSON-LD Organization untuk rich result. */
 export function organizationJsonLd() {
   const sameAs = socialLinks
@@ -152,6 +164,7 @@ export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": ORGANIZATION_ID,
     name: siteConfig.name,
     legalName: siteConfig.legalName,
     alternateName: siteConfig.shortName,
