@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { DetailTable } from "@/components/ui/DetailTable";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { BoxIcon, CheckIcon, MailIcon } from "@/components/ui/icons";
+import { getProductCategoryTrail } from "@/lib/data/category-pages";
 import { getProductBySlug, getRelatedProducts, products } from "@/lib/data/products";
 import { quoteHref } from "@/lib/quote";
 import { META_DESCRIPTION_MAX, TITLE_BRAND, createPageMetadata, truncateAtWord } from "@/lib/seo";
@@ -83,13 +84,30 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const additionalGroups = product.additionalInformation ?? [];
   const relatedProducts = getRelatedProducts(product);
 
-  /** JSON-LD produk: hanya field yang datanya benar-benar tersedia. */
+  /*
+   * Kategori untuk JSON-LD: jalur yang sama dengan yang tampil di halaman
+   * (label kategori di breadcrumb, lalu subkategori di rincian produk).
+   */
+  const categoryPath = [
+    getProductCategoryTrail(product).category?.label ?? product.category,
+    product.subcategory,
+  ]
+    .filter(Boolean)
+    .join(" > ");
+
+  /**
+   * JSON-LD produk: hanya field yang datanya benar-benar tersedia.
+   *
+   * Tahap S1: teks kolom "Model" dikirim sebagai `model` (bukan `sku`, karena
+   * bukan kode stok tunggal). `offers`, `review`, dan `aggregateRating` SENGAJA
+   * tidak ada: harga jual final, ulasan, dan rating nyata belum tersedia.
+   */
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    sku: product.model,
-    category: product.category,
+    model: product.model,
+    category: categoryPath,
     ...(paragraphs[0] ? { description: paragraphs[0] } : {}),
     image: `${siteConfig.url}${product.image}`,
     brand: { "@type": "Brand", name: product.brand },
