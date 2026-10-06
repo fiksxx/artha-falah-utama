@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
@@ -12,6 +13,7 @@ import { Section, SectionHeading } from "@/components/ui/Section";
 import { BoxIcon, CheckIcon, MailIcon } from "@/components/ui/icons";
 import { getGuidesForProduct } from "@/lib/data/article-catalog-links";
 import { getProductCategoryTrail } from "@/lib/data/category-pages";
+import { getSeriesSiblings } from "@/lib/data/product-series";
 import { getProductBySlug, getRelatedProducts, products } from "@/lib/data/products";
 import { quoteHref } from "@/lib/quote";
 import { META_DESCRIPTION_MAX, TITLE_BRAND, createPageMetadata, truncateAtWord } from "@/lib/seo";
@@ -87,6 +89,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const relatedProducts = getRelatedProducts(product);
   /** Artikel panduan yang dipasangkan dengan jenis produk ini (Tahap S5). */
   const guides = getGuidesForProduct(product);
+  /** Model/varian lain dari seri yang sama (Tahap S6). */
+  const seriesSiblings = getSeriesSiblings(product);
 
   /*
    * Kategori untuk JSON-LD: jalur yang sama dengan yang tampil di halaman
@@ -288,6 +292,28 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </Button>
         </div>
       </Section>
+
+      {/* MODEL LAIN DALAM SERI - hanya tampil bila produk ini punya model seseri */}
+      {seriesSiblings.length > 0 ? (
+        <Section width="wide" spacing="sm" className="border-t border-line">
+          <SectionHeading title="Model lain dalam seri ini" />
+          <ul className="mt-6 max-w-4xl border-t border-line-strong">
+            {seriesSiblings.map((item) => (
+              <li key={item.id} className="border-b border-line-strong">
+                <Link
+                  href={`/artha-labs/${item.slug}`}
+                  className="group/item flex min-h-[56px] flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4"
+                >
+                  <span className="text-lg font-semibold leading-snug text-ink transition-colors duration-200 group-hover/item:text-brand-700">
+                    {item.name}
+                  </span>
+                  <span className="break-words font-mono text-sm text-ink-subtle">{item.model}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
 
       {/* PANDUAN TERKAIT - hanya tampil bila ada artikel untuk jenis produk ini */}
       {guides.length > 0 ? (
