@@ -5,10 +5,12 @@ import type { ReactNode } from "react";
 import { ProductCard } from "@/components/sections/ProductCard";
 import { ProductHeader } from "@/components/sections/ProductHeader";
 import { ProductTabs, type ProductTab } from "@/components/sections/ProductTabs";
+import { RelatedGuides } from "@/components/sections/RelatedGuides";
 import { Button } from "@/components/ui/Button";
 import { DetailTable } from "@/components/ui/DetailTable";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { BoxIcon, CheckIcon, MailIcon } from "@/components/ui/icons";
+import { getGuidesForProduct } from "@/lib/data/article-catalog-links";
 import { getProductCategoryTrail } from "@/lib/data/category-pages";
 import { getProductBySlug, getRelatedProducts, products } from "@/lib/data/products";
 import { quoteHref } from "@/lib/quote";
@@ -83,6 +85,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const specifications = product.specifications ?? [];
   const additionalGroups = product.additionalInformation ?? [];
   const relatedProducts = getRelatedProducts(product);
+  /** Artikel panduan yang dipasangkan dengan jenis produk ini (Tahap S5). */
+  const guides = getGuidesForProduct(product);
 
   /*
    * Kategori untuk JSON-LD: jalur yang sama dengan yang tampil di halaman
@@ -284,6 +288,14 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </Button>
         </div>
       </Section>
+
+      {/* PANDUAN TERKAIT - hanya tampil bila ada artikel untuk jenis produk ini */}
+      {guides.length > 0 ? (
+        <Section width="wide" spacing="sm" className="border-t border-line">
+          <SectionHeading title="Panduan terkait" />
+          <RelatedGuides guides={guides} className="mt-6 max-w-4xl" />
+        </Section>
+      ) : null}
 
       {/* RELATED PRODUCTS - hanya tampil bila ada produk lain yang relevan */}
       {relatedProducts.length > 0 ? (

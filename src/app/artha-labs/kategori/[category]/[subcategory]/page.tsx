@@ -4,9 +4,11 @@ import { notFound } from "next/navigation";
 import { SubcategoryLinks } from "@/components/sections/CategoryLinks";
 import { PageHero } from "@/components/sections/PageHero";
 import { ProductCard } from "@/components/sections/ProductCard";
+import { RelatedGuides } from "@/components/sections/RelatedGuides";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Button } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
+import { getGuidesForSubcategory } from "@/lib/data/article-catalog-links";
 import {
   brandsOf,
   categoryHref,
@@ -55,6 +57,8 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
   if (!page) notFound();
 
   const brands = brandsOf(page.products);
+  /** Artikel panduan yang dipasangkan dengan subkategori ini (Tahap S5). */
+  const guides = getGuidesForSubcategory(page.category.category, page.name);
 
   const pageSchema = pageJsonLd({
     type: "CollectionPage",
@@ -114,6 +118,14 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
           ))}
         </ul>
       </Section>
+
+      {/* PANDUAN TERKAIT - hanya tampil bila ada artikel untuk subkategori ini */}
+      {guides.length > 0 ? (
+        <Section width="wide" spacing="sm" className="border-t border-line">
+          <SectionHeading title="Panduan terkait" />
+          <RelatedGuides guides={guides} className="mt-6 max-w-4xl" />
+        </Section>
+      ) : null}
 
       <Section tone="muted" width="wide" spacing="sm">
         <SectionHeading title={`Subkategori ${page.category.label} lainnya`} />

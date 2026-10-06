@@ -1,10 +1,11 @@
+import { activities } from "@/lib/data/activities";
 import {
   categoryPages,
   subcategoryPages,
   type CategoryPage,
   type SubcategoryPage,
 } from "@/lib/data/category-pages";
-import type { Product, ProductCategory } from "@/types";
+import type { Activity, Product, ProductCategory } from "@/types";
 
 /**
  * PRODUK TERKAIT DI KATALOG (halaman artikel Activity)
@@ -170,3 +171,58 @@ export function getArticleCatalogBlock(articleSlug: string): ArticleCatalogBlock
 
 /** Slug seluruh artikel yang dipasangkan - dipakai untuk pemeriksaan data. */
 export const linkedArticleSlugs = Object.keys(articleCatalogLinks);
+
+/**
+ * ARAH SEBALIKNYA: PANDUAN TERKAIT DI HALAMAN KATALOG (Tahap S5)
+ * ==============================================================
+ *
+ * Pasangan di `articleCatalogLinks` dibaca terbalik: dari produk atau
+ * subkategori ke artikelnya. Tidak ada daftar tautan baru yang harus dirawat -
+ * menambah pasangan artikel di atas otomatis menambah tautan di halaman produk
+ * dan subkategori yang cocok.
+ */
+
+/** Jumlah tautan panduan yang ditampilkan di satu halaman produk. */
+const GUIDES_PER_PRODUCT = 3;
+
+/**
+ * Apakah sebuah pasangan artikel berlaku untuk produk ini.
+ * Lebih ketat daripada blok di halaman artikel: bila pasangan punya pola
+ * `productType`, jenis produk HARUS cocok (pH meter mendapat artikel pH meter,
+ * conductivity meter di subkategori yang sama tidak). Pasangan tanpa
+ * subkategori (mis. artikel penyimpanan reagen) berlaku untuk seluruh kategori.
+ */
+function linkMatchesProduct(
+  link: ArticleCatalogLink,
+  product: Pick<Product, "category" | "subcategory" | "productType">,
+): boolean {
+  if (link.category !== product.category) return false;
+  if (!link.subcategory) return true;
+  if (link.subcategory !== product.subcategory) return false;
+  return link.productType ? link.productType.test(product.productType) : true;
+}
+
+/** Artikel panduan untuk satu produk, urutan terbaru lebih dulu (urutan `activities`). */
+export function getGuidesForProduct(
+  product: Pick<Product, "category" | "subcategory" | "productType">,
+  limit = GUIDES_PER_PRODUCT,
+): Activity[] {
+  return activities
+    .filter((activity) => {
+      const link = articleCatalogLinks[activity.slug];
+      return link ? linkMatchesProduct(link, product) : false;
+    })
+    .slice(0, limit);
+}
+
+/**
+ * Artikel panduan untuk satu halaman subkategori: semua artikel yang
+ * dipasangkan dengan subkategori itu, ditambah artikel tingkat kategorinya.
+ */
+export function getGuidesForSubcategory(category: ProductCategory, subcategory: string): Activity[] {
+  return activities.filter((activity) => {
+    const link = articleCatalogLinks[activity.slug];
+    if (!link || link.category !== category) return false;
+    return !link.subcategory || link.subcategory === subcategory;
+  });
+}
