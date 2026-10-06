@@ -7,20 +7,37 @@ import { Button } from "@/components/ui/Button";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { WhatsappIcon } from "@/components/ui/icons";
 import { CONTACT_FORM_ANCHOR } from "@/lib/quote";
-import { createPageMetadata } from "@/lib/seo";
+import { createPageMetadata, jsonLdScript, pageJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
+
+/** Dipakai meta description dan JSON-LD halaman agar keduanya selalu sama. */
+const PAGE_DESCRIPTION =
+  "Hubungi CV Artha Falah Utama untuk permintaan penawaran, pertanyaan teknis, maupun kebutuhan pengadaan. Kirim pesan lewat formulir, email, telepon, atau WhatsApp.";
 
 export const metadata = createPageMetadata({
   title: "Hubungi Kami",
-  description:
-    "Hubungi CV Artha Falah Utama untuk permintaan penawaran, pertanyaan teknis, maupun kebutuhan pengadaan. Kirim pesan lewat formulir, email, telepon, atau WhatsApp.",
+  description: PAGE_DESCRIPTION,
   path: "/contact",
   keywords: ["kontak", "penawaran", "konsultasi", "whatsapp"],
 });
 
 export default function ContactPage() {
+  const pageSchema = pageJsonLd({
+    type: "ContactPage",
+    path: "/contact",
+    // Sama dengan teks H1 halaman ini.
+    name: "Sampaikan kebutuhan Anda",
+    description: PAGE_DESCRIPTION,
+  });
+
   return (
     <>
+      {/* Jenis halaman untuk mesin pencari (Tahap S4) - tidak menampilkan apa pun. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(pageSchema) }}
+      />
+
       <PageHero
         eyebrow="Kontak"
         textWidth="wide"

@@ -6,12 +6,15 @@ import { Section } from "@/components/ui/Section";
 import { toActivityListItem } from "@/lib/activity-meta";
 import { withActivityImages } from "@/lib/activity-images";
 import { activities } from "@/lib/data/activities";
-import { createPageMetadata } from "@/lib/seo";
+import { createPageMetadata, jsonLdScript, pageJsonLd } from "@/lib/seo";
+
+/** Dipakai meta description dan JSON-LD halaman agar keduanya selalu sama. */
+const PAGE_DESCRIPTION =
+  "Catatan teknis seputar pemilihan, penggunaan, dan perawatan alat laboratorium, serta rekam jejak kegiatan CV Artha Falah Utama.";
 
 export const metadata = createPageMetadata({
   title: "Panduan & Artikel Alat Laboratorium",
-  description:
-    "Catatan teknis seputar pemilihan, penggunaan, dan perawatan alat laboratorium, serta rekam jejak kegiatan CV Artha Falah Utama.",
+  description: PAGE_DESCRIPTION,
   path: "/activity",
   keywords: [
     "panduan alat laboratorium",
@@ -31,8 +34,22 @@ export const metadata = createPageMetadata({
  * dalam bentuk card.
  */
 export default function ActivityPage() {
+  const pageSchema = pageJsonLd({
+    type: "CollectionPage",
+    path: "/activity",
+    // Sama dengan teks H1 halaman ini.
+    name: "Catatan Teknis dan Kegiatan Kami",
+    description: PAGE_DESCRIPTION,
+  });
+
   return (
     <>
+      {/* Jenis halaman untuk mesin pencari (Tahap S4) - tidak menampilkan apa pun. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(pageSchema) }}
+      />
+
       <PageHero
         eyebrow="Aktivitas"
         // @ts-expect-error: PageHero aslinya menerima string, kita paksa kirim ReactNode agar bisa pakai warna

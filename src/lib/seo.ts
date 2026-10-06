@@ -193,3 +193,43 @@ export function organizationJsonLd() {
     },
   };
 }
+
+/**
+ * JSON-LD jenis halaman (Tahap S4): CollectionPage untuk halaman daftar
+ * (katalog, kategori, subkategori, daftar tulisan) dan ContactPage untuk Kontak.
+ *
+ * `name` diisi teks H1 halaman dan `description` diisi meta description-nya,
+ * jadi tidak ada teks baru. Penerbit merujuk blok Organization yang dicetak di
+ * setiap halaman lewat app/layout.tsx.
+ */
+export function pageJsonLd({
+  type,
+  path,
+  name,
+  description,
+}: {
+  type: "CollectionPage" | "ContactPage";
+  path: string;
+  name: string;
+  description: string;
+}) {
+  const url = path === "/" ? siteConfig.url : `${siteConfig.url}${path}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": type,
+    "@id": `${url}#webpage`,
+    url,
+    name,
+    description,
+    inLanguage: "id-ID",
+    publisher: { "@id": ORGANIZATION_ID },
+    // Halaman Kontak membahas organisasi itu sendiri.
+    ...(type === "ContactPage" ? { mainEntity: { "@id": ORGANIZATION_ID } } : {}),
+  };
+}
+
+/** Teks untuk <script type="application/ld+json">; "<" di-escape agar tidak bisa menutup tag. */
+export function jsonLdScript(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}

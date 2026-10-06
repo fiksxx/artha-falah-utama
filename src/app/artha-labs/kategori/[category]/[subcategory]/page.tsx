@@ -15,7 +15,7 @@ import {
   subcategoryHref,
   subcategoryPages,
 } from "@/lib/data/category-pages";
-import { createPageMetadata } from "@/lib/seo";
+import { createPageMetadata, jsonLdScript, pageJsonLd } from "@/lib/seo";
 
 type SubcategoryPageProps = {
   params: Promise<{ category: string; subcategory: string }>;
@@ -31,16 +31,20 @@ export function generateStaticParams() {
   }));
 }
 
+/** Meta description subkategori - dipakai juga oleh JSON-LD halaman agar keduanya selalu sama. */
+function subcategoryDescription(page: NonNullable<ReturnType<typeof getSubcategoryPage>>) {
+  const brands = joinIndonesian(brandsOf(page.products));
+  return `Katalog ${page.name.toLowerCase()} Artha Labs: ${page.products.length} produk dari ${brands}, lengkap dengan spesifikasi. Minta penawaran langsung dari halaman produk.`;
+}
+
 export async function generateMetadata({ params }: SubcategoryPageProps): Promise<Metadata> {
   const { category, subcategory } = await params;
   const page = getSubcategoryPage(category, subcategory);
   if (!page) return {};
 
-  const brands = joinIndonesian(brandsOf(page.products));
-
   return createPageMetadata({
     title: `${page.name} – Katalog ${page.category.label}`,
-    description: `Katalog ${page.name.toLowerCase()} Artha Labs: ${page.products.length} produk dari ${brands}, lengkap dengan spesifikasi. Minta penawaran langsung dari halaman produk.`,
+    description: subcategoryDescription(page),
     path: subcategoryHref(page.category, page),
   });
 }
@@ -52,8 +56,22 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
 
   const brands = brandsOf(page.products);
 
+  const pageSchema = pageJsonLd({
+    type: "CollectionPage",
+    path: subcategoryHref(page.category, page),
+    // Sama dengan teks H1 halaman ini.
+    name: page.name,
+    description: subcategoryDescription(page),
+  });
+
   return (
     <>
+      {/* Jenis halaman untuk mesin pencari (Tahap S4) - tidak menampilkan apa pun. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(pageSchema) }}
+      />
+
       <PageHero
         eyebrow={page.category.label}
         title={page.name}

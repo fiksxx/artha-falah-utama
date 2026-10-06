@@ -9,19 +9,36 @@ import {
   getCatalogFacets,
   getInitialCatalogItems,
 } from "@/lib/data/catalog-index";
-import { createPageMetadata } from "@/lib/seo";
+import { createPageMetadata, jsonLdScript, pageJsonLd } from "@/lib/seo";
+
+/** Dipakai meta description dan JSON-LD halaman agar keduanya selalu sama. */
+const PAGE_DESCRIPTION =
+  "Katalog Artha Labs: reagen, alat laboratorium, dan alat kesehatan dari brand mitra, lengkap dengan dukungan teknis dan layanan purna jual.";
 
 export const metadata = createPageMetadata({
   title: "Katalog Reagen & Alat Laboratorium",
-  description:
-    "Katalog Artha Labs: reagen, alat laboratorium, dan alat kesehatan dari brand mitra, lengkap dengan dukungan teknis dan layanan purna jual.",
+  description: PAGE_DESCRIPTION,
   path: "/artha-labs",
   keywords: ["reagen", "alat laboratorium", "alat kesehatan", "supplier lab"],
 });
 
 export default function ArthaLabsPage() {
+  const pageSchema = pageJsonLd({
+    type: "CollectionPage",
+    path: "/artha-labs",
+    // Sama dengan teks H1 halaman ini.
+    name: "Reagen, Alat Laboratorium, dan Alat Kesehatan",
+    description: PAGE_DESCRIPTION,
+  });
+
   return (
     <>
+      {/* Jenis halaman untuk mesin pencari (Tahap S4) - tidak menampilkan apa pun. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(pageSchema) }}
+      />
+
       <PageHero
         eyebrow="Artha Labs"
         // @ts-expect-error: PageHero aslinya menerima string, kita paksa kirim ReactNode agar bisa pakai warna
