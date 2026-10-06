@@ -15,13 +15,14 @@ import { navItems, siteConfig } from "@/lib/site";
  * subkategori katalog, halaman detail produk dari data katalog, dan halaman
  * tulisan dari data Activity.
  * Menambah produk atau tulisan baru otomatis menambah entri sitemap-nya.
+ *
+ * Tahap S2: `lastModified` hanya diisi untuk tulisan (tanggal terbit). Halaman
+ * lain tidak punya tanggal perubahan yang tercatat; mengisinya dengan waktu
+ * build membuat seluruh URL tampak berubah di setiap deploy, jadi dikosongkan.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
   const pages: MetadataRoute.Sitemap = navItems.map((item) => ({
     url: item.href === "/" ? siteConfig.url : `${siteConfig.url}${item.href}`,
-    lastModified,
     changeFrequency: "monthly",
     priority: item.href === "/" ? 1 : 0.8,
   }));
@@ -30,13 +31,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const categoryUrls: MetadataRoute.Sitemap = [
     ...categoryPages.map((page) => ({
       url: `${siteConfig.url}${categoryHref(page)}`,
-      lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     ...subcategoryPages.map((page) => ({
       url: `${siteConfig.url}${subcategoryHref(page.category, page)}`,
-      lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
@@ -44,7 +43,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const productPages: MetadataRoute.Sitemap = products.map((product) => ({
     url: `${siteConfig.url}/artha-labs/${product.slug}`,
-    lastModified,
     changeFrequency: "monthly",
     priority: 0.6,
   }));

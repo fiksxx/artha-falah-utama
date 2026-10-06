@@ -14,7 +14,7 @@ import {
   getActivityBySlug,
   getRelatedActivities,
 } from "@/lib/data/activities";
-import { createPageMetadata } from "@/lib/seo";
+import { META_DESCRIPTION_MAX, createPageMetadata, truncateAtWord } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import type { Activity } from "@/types";
 
@@ -55,7 +55,9 @@ export async function generateMetadata({ params }: ActivityPageProps): Promise<M
 
   return createPageMetadata({
     title: activity.title,
-    description: activity.excerpt,
+    // Tahap S2: ringkasan dipendekkan di batas kata agar cuplikan tidak terpotong
+    // sembarangan. Ringkasan utuh tetap tampil di halaman dan di JSON-LD Article.
+    description: truncateAtWord(activity.excerpt, META_DESCRIPTION_MAX),
     path: `/activity/${activity.slug}`,
     image: activity.image,
     keywords: activity.tags,
